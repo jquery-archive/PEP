@@ -3,15 +3,31 @@
   <head>
     <title>PointerEventShim testing ground</title>
     <style>
-      html, body {
+      body, html {
+        margin: 0;
         height: 100%;
+        position: relative;
+      }
+      body {
+        overflow: auto;
       }
       #capture {
-        background-color: green;
+        background-color: orange;
         height: 300px;
         width: 300px;
         text-align: center;
         -webkit-user-select: none;
+      }
+      #enterleave {
+        background-color: blue;
+        height: 150px;
+        width: 150px;
+        text-align: center;
+        vertical-align: center;
+        line-height: 150px;
+        left: 25%;
+        top: 25%;
+        position: relative;
       }
       #output {
         width: 300px;
@@ -26,12 +42,16 @@
       window.PointerEventShim.keep = true;
     </script>
     <script src="../src/events.js"></script>
-    <script src="../src/touch.js"></script>
-    <script src="../src/mouse.js"></script>
+    <script src="../src/sources.js"></script>
     <script src="../src/finalize.js"></script>
   </head>
   <body>
-    <div id="capture">Capture Target!</div>
+    <div id="capture">
+      Capture Target
+      <div id="enterleave">
+        Enter and leave here
+      </div>
+    </div>
     <div id="output"></div>
     <script>
       var events = [
@@ -45,11 +65,19 @@
       ];
       var target = document.getElementById("capture");
       var output = document.getElementById("output");
+      var enleav = document.getElementById("enterleave");
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
           var it = output.innerText;
           output.innerText = inEvent.type + "\n" + it;
+          console.log(inEvent.type);
         });
+      });
+      enleav.addEventListener("pointerenter", function(e) {
+        console.log("enterleave entered");
+      });
+      enleav.addEventListener("pointerleave", function(e) {
+        console.log("enterleave left");
       });
     </script>
   </body>
