@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>PointerEventShim land</title>
+		<style>
+			html, body {
+				height: 100%;
+			}
+		</style>
+		<script src="../src/init.js"></script>
+		<script src="../src/events.js"></script>
+		<script src="../src/touch.js"></script>
+		<script src="../src/mouse.js"></script>
+		<script src="../src/finalize.js"></script>
+	</head>
+	<body>
+		<script>
+			var events = [
+				// base events
+				"pointerdown",
+				"pointerup",
+				"pointermove",
+				"pointertap",
+				"pointerenter",
+				"pointerleave"
+			];
+			for (var i = 0, e; e = events[i]; i++) {
+				document.addEventListener(e, function(inEvent) {
+					console.log(inEvent.type);
+				});
+			}
+		</script>
+	</body>
+</html>
