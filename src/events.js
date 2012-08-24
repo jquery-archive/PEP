@@ -12,19 +12,19 @@
   *   - pointerscroll: mousescroll
   */
 (function(scope) {
-  var boundHandler;
   var dispatcher = {
     hooks: [],
-    addHook: function(inScope, inEvents, inName) {
-      this.hooks.push({scope: inScope, events: inEvents, name: inName});
-    },
-    get events() {
-      return this._events;
-    },
-    set events(inEvents) {
-      this.unlisten(this.events);
+    events: {},
+    eventSources: {},
+    registerSource: function(inName, inScope, inEvents) {
+      inEvents.forEach(function(e) {
+        this.events[e] = inScope[e].bind(inScope);
+      }.bind(this));
       this.listen(inEvents);
-      this._events = inEvents;
+      this.eventSources[inName] = inScope;
+    },
+    registerHook: function(inName, inScope, inEvents) {
+      this.hooks.push({scope: inScope, events: inEvents, name: inName});
     },
     // EVENTS
     down: function(inEvent) {
@@ -42,10 +42,14 @@
       }
     },
     enter: function(inEvent) {
-      this.fireEvent(inEvent, "pointerenter")
+      var e = this.cloneEvent(inEvent);
+      e.bubbles = false;
+      this.fireEvent(e, "pointerenter")
     },
     leave: function(inEvent) {
-      this.fireEvent(inEvent, "pointerleave");
+      var e = this.cloneEvent(inEvent);
+      e.bubbles = false;
+      this.fireEvent(e, "pointerleave");
     },
     scroll: function(inEvent) {
       this.fireEvent(inEvent, "pointerscroll");
@@ -53,22 +57,22 @@
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
       var type = inEvent.type;
-      var fn = this.events[type];
+      var fn = this.events && this.events[type];
       if (fn) {
         fn(inEvent);
       }
     },
     listen: function(inEvents) {
       // set up event listeners
-      for (var e in inEvents) {
-        this.addEvent(e, boundHandler);
-      }
+      inEvents.forEach(function(e) {
+        this.addEvent(e, this.boundHandler);
+      }.bind(this));
     },
     unlisten: function(inEvents) {
       // remove event listeners
-      for (var e in inEvents) {
-        this.removeEvent(e, boundHandler);
-      }
+      inEvents.forEach(function(e) {
+        this.removeEvent(e, this.boundHandler);
+      }.bind(this));
     },
     addEvent: function(inEventName, inEventHandler, inCapture) {
       document.addEventListener(inEventName, inEventHandler, inCapture);
@@ -79,14 +83,19 @@
     // EVENT CREATION AND TRACKING
     makeEvent: function(inEvent, inType) {
       /*
-       * inEvent.button is horribly broken.
-       * A falsey button value in the initMouseEvent will set which to 1, because button 0 means left button held
-       * However, mouse events can have button == 0 and which == 0
-       * Therefore, we use inEvent.button iff which is 1, or we use -1, as this leaves which = 0;
+       * inEvent.button is horribly broken. A falsey button value in the
+       * initMouseEvent will set which to 1, because button 0 means left button
+       * held However, mouse events can have button == 0 and which == 0
+       * Therefore, we use inEvent.button iff which is 1, or we use -1, as this
+       * leaves which = 0;
        */
       var b = inEvent.which ? inEvent.button : -1;
       var e = document.createEvent("MouseEvent");
-      e.initMouseEvent(inType, inEvent.bubbles, inEvent.cancelable, inEvent.view, inEvent.detail, inEvent.screenX, inEvent.screenY, inEvent.clientX, inEvent.clientY, inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey, inEvent.metaKey, b, inEvent.relatedTarget);
+      e.initMouseEvent(inType, inEvent.bubbles, inEvent.cancelable,
+                       inEvent.view, inEvent.detail, inEvent.screenX,
+                       inEvent.screenY, inEvent.clientX, inEvent.clientY,
+                       inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
+                       inEvent.metaKey, b, inEvent.relatedTarget);
       e.srcEvent = inEvent.srcEvent || inEvent;
       return e;
     },
@@ -115,5 +124,5 @@
     }
   };
   scope.dispatcher = dispatcher;
-  boundHandler = dispatcher.eventHandler.bind(dispatcher);
+  dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
 })(window.PointerEventShim);
