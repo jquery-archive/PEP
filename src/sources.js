@@ -1,5 +1,15 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  // returns true if a === b or a is inside b
+  var isDescendant = function(inA, inB) {
+    var a = inA;
+    while(a) {
+      if (a === inB) {
+        return true;
+      }
+      a = a.parentNode;
+    }
+  };
   var touchEvents = {
     events: [
       "click",
@@ -24,7 +34,7 @@
       for (var i = 0, e; e = es[i]; i++) {
         dispatcher.down(e);
         //TODO (dfreedm) set up a registry for overEvents?
-        this.overEvent = dispatcher.cloneEvent(e);
+        this.overEvent = e;
         dispatcher.enter(e);
       }
     },
@@ -42,8 +52,12 @@
         if (this.overEvent && this.overEvent.target !== e.target) {
           this.overEvent.relatedTarget = e.target;
           e.relatedTarget = this.overEvent.target;
-          dispatcher.leave(this.overEvent);
-          dispatcher.enter(e);
+          if (isDescendant(this.overEvent.target, e.target)) {
+            dispatcher.leave(this.overEvent);
+          }
+          if (isDescendant(e.target, this.overEvent.target)) {
+            dispatcher.enter(e);
+          }
         }
         this.overEvent = e;
       }
@@ -80,10 +94,14 @@
       dispatcher.up(inEvent);
     },
     mouseover: function(inEvent) {
-      dispatcher.enter(inEvent);
+      if (isDescendant(inEvent.target, inEvent.relatedTarget)) {
+        dispatcher.enter(inEvent);
+      }
     },
     mouseout: function(inEvent) {
-      dispatcher.leave(inEvent);
+      if (isDescendant(inEvent.target, inEvent.relatedTarget)) {
+        dispatcher.leave(inEvent);
+      }
     },
     mousescroll: function(inEvent) {
       dispatcher.scroll(inEvent);
