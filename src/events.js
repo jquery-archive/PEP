@@ -1,16 +1,16 @@
-/*
-  This module is for normalizing events.
-  Mouse and Touch events will be collected here, and fire Pointer events that have the same semantics, no matter the source.
-  We hope that eventually a system like this one will be standard and available from the platform.
-  Events fired:
-    - pointertap: click
-    - pointerdown: mousedown / touchstart
-    - pointerup: mouseup / touchend
-    - pointermove: mousemove / touchmove
-    - pointerenter: mouseover / synthed from touchmove + touchstart
-    - pointerleave: mouseout / synthed from touchmove + touchend
-    - pointerscroll: mousescroll
-*/
+ /*
+  * This module is for normalizing events.
+  * Mouse and Touch events will be collected here, and fire Pointer events that have the same semantics, no matter the source.
+  * We hope that eventually a system like this one will be standard and available from the platform.
+  * Events fired:
+  *   - pointertap: click
+  *   - pointerdown: mousedown / touchstart
+  *   - pointerup: mouseup / touchend
+  *   - pointermove: mousemove / touchmove
+  *   - pointerenter: mouseover / synthed from touchmove + touchstart
+  *   - pointerleave: mouseout / synthed from touchmove + touchend
+  *   - pointerscroll: mousescroll
+  */
 (function(scope) {
   var boundHandler;
   var dispatcher = {

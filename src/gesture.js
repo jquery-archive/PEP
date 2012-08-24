@@ -1,10 +1,10 @@
 /*
-  Events:
-    - pointerzoom
-    - pointerrotate
-*/
-(function() {
-  var dispatcher = sk.dispatcher;
+ * Events:
+ *   - pointerzoom
+ *   - pointerrotate
+ */
+(function(scope) {
+  var dispatcher = scope.dispatcher;
   var gesture = {
     pointerdown: function(inEvent) {
     },
@@ -13,4 +13,4 @@
     pointermove: function(inEvent) {
     }
   };
-})();
+})(window.PointerEventShim);

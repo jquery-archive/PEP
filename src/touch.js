@@ -1,5 +1,5 @@
 (function(scope) {
-  // FIXME make this split touch events into individual fingers
+  // TODO(dfreedm) make this split touch events into individual fingers
   if ("ontouchstart" in window) {
     var dispatcher = scope.dispatcher;
     dispatcher.events = {
