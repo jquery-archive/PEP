@@ -23,4 +23,12 @@
       return inSink;
     },
   };
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function(scope) {
+      var _this = this;
+      return function() {
+        return _this.apply(scope, arguments);
+      }
+    }
+  }
 })();
