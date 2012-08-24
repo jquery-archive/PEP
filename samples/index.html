@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>PointerEventShim land</title>
+    <title>PointerEventShim testing ground</title>
     <style>
       html, body {
         height: 100%;
@@ -11,10 +11,20 @@
         height: 300px;
         width: 300px;
         text-align: center;
+        -webkit-user-select: none;
+      }
+      #output {
+        width: 300px;
+        height: 150px;
+        overflow: scroll;
       }
     </style>
     <!--TODO (dfreedm): make one script out of this somehow-->
     <script src="../src/init.js"></script>
+    <script>
+      // Keep PointerEventShim around for mucking with
+      window.PointerEventShim.keep = true;
+    </script>
     <script src="../src/events.js"></script>
     <script src="../src/touch.js"></script>
     <script src="../src/mouse.js"></script>
@@ -22,6 +32,7 @@
   </head>
   <body>
     <div id="capture">Capture Target!</div>
+    <div id="output"></div>
     <script>
       var events = [
         // base events
@@ -32,10 +43,12 @@
         "pointerenter",
         "pointerleave"
       ];
-      var el = document.getElementById("capture");
+      var target = document.getElementById("capture");
+      var output = document.getElementById("output");
       events.forEach(function(en) {
-        el.addEventListener(en, function(inEvent) {
-          console.log(inEvent.type);
+        capture.addEventListener(en, function(inEvent) {
+          var it = output.innerText;
+          output.innerText = inEvent.type + "\n" + it;
         });
       });
     </script>
