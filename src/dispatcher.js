@@ -1,4 +1,10 @@
 /*
+ * Copyright 2012 The Toolkit Authors. All rights reserved.
+ * Use of this source code is goverened by a BSD-style
+ * license that can be found in the LICENSE file.
+ */
+
+/*
  * This module is for normalizing events. Mouse and Touch events will be
  * collected here, and fire Pointer events that have the same semantics, no
  * matter the source. We hope that eventually a system like this one will be

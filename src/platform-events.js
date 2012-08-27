@@ -1,4 +1,10 @@
 /*
+ * Copyright 2012 The Toolkit Authors. All rights reserved.
+ * Use of this source code is goverened by a BSD-style
+ * license that can be found in the LICENSE file.
+ */
+
+/*
  * This module contains the handlers for native platform events.
  * From here, the dispatcher is called to create unified pointer events.
  * Included are touch events (v1) and mouse events.

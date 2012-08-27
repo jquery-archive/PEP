@@ -1,3 +1,8 @@
+/*
+ * Copyright 2012 The Toolkit Authors. All rights reserved.
+ * Use of this source code is goverened by a BSD-style
+ * license that can be found in the LICENSE file.
+ */
 (function(scope) {
   // Function bind is required, iOS is missing it :(
   if (!Function.prototype.bind) {
