@@ -95,12 +95,16 @@
     },
     mouseover: function(inEvent) {
       if (isDescendant(inEvent.target, inEvent.relatedTarget)) {
-        dispatcher.enter(inEvent);
+        var e = dispatcher.cloneEvent(inEvent);
+        e.bubbles = false;
+        dispatcher.enter(e);
       }
     },
     mouseout: function(inEvent) {
       if (isDescendant(inEvent.target, inEvent.relatedTarget)) {
-        dispatcher.leave(inEvent);
+        var e = dispatcher.cloneEvent(inEvent);
+        e.bubbles = false;
+        dispatcher.leave(e);
       }
     },
     mousescroll: function(inEvent) {

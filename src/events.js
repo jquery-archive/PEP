@@ -1,7 +1,8 @@
  /*
-  * This module is for normalizing events.
-  * Mouse and Touch events will be collected here, and fire Pointer events that have the same semantics, no matter the source.
-  * We hope that eventually a system like this one will be standard and available from the platform.
+  * This module is for normalizing events. Mouse and Touch events will be
+  * collected here, and fire Pointer events that have the same semantics, no
+  * matter the source.  We hope that eventually a system like this one will be
+  * standard and available from the platform.
   * Events fired:
   *   - pointertap: click
   *   - pointerdown: mousedown / touchstart
@@ -42,13 +43,9 @@
       }
     },
     enter: function(inEvent) {
-      var e = this.cloneEvent(inEvent);
-      e.bubbles = false;
       this.fireEvent(e, "pointerenter")
     },
     leave: function(inEvent) {
-      var e = this.cloneEvent(inEvent);
-      e.bubbles = false;
       this.fireEvent(e, "pointerleave");
     },
     scroll: function(inEvent) {
