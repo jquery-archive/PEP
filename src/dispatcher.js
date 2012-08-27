@@ -42,27 +42,27 @@
     },
     // EVENTS
     down: function(inEvent) {
-      this.fireEvent(inEvent, "pointerdown")
+      this.fireEvent(inEvent, 'pointerdown')
     },
     move: function(inEvent) {
-      this.fireEvent(inEvent, "pointermove");
+      this.fireEvent(inEvent, 'pointermove');
     },
     up: function(inEvent) {
-      this.fireEvent(inEvent, "pointerup");
+      this.fireEvent(inEvent, 'pointerup');
     },
     tap: function(inEvent) {
       if (!this.disableTap) {
-        this.fireEvent(inEvent, "pointertap");
+        this.fireEvent(inEvent, 'pointertap');
       }
     },
     enter: function(inEvent) {
-      this.fireEvent(inEvent, "pointerenter")
+      this.fireEvent(inEvent, 'pointerenter')
     },
     leave: function(inEvent) {
-      this.fireEvent(inEvent, "pointerleave");
+      this.fireEvent(inEvent, 'pointerleave');
     },
     scroll: function(inEvent) {
-      this.fireEvent(inEvent, "pointerscroll");
+      this.fireEvent(inEvent, 'pointerscroll');
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
@@ -100,7 +100,7 @@
        * leaves which = 0;
        */
       var b = inEvent.which ? inEvent.button : -1;
-      var e = document.createEvent("MouseEvent");
+      var e = document.createEvent('MouseEvent');
       e.initMouseEvent(inType, inEvent.bubbles, inEvent.cancelable,
                        inEvent.view, inEvent.detail, inEvent.screenX,
                        inEvent.screenY, inEvent.clientX, inEvent.clientY,

@@ -5,6 +5,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  //TODO(dfreedm) put real gesture code here
   var gesture = {
     pointerdown: function(inEvent) {
     },

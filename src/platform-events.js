@@ -24,10 +24,10 @@
   // handler block for native touch events
   var touchEvents = {
     events: [
-      "click",
-      "touchstart",
-      "touchmove",
-      "touchend"
+      'click',
+      'touchstart',
+      'touchmove',
+      'touchend'
     ],
     //TODO(dfreedm) make this actually split touch event into individuals
     splitEvents: function(inEvent) {
@@ -86,13 +86,13 @@
   // handler block for native mouse events
   var mouseEvents = {
     events: [
-      "click",
-      "mousedown",
-      "mousemove",
-      "mouseup",
-      "mouseover",
-      "mouseout",
-      "mousescroll"
+      'click',
+      'mousedown',
+      'mousemove',
+      'mouseup',
+      'mouseover',
+      'mouseout',
+      'mousescroll'
     ],
     click: function(inEvent) {
       dispatcher.tap(inEvent);
@@ -129,9 +129,9 @@
    * touch events will simulate mouse events, but poorly
    * See README for more details
    */
-  if ("ontouchstart" in window) {
-    dispatcher.registerSource("touch", touchEvents, touchEvents.events);
+  if ('ontouchstart' in window) {
+    dispatcher.registerSource('touch', touchEvents, touchEvents.events);
   } else {
-    dispatcher.registerSource("mouse", mouseEvents, mouseEvents.events);
+    dispatcher.registerSource('mouse', mouseEvents, mouseEvents.events);
   }
 })(window.PointerEventShim);
