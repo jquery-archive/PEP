@@ -1,16 +1,16 @@
  /*
   * This module is for normalizing events. Mouse and Touch events will be
   * collected here, and fire Pointer events that have the same semantics, no
-  * matter the source.  We hope that eventually a system like this one will be
+  * matter the source. We hope that eventually a system like this one will be
   * standard and available from the platform.
   * Events fired:
   *   - pointertap: click
-  *   - pointerdown: mousedown / touchstart
-  *   - pointerup: mouseup / touchend
-  *   - pointermove: mousemove / touchmove
-  *   - pointerenter: mouseover / synthed from touchmove + touchstart
-  *   - pointerleave: mouseout / synthed from touchmove + touchend
-  *   - pointerscroll: mousescroll
+  *   - pointerdown: a pointing is added
+  *   - pointerup: a pointer is removed
+  *   - pointermove: a pointer is moved
+  *   - pointerenter: a pointer enters the boundaries of an element
+  *   - pointerleave: a pointer leaves the boundaries of an element
+  *   - pointerscroll: a pointer is scrolling
   */
 (function(scope) {
   var dispatcher = {
@@ -19,7 +19,9 @@
     eventSources: {},
     registerSource: function(inName, inScope, inEvents) {
       inEvents.forEach(function(e) {
-        this.events[e] = inScope[e].bind(inScope);
+        if (inScope[e]) {
+          this.events[e] = inScope[e].bind(inScope);
+        }
       }.bind(this));
       this.listen(inEvents);
       this.eventSources[inName] = inScope;
