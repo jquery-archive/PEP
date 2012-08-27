@@ -1,3 +1,8 @@
+/*
+ * This module contains the handlers for native platform events.
+ * From here, the dispatcher is called to create unified pointer events.
+ * Included are touch events (v1) and mouse events.
+ */
 (function(scope) {
   var dispatcher = scope.dispatcher;
   // returns true if a === b or a is inside b
@@ -10,6 +15,7 @@
       a = a.parentNode;
     }
   };
+  // handler block for native touch events
   var touchEvents = {
     events: [
       "click",
@@ -71,6 +77,7 @@
     }
   };
 
+  // handler block for native mouse events
   var mouseEvents = {
     events: [
       "click",
@@ -112,6 +119,10 @@
     }
   };
 
+  /*
+   * touch events will simulate mouse events, but poorly
+   * See README for more details
+   */
   if ("ontouchstart" in window) {
     dispatcher.registerSource("touch", touchEvents, touchEvents.events);
   } else {

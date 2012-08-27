@@ -1,22 +1,26 @@
- /*
-  * This module is for normalizing events. Mouse and Touch events will be
-  * collected here, and fire Pointer events that have the same semantics, no
-  * matter the source. We hope that eventually a system like this one will be
-  * standard and available from the platform.
-  * Events fired:
-  *   - pointertap: click
-  *   - pointerdown: a pointing is added
-  *   - pointerup: a pointer is removed
-  *   - pointermove: a pointer is moved
-  *   - pointerenter: a pointer enters the boundaries of an element
-  *   - pointerleave: a pointer leaves the boundaries of an element
-  *   - pointerscroll: a pointer is scrolling
-  */
+/*
+ * This module is for normalizing events. Mouse and Touch events will be
+ * collected here, and fire Pointer events that have the same semantics, no
+ * matter the source. We hope that eventually a system like this one will be
+ * standard and available from the platform.
+ * Events fired:
+ *   - pointertap: click
+ *   - pointerdown: a pointing is added
+ *   - pointerup: a pointer is removed
+ *   - pointermove: a pointer is moved
+ *   - pointerenter: a pointer enters the boundaries of an element
+ *   - pointerleave: a pointer leaves the boundaries of an element
+ *   - pointerscroll: a pointer is scrolling
+ */
 (function(scope) {
   var dispatcher = {
+    // events that require preprocessing, fire after events in this module
     hooks: [],
+    // native platform events being listened for
     events: {},
+    // scope objects for native events
     eventSources: {},
+    // add a new event source and listen for those events
     registerSource: function(inName, inScope, inEvents) {
       inEvents.forEach(function(e) {
         if (inScope[e]) {
@@ -26,6 +30,7 @@
       this.listen(inEvents);
       this.eventSources[inName] = inScope;
     },
+    // add a new event module that needs pointer events
     registerHook: function(inName, inScope, inEvents) {
       this.hooks.push({scope: inScope, events: inEvents, name: inName});
     },
@@ -61,14 +66,14 @@
         fn(inEvent);
       }
     },
+    // set up event listeners
     listen: function(inEvents) {
-      // set up event listeners
       inEvents.forEach(function(e) {
         this.addEvent(e, this.boundHandler);
       }.bind(this));
     },
+    // remove event listeners
     unlisten: function(inEvents) {
-      // remove event listeners
       inEvents.forEach(function(e) {
         this.removeEvent(e, this.boundHandler);
       }.bind(this));
@@ -105,15 +110,16 @@
     cloneEvent: function(inEvent) {
       return scope.clone({}, inEvent);
     },
-    // override this for more interesting event targeting
     findTarget: function(inEvent) {
       return inEvent.target;
     },
+    // fire pointer events and hooked events
     dispatchEvent: function(inEvent) {
       var et = inEvent.type;
       for (var i = 0, h, fn; h = this.hooks[i]; i++) {
         if (h.events.indexOf(et) > -1) {
           fn = h.scope[et];
+          // if a hook for this event returns true, do not dispatch
           if (fn && fn.call(h.scope, inEvent) === true) {
             return;
           }
