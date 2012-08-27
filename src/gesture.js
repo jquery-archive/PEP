@@ -1,7 +1,14 @@
 /*
+ * Copyright 2012 The Toolkitchen Authors. All rights reserved.
+ * Use of this source code is goverened by a BSD-style
+ * license that can be found in the LICENSE file.
+ */
+
+/*
+ * Rich gestures formed from multiple pointers
  * Events:
- *   - pointerzoom
- *   - pointerrotate
+ * - pointerscale: fired when two or more pointers move closer or farther apart
+ * - pointerrotate: fired when two pointers rotate from their starting positions
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;

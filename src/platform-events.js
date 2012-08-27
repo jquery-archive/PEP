@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 The Toolkit Authors. All rights reserved.
+ * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is goverened by a BSD-style
  * license that can be found in the LICENSE file.
  */
@@ -64,10 +64,10 @@
         if (this.overEvent && this.overEvent.target !== e.target) {
           this.overEvent.relatedTarget = e.target;
           e.relatedTarget = this.overEvent.target;
-          if (isDescendant(this.overEvent.target, e.target)) {
+          if (!isDescendant(this.overEvent.relatedTarget, this.overEvent.target)) {
             dispatcher.leave(this.overEvent);
           }
-          if (isDescendant(e.target, this.overEvent.target)) {
+          if (!isDescendant(e.relatedTarget, e.target)) {
             dispatcher.enter(e);
           }
         }
@@ -107,14 +107,14 @@
       dispatcher.up(inEvent);
     },
     mouseover: function(inEvent) {
-      if (isDescendant(inEvent.target, inEvent.relatedTarget)) {
+      if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
         var e = dispatcher.cloneEvent(inEvent);
         e.bubbles = false;
         dispatcher.enter(e);
       }
     },
     mouseout: function(inEvent) {
-      if (isDescendant(inEvent.target, inEvent.relatedTarget)) {
+      if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
         var e = dispatcher.cloneEvent(inEvent);
         e.bubbles = false;
         dispatcher.leave(e);
