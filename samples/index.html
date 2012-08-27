@@ -35,15 +35,11 @@
         overflow: scroll;
       }
     </style>
-    <!--TODO (dfreedm): make one script out of this somehow-->
-    <script src="../src/init.js"></script>
     <script>
       // Keep PointerEventShim around for mucking with
-      window.PointerEventShim.keep = true;
+      window.PointerEventShim = {keep: true};
     </script>
-    <script src="../src/events.js"></script>
-    <script src="../src/sources.js"></script>
-    <script src="../src/finalize.js"></script>
+    <script src="../src/bootstrap.js"></script>
   </head>
   <body>
     <div id="capture">
