@@ -50,10 +50,10 @@
       }
     },
     enter: function(inEvent) {
-      this.fireEvent(e, "pointerenter")
+      this.fireEvent(inEvent, "pointerenter")
     },
     leave: function(inEvent) {
-      this.fireEvent(e, "pointerleave");
+      this.fireEvent(inEvent, "pointerleave");
     },
     scroll: function(inEvent) {
       this.fireEvent(inEvent, "pointerscroll");
