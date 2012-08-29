@@ -36,26 +36,26 @@ Therefore, we felt the need to create PointerEvents.
 ## What events are there?
 
 - Basic screen movement
-  - pointermove: a pointer moves, similar to touchmove or mousemove.
-  - pointerdown: a pointer is activated, or a device button held.
-  - pointerup: a pointer is deactivated, or a device button released.
-  - pointerenter: a pointer crosses into an element’s bounding box.
-  - pointerleave: a pointer leaves an element’s bounding box.
-  - pointertap: an up/down pair is seen in rapid succession.
-- Hold Events * not yet implemented *
-  - pointerhold: a pointer is held down for 200ms.
-  - pointerholdpulse: a pointer is *still* held down, pulses every 200ms.
-  - pointerrelease: a pointer is released after holding.
-- Drag Events * not yet implemented *
-  - pointerdragstart: a pointer starts dragging across the screen.
-  - pointerdrag: a pointer is being dragged across the screen, updates with position, fired on the target of the dragstart.
-  - pointerdragend: a pointer stops dragging, fired on the target of the dragstart.
-  - pointerdrop: a pointer stops dragging, fired on the last element the pointer entered.
-  - pointerdragenter: a pointer enters an element's bounding box while dragging.
-  - pointerdragleave: a pointer leaves an element’s bounding box while dragging.
-  - pointerflick: a pointer moves rapidly across the screen, provides inertial information.
-- Gesture Events * not yet implemented *
-  - pointerscale: two or more pointers are spreading apart
-  - pointerrotate: two or more pointers are rotating around a center point
+  - `pointermove`: a pointer moves, similar to touchmove or mousemove.
+  - `pointerdown`: a pointer is activated, or a device button held.
+  - `pointerup`: a pointer is deactivated, or a device button released.
+  - `pointerenter`: a pointer crosses into an element’s bounding box.
+  - `pointerleave`: a pointer leaves an element’s bounding box.
+  - `pointertap`: an up/down pair is seen in rapid succession.
+- Hold Events **not yet implemented**
+  - `pointerhold`: a pointer is held down for 200ms.
+  - `pointerholdpulse`: a pointer is *still* held down, pulses every 200ms.
+  - `pointerrelease`: a pointer is released after holding.
+- Drag Events **not yet implemented**
+  - `pointerdragstart`: a pointer starts dragging across the screen.
+  - `pointerdrag`: a pointer is being dragged across the screen, updates with position, fired on the target of the dragstart.
+  - `pointerdragend`: a pointer stops dragging, fired on the target of the dragstart.
+  - `pointerdrop`: a pointer stops dragging, fired on the last element the pointer entered.
+  - `pointerdragenter`: a pointer enters an element's bounding box while dragging.
+  - `pointerdragleave`: a pointer leaves an element’s bounding box while dragging.
+  - `pointerflick`: a pointer moves rapidly across the screen, provides inertial information.
+- Gesture Events **not yet implemented**
+  - `pointerscale`: two or more pointers are spreading apart
+  - `pointerrotate`: two or more pointers are rotating around a center point
 
 You can also add your own events!
