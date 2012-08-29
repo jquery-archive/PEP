@@ -91,8 +91,7 @@
       'mousemove',
       'mouseup',
       'mouseover',
-      'mouseout',
-      'mousescroll'
+      'mouseout'
     ],
     click: function(inEvent) {
       dispatcher.tap(inEvent);
@@ -119,16 +118,25 @@
         e.bubbles = false;
         dispatcher.leave(e);
       }
-    },
-    mousescroll: function(inEvent) {
-      dispatcher.scroll(inEvent);
     }
   };
 
   /*
-   * touch events will simulate mouse events, but poorly
-   * See README for more details
+   * We fork the initialization of dispatcher event listeners here because
+   * current native touch event systems emulate mouse events. These
+   * touch-emulated mouse events behave differently than normal mouse events.
+   *
+   * Touch-emulated mouse events will only occur if the target element has
+   * either a native click handler, or the onclick attribute is set. In
+   * addition, the touch-emulated mouse events fire only after the finger has
+   * left the screen, negating any live-tracking ability a developer might want.
+   *
+   * The only way to disable mouse event emulation by native touch systems is to
+   * preventDefault every touch event, which we feel is inelegant.
+   *
+   * Therefore we choose to only listen to native touche events if they exist.
    */
+
   if ('ontouchstart' in window) {
     dispatcher.registerSource('touch', touchEvents, touchEvents.events);
   } else {

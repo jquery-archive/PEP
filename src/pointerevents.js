@@ -4,7 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 (function() {
-  var thisFile = 'bootstrap.js';
+  var thisFile = 'pointerevents.js';
   var source = '', base = '';
   var s$ = document.querySelectorAll('script[src]');
   Array.prototype.forEach.call(s$, function(s) {
@@ -18,7 +18,7 @@
     document.write('<script src="' + base + inSrc + '"></script>');
   };
   [
-    'init.js',
+    'initialize.js',
     'dispatcher.js',
     'platform-events.js',
     'finalize.js'
