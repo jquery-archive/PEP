@@ -22,8 +22,13 @@
   var dispatcher = {
     /*
      * Hooks are event handlers that use pointer events and create different pointer events.
-     * Hook handlers are called before the base pointer events are dispatched,
-     * and have the ability to cancel the dispatch by returning true.
+     * Hooks are called before the base pointer events are dispatched, and have
+     * the ability to cancel the dispatch by returning true.
+     *
+     * Hooks are how rich gesture events are created: by listening to normalized
+     * pointer events, gesture code can be much simpler.
+     *
+     * Users can add custom hooks with `registerHook` to create new pointer events.
      */
     hooks: [],
     // native platform events being listened for
