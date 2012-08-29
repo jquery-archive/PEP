@@ -16,15 +16,22 @@
  *   - pointermove: a pointer is moved
  *   - pointerenter: a pointer enters the boundaries of an element
  *   - pointerleave: a pointer leaves the boundaries of an element
- *   - pointerscroll: a pointer is scrolling
  */
 (function(scope) {
+  var clone = scope.clone;
   var dispatcher = {
-    // events that require preprocessing, fire after events in this module
+    /*
+     * Hooks are event handlers that use pointer events and create different pointer events.
+     * Hook handlers are called before the base pointer events are dispatched,
+     * and have the ability to cancel the dispatch by returning true.
+     */
     hooks: [],
     // native platform events being listened for
     events: {},
-    // scope objects for native events
+    /*
+     * Scope objects for native events.
+     * This exists for ease of testing.
+     */
     eventSources: {},
     // add a new event source and listen for those events
     registerSource: function(inName, inScope, inEvents) {
@@ -32,7 +39,7 @@
         if (inScope[e]) {
           this.events[e] = inScope[e].bind(inScope);
         }
-      }.bind(this));
+      }, this);
       this.listen(inEvents);
       this.eventSources[inName] = inScope;
     },
@@ -61,9 +68,6 @@
     leave: function(inEvent) {
       this.fireEvent(inEvent, 'pointerleave');
     },
-    scroll: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerscroll');
-    },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
       var type = inEvent.type;
@@ -76,13 +80,13 @@
     listen: function(inEvents) {
       inEvents.forEach(function(e) {
         this.addEvent(e, this.boundHandler);
-      }.bind(this));
+      }, this);
     },
     // remove event listeners
     unlisten: function(inEvents) {
       inEvents.forEach(function(e) {
         this.removeEvent(e, this.boundHandler);
-      }.bind(this));
+      }, this);
     },
     addEvent: function(inEventName, inEventHandler, inCapture) {
       document.addEventListener(inEventName, inEventHandler, inCapture);
@@ -93,11 +97,25 @@
     // EVENT CREATION AND TRACKING
     makeEvent: function(inEvent, inType) {
       /*
-       * inEvent.button is horribly broken. A falsey button value in the
-       * initMouseEvent will set which to 1, because button 0 means left button
-       * held However, mouse events can have button == 0 and which == 0
-       * Therefore, we use inEvent.button iff which is 1, or we use -1, as this
-       * leaves which = 0;
+       * According to the w3c spec,
+       * http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-MouseEvent
+       * MouseEvent.button == 0 can mean either no mouse button depressed, or
+       * the left mouse button depressed.
+       *
+       * As of now, the only way to distinguish between the two states of
+       * MouseEvent.button is by using the deprecated MouseEvent.which property,
+       * as this maps mouse buttons to positive integers > 0, and uses 0 to mean
+       * that no mouse button is held.
+       *
+       * MouseEvent.which is derived from MouseEvent.button at MouseEvent
+       * creation, but initMouseEvent does not expose an argument with which to
+       * set MouseEvent.which. Calling initMouseEvent with a buttonArg of 0 will
+       * set MouseEvent.button == 0 and MouseEvent.which == 1, breaking the
+       * expectations of app developers.
+       *
+       * The only way to propagate the correct state of MouseEvent.which and
+       * MouseEvent.button to a new MouseEvent.button == 0 and MouseEvent.which == 0
+       * is to call initMouseEvent with a buttonArg value of -1.
        */
       var b = inEvent.which ? inEvent.button : -1;
       var e = document.createEvent('MouseEvent');
@@ -114,15 +132,15 @@
       return this.dispatchEvent(e);
     },
     cloneEvent: function(inEvent) {
-      return scope.clone({}, inEvent);
+      return clone({}, inEvent);
     },
     findTarget: function(inEvent) {
       return inEvent.target;
     },
-    // fire pointer events and hooked events
+    // dispatch events
     dispatchEvent: function(inEvent) {
       var et = inEvent.type;
-      for (var i = 0, h, fn; h = this.hooks[i]; i++) {
+      for (var i = 0, h, fn; (h = this.hooks[i]); i++) {
         if (h.events.indexOf(et) > -1) {
           fn = h.scope[et];
           // if a hook for this event returns true, do not dispatch
