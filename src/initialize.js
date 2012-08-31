@@ -35,4 +35,5 @@
     }
     return inSink;
   };
+  window.PointerEventShim = scope;
 })(window.PointerEventShim);
