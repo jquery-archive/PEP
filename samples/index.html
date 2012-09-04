@@ -52,28 +52,29 @@
     <script>
       var events = [
         // base events
-        "pointerdown",
-        "pointerup",
-        "pointermove",
-        "pointertap",
-        "pointerenter",
-        "pointerleave"
+        'pointerdown',
+        'pointerup',
+        'pointermove',
+        'pointertap',
+        'pointerenter',
+        'pointerleave',
+        'pointerflick'
       ];
-      var target = document.getElementById("capture");
-      var output = document.getElementById("output");
-      var enleav = document.getElementById("enterleave");
+      var target = document.getElementById('capture');
+      var output = document.getElementById('output');
+      var enleav = document.getElementById('enterleave');
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
           var it = output.innerText;
-          output.innerText = inEvent.type + "\n" + it;
+          output.innerText = inEvent.type + '\n' + it;
           console.log(inEvent.type);
         });
       });
-      enleav.addEventListener("pointerenter", function(e) {
-        console.log("enterleave entered");
+      enleav.addEventListener('pointerenter', function(e) {
+        console.log('enterleave entered');
       });
-      enleav.addEventListener("pointerleave", function(e) {
-        console.log("enterleave left");
+      enleav.addEventListener('pointerleave', function(e) {
+        console.log('enterleave left');
       });
     </script>
   </body>
