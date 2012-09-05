@@ -1,6 +1,6 @@
 /*
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
- * Use of this source code is goverened by a BSD-style
+ * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
  */
 
@@ -19,12 +19,23 @@
       }
     },
     getPointerById: function(inId) {
-      for (var i = 0, p; (p = this.pointers[i]); i++) {
+      return this.pointers[this.getPointerIndex(inId)];
+    },
+    getPointerIndex: function(inId) {
+      for (var i = 0, l = this.pointers.length, p; (i < l) && (p = this.pointers[i]); i++) {
         if (p.id === inId) {
-          return p;
+          return i;
         }
       }
+      return -1;
     },
+    getPointerList: function() {
+      return this.pointers;
+    },
+    updatePointer: function(inId, inPointer) {
+      var i = this.getPointerIndex(inId);
+      this.pointers[i] = inPointer;
+    }
   };
   scope.pointermap = pointermap;
 })(window.PointerEventShim);
