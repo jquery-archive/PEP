@@ -42,6 +42,7 @@
     findTarget: function(inEvent) {
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
+    // TODO(dfreedm) should click even be here, or watch up/down pairs for tap?
     click: function(inEvent) {
       dispatcher.tap(inEvent);
     },
@@ -49,8 +50,6 @@
       var es = this.splitEvents(inEvent);
       es.forEach(this.downEnter, this);
     },
-    // TODO(dfreedm) should dispatcher control pointer creation, or
-    // platform-events?
     downEnter: function(inTouch) {
       var p = pointermap.addPointer(inTouch.pointerId, inTouch, null);
       dispatcher.down(inTouch);
@@ -97,6 +96,7 @@
 
   // handler block for native mouse events
   var mouseEvents = {
+    POINTER_ID: -1,
     events: [
       'click',
       'mousedown',
@@ -109,12 +109,18 @@
       dispatcher.tap(inEvent);
     },
     mousedown: function(inEvent) {
+      pointermap.addPointer(this.POINTER_ID, inEvent, null);
       dispatcher.down(inEvent);
     },
     mousemove: function(inEvent) {
+      var p = pointermap.getPointerById(this.POINTER_ID);
+      if (p) {
+        p.event = inEvent;
+      }
       dispatcher.move(inEvent);
     },
     mouseup: function(inEvent) {
+      pointermap.removePointer(this.POINTER_ID);
       dispatcher.up(inEvent);
     },
     mouseover: function(inEvent) {

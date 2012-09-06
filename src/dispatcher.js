@@ -19,7 +19,6 @@
  */
 (function(scope) {
   var clone = scope.clone;
-  var pointermap = scope.pointermap;
   var dispatcher = {
     /*
      * Hooks are event handlers that use pointer events and create different pointer events.
