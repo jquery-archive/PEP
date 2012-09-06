@@ -19,8 +19,8 @@
   var pointermap = {
     // pointers is an array of pointer states, ordered from oldest to youngest
     pointers: [],
-    addPointer: function(inId, inSrcEvent, inState) {
-      var p = {id: inId, event: inSrcEvent, state: inState};
+    addPointer: function(inId, inSrcEvent) {
+      var p = {id: inId, event: inSrcEvent};
       this.pointers.push(p);
       return p;
     },
