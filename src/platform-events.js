@@ -11,6 +11,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  var pointermap = scope.pointermap;
   // returns true if a === b or a is inside b
   var isDescendant = function(inA, inB) {
     var a = inA;
@@ -29,11 +30,14 @@
       'touchmove',
       'touchend'
     ],
-    //TODO(dfreedm) make this actually split touch event into individuals
     splitEvents: function(inEvent) {
-      var e = dispatcher.cloneEvent(inEvent.changedTouches[0]);
-      e.target = this.findTarget(e);
-      return [e];
+      var es = Array.prototype.map.call(inEvent.changedTouches, function(inTouch) {
+        var e = dispatcher.cloneEvent(inTouch);
+        e.pointerId = inTouch.identifier;
+        e.target = this.findTarget(e);
+        return e;
+      }, this);
+      return es;
     },
     findTarget: function(inEvent) {
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
@@ -43,12 +47,15 @@
     },
     touchstart: function(inEvent) {
       var es = this.splitEvents(inEvent);
-      for (var i = 0, e; e = es[i]; i++) {
-        dispatcher.down(e);
-        //TODO (dfreedm) set up a registry for overEvents?
-        this.overEvent = e;
-        dispatcher.enter(e);
-      }
+      es.forEach(this.downEnter, this);
+    },
+    // TODO(dfreedm) should dispatcher control pointer creation, or
+    // platform-events?
+    downEnter: function(inTouch) {
+      var p = pointermap.addPointer(inTouch.pointerId, inTouch, null);
+      dispatcher.down(inTouch);
+      p.state = inTouch;
+      dispatcher.enter(inTouch);
     },
     touchmove: function(inEvent) {
       /*
@@ -58,29 +65,34 @@
        */
       inEvent.preventDefault();
       var es = this.splitEvents(inEvent);
-      for (var i = 0, e; e = es[i]; i++) {
-        //TODO (dfreedm) needs refactor for multiple overEvents
-        dispatcher.move(e);
-        if (this.overEvent && this.overEvent.target !== e.target) {
-          this.overEvent.relatedTarget = e.target;
-          e.relatedTarget = this.overEvent.target;
-          if (!isDescendant(this.overEvent.relatedTarget, this.overEvent.target)) {
-            dispatcher.leave(this.overEvent);
-          }
-          if (!isDescendant(e.relatedTarget, e.target)) {
-            dispatcher.enter(e);
-          }
+      es.forEach(this.moveEnterLeave, this);
+    },
+    moveEnterLeave: function(inTouch) {
+      var event = inTouch;
+      var pointer = pointermap.getPointerById(event.pointerId);
+      var overEvent = pointer.state;
+      dispatcher.move(event);
+      if (overEvent && overEvent.target !== event.target) {
+        overEvent.relatedTarget = event.target;
+        event.relatedTarget = overEvent.target;
+        if (!isDescendant(overEvent.relatedTarget, overEvent.target)) {
+          dispatcher.leave(overEvent);
         }
-        this.overEvent = e;
+        if (!isDescendant(event.relatedTarget, event.target)) {
+          dispatcher.enter(event);
+        }
       }
+      pointer.state = pointer.event = event;
     },
     touchend: function(inEvent) {
       var es = this.splitEvents(inEvent);
-      for (var i = 0, e; e = es[i]; i++) {
-        dispatcher.up(e);
-        dispatcher.leave(e);
-      }
-    }
+      es.forEach(this.upLeave, this);
+    },
+    upLeave: function(inTouch) {
+      dispatcher.up(inTouch);
+      dispatcher.leave(inTouch);
+      pointermap.removePointer(inTouch.pointerId);
+    },
   };
 
   // handler block for native mouse events
