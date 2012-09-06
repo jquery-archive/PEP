@@ -19,6 +19,7 @@
  */
 (function(scope) {
   var clone = scope.clone;
+  var pointermap = scope.pointermap;
   var dispatcher = {
     /*
      * Hooks are event handlers that use pointer events and create different pointer events.
@@ -130,6 +131,7 @@
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
       e.srcEvent = inEvent.srcEvent || inEvent;
+      e.pointerId = inEvent.pointerId || -1;
       return e;
     },
     fireEvent: function(inEvent, inType) {
