@@ -22,11 +22,12 @@
     addPointer: function(inId, inSrcEvent, inState) {
       var p = {id: inId, event: inSrcEvent, state: inState};
       this.pointers.push(p);
+      return p;
     },
     removePointer: function(inId) {
       var i = this.getPointerIndex(inId);
       if (i > -1) {
-        this.pointers.splice(i, 1);
+        return this.pointers.splice(i, 1);
       }
     },
     getPointerById: function(inId) {
