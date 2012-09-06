@@ -53,7 +53,7 @@
     downEnter: function(inTouch) {
       var p = pointermap.addPointer(inTouch.pointerId, inTouch, null);
       dispatcher.down(inTouch);
-      p.state = inTouch;
+      p.over = inTouch;
       dispatcher.enter(inTouch);
     },
     touchmove: function(inEvent) {
@@ -69,7 +69,8 @@
     moveEnterLeave: function(inTouch) {
       var event = inTouch;
       var pointer = pointermap.getPointerById(event.pointerId);
-      var overEvent = pointer.state;
+      var overEvent = pointer.over;
+      pointer.event = event;
       dispatcher.move(event);
       if (overEvent && overEvent.target !== event.target) {
         overEvent.relatedTarget = event.target;
@@ -81,7 +82,7 @@
           dispatcher.enter(event);
         }
       }
-      pointer.state = pointer.event = event;
+      pointer.over = event;
     },
     touchend: function(inEvent) {
       var es = this.splitEvents(inEvent);
@@ -120,8 +121,8 @@
       dispatcher.move(inEvent);
     },
     mouseup: function(inEvent) {
-      pointermap.removePointer(this.POINTER_ID);
       dispatcher.up(inEvent);
+      pointermap.removePointer(this.POINTER_ID);
     },
     mouseover: function(inEvent) {
       if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
