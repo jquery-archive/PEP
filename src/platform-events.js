@@ -98,6 +98,12 @@
   // handler block for native mouse events
   var mouseEvents = {
     POINTER_ID: -1,
+    /*
+     * Mouse can only count as one pointer ever, so we keep track of the number of
+     * mouse buttons held down to keep number of pointerdown / pointerup events
+     * correct
+     */
+    buttons: 0,
     events: [
       'click',
       'mousedown',
@@ -110,8 +116,11 @@
       dispatcher.tap(inEvent);
     },
     mousedown: function(inEvent) {
-      pointermap.addPointer(this.POINTER_ID, inEvent, null);
-      dispatcher.down(inEvent);
+      if (this.buttons == 0) {
+        pointermap.addPointer(this.POINTER_ID, inEvent);
+        dispatcher.down(inEvent);
+      }
+      this.buttons++;
     },
     mousemove: function(inEvent) {
       var p = pointermap.getPointerById(this.POINTER_ID);
@@ -121,8 +130,11 @@
       dispatcher.move(inEvent);
     },
     mouseup: function(inEvent) {
-      dispatcher.up(inEvent);
-      pointermap.removePointer(this.POINTER_ID);
+      this.buttons--;
+      if (this.buttons == 0) {
+        dispatcher.up(inEvent);
+        pointermap.removePointer(this.POINTER_ID);
+      }
     },
     mouseover: function(inEvent) {
       if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
