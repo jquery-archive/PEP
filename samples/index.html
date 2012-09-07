@@ -76,6 +76,19 @@
       enleav.addEventListener('pointerleave', function(e) {
         console.log('enterleave left');
       });
+      // log for testing pointer tracking
+      document.addEventListener('pointerdown', function(e) {
+        var pl = e.getPointerList();
+        console.log("Down -- Pointers on screen:", pl.length);
+      });
+      document.addEventListener('pointerup', function(e) {
+        var pl = e.getPointerList();
+        console.log("Up -- Pointers on screen:", pl.length);
+      });
+      document.addEventListener('pointermove', function(e) {
+        var pl = e.getPointerList();
+        console.log("Move -- Pointers on screen:", pl.length);
+      });
     </script>
   </body>
 </html>
