@@ -63,31 +63,21 @@
       var target = document.getElementById('capture');
       var output = document.getElementById('output');
       var enleav = document.getElementById('enterleave');
+      var appendOutput = function(inString) {
+        var it = output.innerText;
+        output.innerText = inString + '\n' + it;
+      };
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
-          var it = output.innerText;
-          output.innerText = inEvent.type + '\n' + it;
-          console.log(inEvent.type);
+          var pl = inEvent.getPointerList().map(function(p) { return p.id });
+          appendOutput(inEvent.type + ' [' + pl + ']');
         });
       });
       enleav.addEventListener('pointerenter', function(e) {
-        console.log('enterleave entered');
+        appendOutput('enterleave entered');
       });
       enleav.addEventListener('pointerleave', function(e) {
-        console.log('enterleave left');
-      });
-      // log for testing pointer tracking
-      document.addEventListener('pointerdown', function(e) {
-        var pl = e.getPointerList();
-        console.log("Down -- Pointers on screen:", pl.length);
-      });
-      document.addEventListener('pointerup', function(e) {
-        var pl = e.getPointerList();
-        console.log("Up -- Pointers on screen:", pl.length);
-      });
-      document.addEventListener('pointermove', function(e) {
-        var pl = e.getPointerList();
-        console.log("Move -- Pointers on screen:", pl.length);
+        appendOutput('enterleave left');
       });
     </script>
   </body>
