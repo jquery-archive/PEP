@@ -45,6 +45,7 @@
       }
       return -1;
     },
+    // TODO(dfreedm) should this return a clone of pointer list?
     getPointerList: function() {
       return this.pointers;
     }
