@@ -11,6 +11,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  var pointermap = scope.pointermap;
   // returns true if a === b or a is inside b
   var isDescendant = function(inA, inB) {
     var a = inA;
@@ -29,26 +30,35 @@
       'touchmove',
       'touchend'
     ],
-    //TODO(dfreedm) make this actually split touch event into individuals
     splitEvents: function(inEvent) {
-      var e = dispatcher.cloneEvent(inEvent.changedTouches[0]);
-      e.target = this.findTarget(e);
-      return [e];
+      var es = Array.prototype.map.call(inEvent.changedTouches, function(inTouch) {
+        var e = dispatcher.cloneEvent(inTouch);
+        e.pointerId = inTouch.identifier;
+        e.target = this.findTarget(e);
+        e.bubbles = true;
+        e.cancelable = true;
+        e.which = 1;
+        e.button = 0;
+        return e;
+      }, this);
+      return es;
     },
     findTarget: function(inEvent) {
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
+    // TODO(dfreedm) should click even be here, or watch up/down pairs for tap?
     click: function(inEvent) {
       dispatcher.tap(inEvent);
     },
     touchstart: function(inEvent) {
       var es = this.splitEvents(inEvent);
-      for (var i = 0, e; e = es[i]; i++) {
-        dispatcher.down(e);
-        //TODO (dfreedm) set up a registry for overEvents?
-        this.overEvent = e;
-        dispatcher.enter(e);
-      }
+      es.forEach(this.downEnter, this);
+    },
+    downEnter: function(inTouch) {
+      var p = pointermap.addPointer(inTouch.pointerId, inTouch, null);
+      dispatcher.down(inTouch);
+      p.over = inTouch;
+      dispatcher.enter(inTouch);
     },
     touchmove: function(inEvent) {
       /*
@@ -58,33 +68,46 @@
        */
       inEvent.preventDefault();
       var es = this.splitEvents(inEvent);
-      for (var i = 0, e; e = es[i]; i++) {
-        //TODO (dfreedm) needs refactor for multiple overEvents
-        dispatcher.move(e);
-        if (this.overEvent && this.overEvent.target !== e.target) {
-          this.overEvent.relatedTarget = e.target;
-          e.relatedTarget = this.overEvent.target;
-          if (!isDescendant(this.overEvent.relatedTarget, this.overEvent.target)) {
-            dispatcher.leave(this.overEvent);
-          }
-          if (!isDescendant(e.relatedTarget, e.target)) {
-            dispatcher.enter(e);
-          }
+      es.forEach(this.moveEnterLeave, this);
+    },
+    moveEnterLeave: function(inTouch) {
+      var event = inTouch;
+      var pointer = pointermap.getPointerById(event.pointerId);
+      var overEvent = pointer.over;
+      pointer.event = event;
+      dispatcher.move(event);
+      if (overEvent && overEvent.target !== event.target) {
+        overEvent.relatedTarget = event.target;
+        event.relatedTarget = overEvent.target;
+        if (!isDescendant(overEvent.relatedTarget, overEvent.target)) {
+          dispatcher.leave(overEvent);
         }
-        this.overEvent = e;
+        if (!isDescendant(event.relatedTarget, event.target)) {
+          dispatcher.enter(event);
+        }
       }
+      pointer.over = event;
     },
     touchend: function(inEvent) {
       var es = this.splitEvents(inEvent);
-      for (var i = 0, e; e = es[i]; i++) {
-        dispatcher.up(e);
-        dispatcher.leave(e);
-      }
-    }
+      es.forEach(this.upLeave, this);
+    },
+    upLeave: function(inTouch) {
+      dispatcher.up(inTouch);
+      dispatcher.leave(inTouch);
+      pointermap.removePointer(inTouch.pointerId);
+    },
   };
 
   // handler block for native mouse events
   var mouseEvents = {
+    POINTER_ID: -1,
+    /*
+     * Mouse can only count as one pointer ever, so we keep track of the number of
+     * mouse buttons held down to keep number of pointerdown / pointerup events
+     * correct
+     */
+    buttons: 0,
     events: [
       'click',
       'mousedown',
@@ -97,13 +120,25 @@
       dispatcher.tap(inEvent);
     },
     mousedown: function(inEvent) {
-      dispatcher.down(inEvent);
+      if (this.buttons == 0) {
+        pointermap.addPointer(this.POINTER_ID, inEvent);
+        dispatcher.down(inEvent);
+      }
+      this.buttons++;
     },
     mousemove: function(inEvent) {
+      var p = pointermap.getPointerById(this.POINTER_ID);
+      if (p) {
+        p.event = inEvent;
+      }
       dispatcher.move(inEvent);
     },
     mouseup: function(inEvent) {
-      dispatcher.up(inEvent);
+      this.buttons--;
+      if (this.buttons == 0) {
+        dispatcher.up(inEvent);
+        pointermap.removePointer(this.POINTER_ID);
+      }
     },
     mouseover: function(inEvent) {
       if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
