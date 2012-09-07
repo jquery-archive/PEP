@@ -71,7 +71,7 @@
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
           var pl = inEvent.getPointerList().map(function(p) { return p.id });
-          appendOutput(inEvent.type + ' [' + pl + ']');
+          appendOutput(inEvent.type + ' [' + pl.join(', ') + ']');
         });
       });
       enleav.addEventListener('pointerenter', function(e) {
