@@ -35,6 +35,10 @@
         var e = dispatcher.cloneEvent(inTouch);
         e.pointerId = inTouch.identifier;
         e.target = this.findTarget(e);
+        e.bubbles = true;
+        e.cancelable = true;
+        e.which = 1;
+        e.button = 0;
         return e;
       }, this);
       return es;
