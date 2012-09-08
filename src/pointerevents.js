@@ -19,6 +19,7 @@
   };
   [
     'initialize.js',
+    'pointermap.js',
     'dispatcher.js',
     'platform-events.js',
     'flick.js',

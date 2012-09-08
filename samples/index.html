@@ -63,18 +63,21 @@
       var target = document.getElementById('capture');
       var output = document.getElementById('output');
       var enleav = document.getElementById('enterleave');
+      var appendOutput = function(inString) {
+        var it = output.innerText;
+        output.innerText = inString + '\n' + it;
+      };
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
-          var it = output.innerText;
-          output.innerText = inEvent.type + '\n' + it;
-          console.log(inEvent.type);
+          var pl = inEvent.getPointerList().map(function(p) { return p.id });
+          appendOutput(inEvent.type + ' [' + pl.join(', ') + ']');
         });
       });
       enleav.addEventListener('pointerenter', function(e) {
-        console.log('enterleave entered');
+        appendOutput('enterleave entered');
       });
       enleav.addEventListener('pointerleave', function(e) {
-        console.log('enterleave left');
+        appendOutput('enterleave left');
       });
     </script>
   </body>
