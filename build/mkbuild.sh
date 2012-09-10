@@ -8,4 +8,4 @@ FILES=(
   '../src/finalize.js'
 )
 
-cat ${FILES[@]} | uglifyjs -o pointerevents.js
+cat ${FILES[@]} | ../third_party/uglifyjs/bin/uglifyjs -o pointerevents.js
