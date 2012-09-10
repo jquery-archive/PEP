@@ -23,9 +23,7 @@
     return inBasePath.slice(0, ls) + inRelPath;
   };
   var require = function(inSrc) {
-    var s = document.createElement('script');
-    s.setAttribute('src', libLocation + inSrc);
-    document.body.appendChild(s);
+    document.write('<script src="' + libLocation + inSrc + '"></script>');
   };
   var s$ = document.querySelectorAll('script[src]');
   Array.prototype.forEach.call(s$, function(s) {
