@@ -123,8 +123,16 @@
        * The only way to propagate the correct state of MouseEvent.which and
        * MouseEvent.button to a new MouseEvent.button == 0 and MouseEvent.which == 0
        * is to call initMouseEvent with a buttonArg value of -1.
+       *
+       * For user agents implementing DOM Level 3 events, Event.buttons has to
+       * be used instead, which is a bitmap of depressed buttons.
        */
-      var b = inEvent.which ? inEvent.button : -1;
+      var b;
+      if (typeof inEvent.buttons !== 'undefined') {
+        b = inEvent.buttons ? inEvent.button : -1;
+      } else {
+        b = inEvent.which ? inEvent.button : -1;
+      }
       var e = document.createEvent('MouseEvent');
       e.initMouseEvent(inType, inEvent.bubbles, inEvent.cancelable,
                        inEvent.view, inEvent.detail, inEvent.screenX,

@@ -120,6 +120,10 @@
       dispatcher.tap(inEvent);
     },
     mousedown: function(inEvent) {
+      // Right mouse button does not fire up events in some user agents
+      if (inEvent.button == 2) {
+        return;
+      }
       if (this.buttons == 0) {
         pointermap.addPointer(this.POINTER_ID, inEvent);
         dispatcher.down(inEvent);
