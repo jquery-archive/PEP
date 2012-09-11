@@ -22,7 +22,5 @@
     'pointermap.js',
     'dispatcher.js',
     'platform-events.js',
-    'flick.js',
-    'finalize.js'
   ].forEach(require);
 })();
