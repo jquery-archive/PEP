@@ -5,18 +5,18 @@
  */
 (function() {
   var thisFile = 'pointerevents.js';
-  var source = '', base = '';
+  var libLocation = '';
+  var require = function(inSrc) {
+    document.write('<script src="' + libLocation + inSrc + '"></script>');
+  };
   var s$ = document.querySelectorAll('script[src]');
-  Array.prototype.forEach.call(s$, function(s) {
+  Array.prototype.some.call(s$, function(s) {
     var src = s.getAttribute('src');
     if (src.slice(-thisFile.length) == thisFile) {
-      source = s;
-      base = src.slice(0, -thisFile.length);
+      libLocation = src.slice(0, -thisFile.length);
+      return true;
     }
   });
-  var require = function(inSrc) {
-    document.write('<script src="' + base + inSrc + '"></script>');
-  };
   [
     'initialize.js',
     'pointermap.js',
