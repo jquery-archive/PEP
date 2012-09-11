@@ -172,4 +172,4 @@
   };
   scope.dispatcher = dispatcher;
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
-})(window.PointerEventShim);
+})(window.__PointerEventShim__);

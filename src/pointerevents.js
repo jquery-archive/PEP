@@ -10,13 +10,13 @@
     document.write('<script src="' + libLocation + inSrc + '"></script>');
   };
   var s$ = document.querySelectorAll('script[src]');
-  Array.prototype.some.call(s$, function(s) {
+  for (var i = 0, l = s$.length, s; (i < l) && (s = s$[i]); i++) {
     var src = s.getAttribute('src');
     if (src.slice(-thisFile.length) == thisFile) {
       libLocation = src.slice(0, -thisFile.length);
-      return true;
+      break;
     }
-  });
+  }
   [
     'initialize.js',
     'pointermap.js',

@@ -181,4 +181,4 @@
   } else {
     dispatcher.registerSource('mouse', mouseEvents, mouseEvents.events);
   }
-})(window.PointerEventShim);
+})(window.__PointerEventShim__);
