@@ -9,10 +9,10 @@ FILES=(
 
 if [[ ! -x $UGLIFY ]]; then
 cat <<EOF
-Please run git submodule update --init from the top level of the repository to
+Please run 'git submodule update --init' from the top level of the repository to
 check out uglifyjs for the build process
 EOF
-exit
+exit 1
 fi
 
 cat ${FILES[@]} | ${UGLIFY} -o pointerevents.js
