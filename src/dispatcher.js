@@ -22,18 +22,6 @@
   var pointermap = scope.pointermap;
   var getPointerList = pointermap.getPointerList.bind(pointermap);
   var dispatcher = {
-    /*
-     * Hooks are event handlers that use pointer events and create different pointer events.
-     * Hooks are called before the base pointer events are dispatched, and have
-     * the ability to cancel the dispatch by returning true.
-     *
-     * Hooks are how rich gesture events are created: by listening to normalized
-     * pointer events, gesture code can be much simpler.
-     *
-     * Users can add custom hooks with `registerHook` to create new pointer events.
-     */
-    hooks: [],
-    // native platform events being listened for
     events: {},
     /*
      * Scope objects for native events.
@@ -49,10 +37,6 @@
       }, this);
       this.listen(inEvents);
       this.eventSources[inName] = inScope;
-    },
-    // add a new event module that needs pointer events
-    registerHook: function(inName, inScope, inEvents) {
-      this.hooks.push({scope: inScope, events: inEvents, name: inName});
     },
     // EVENTS
     down: function(inEvent) {
@@ -158,15 +142,6 @@
     // dispatch events
     dispatchEvent: function(inEvent) {
       var et = inEvent.type;
-      for (var i = 0, h, fn; (h = this.hooks[i]); i++) {
-        if (h.events.indexOf(et) > -1) {
-          fn = h.scope[et];
-          // if a hook for this event returns true, do not dispatch
-          if (fn && fn.call(h.scope, inEvent) === true) {
-            return;
-          }
-        }
-      }
       return this.findTarget(inEvent.srcEvent).dispatchEvent(inEvent);
     }
   };
