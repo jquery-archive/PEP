@@ -22,21 +22,30 @@
   var pointermap = scope.pointermap;
   var getPointerList = pointermap.getPointerList.bind(pointermap);
   var dispatcher = {
-    events: {},
+    events: [],
+    eventMap: {},
     /*
      * Scope objects for native events.
      * This exists for ease of testing.
      */
     eventSources: {},
-    // add a new event source and listen for those events
-    registerSource: function(inName, inScope, inEvents) {
-      inEvents.forEach(function(e) {
+    // add a new event source
+    registerSource: function(inName, inScope) {
+      this.events = inScope.events;
+      this.events.forEach(function(e) {
         if (inScope[e]) {
-          this.events[e] = inScope[e].bind(inScope);
+          this.eventMap[e] = inScope[e].bind(inScope);
         }
       }, this);
-      this.listen(inEvents);
       this.eventSources[inName] = inScope;
+    },
+    // add event listeners for inTarget
+    registerTarget: function(inTarget) {
+      this.listen(this.events, inTarget);
+    },
+    // remove event listeners for inTarget
+    unregisterTarget: function(inTarget) {
+      this.unlisten(this.events, inTarget);
     },
     // EVENTS
     down: function(inEvent) {
@@ -61,29 +70,35 @@
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
+      if (inEvent.__pointerHandled__) {
+        return;
+      }
       var type = inEvent.type;
-      var fn = this.events && this.events[type];
+      var fn = this.eventMap && this.eventMap[type];
       if (fn) {
         fn(inEvent);
       }
+      inEvent.__pointerHandled__ = true;
     },
     // set up event listeners
-    listen: function(inEvents) {
+    listen: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
-        this.addEvent(e, this.boundHandler);
+        this.addEvent(e, this.boundHandler, false, inTarget);
       }, this);
     },
     // remove event listeners
     unlisten: function(inEvents) {
       inEvents.forEach(function(e) {
-        this.removeEvent(e, this.boundHandler);
+        this.removeEvent(e, this.boundHandler, false, inTarget);
       }, this);
     },
-    addEvent: function(inEventName, inEventHandler, inCapture) {
-      document.addEventListener(inEventName, inEventHandler, inCapture);
+    addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
+      var t = inTarget || document;
+      t.addEventListener(inEventName, inEventHandler, inCapture);
     },
-    removeEvent: function(inEventName, inEventHandler, inCapture) {
-      document.removeEventListener(inEventName, inEventHandler, inCapture);
+    removeEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
+      var t = inTarget || document;
+      t.removeEventListener(inEventName, inEventHandler, inCapture);
     },
     // EVENT CREATION AND TRACKING
     makeEvent: function(inEvent, inType) {
@@ -124,7 +139,7 @@
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
       // TODO(dfreedm) do these properties need to be readonly?
-      e.srcEvent = inEvent.srcEvent || inEvent;
+      e.__srcTarget__ = inEvent.__srcTarget__ || inEvent.target;
       e.pointerId = inEvent.pointerId || -1;
       e.getPointerList = getPointerList;
       return e;
@@ -136,13 +151,9 @@
     cloneEvent: function(inEvent) {
       return clone({}, inEvent);
     },
-    findTarget: function(inEvent) {
-      return inEvent.target;
-    },
     // dispatch events
     dispatchEvent: function(inEvent) {
-      var et = inEvent.type;
-      return this.findTarget(inEvent.srcEvent).dispatchEvent(inEvent);
+      return inEvent.__srcTarget__.dispatchEvent(inEvent);
     }
   };
   scope.dispatcher = dispatcher;

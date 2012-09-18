@@ -177,8 +177,9 @@
    */
 
   if ('ontouchstart' in window) {
-    dispatcher.registerSource('touch', touchEvents, touchEvents.events);
+    dispatcher.registerSource('touch', touchEvents);
   } else {
-    dispatcher.registerSource('mouse', mouseEvents, mouseEvents.events);
+    dispatcher.registerSource('mouse', mouseEvents);
   }
+  dispatcher.registerTarget(document);
 })(window.__PointerEventShim__);
