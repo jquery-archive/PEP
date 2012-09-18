@@ -6,17 +6,17 @@
 (function() {
   var thisFile = 'pointerevents.js';
   var libLocation = '';
+
   var require = function(inSrc) {
     document.write('<script src="' + libLocation + inSrc + '"></script>');
   };
-  var s$ = document.querySelectorAll('script[src]');
-  for (var i = 0, l = s$.length, s; (i < l) && (s = s$[i]); i++) {
+
+  var s = document.querySelector('script[src $= "' + thisFile + '"]');
+  if (s) {
     var src = s.getAttribute('src');
-    if (src.slice(-thisFile.length) == thisFile) {
-      libLocation = src.slice(0, -thisFile.length);
-      break;
-    }
+    libLocation = src.slice(0, -thisFile.length);
   }
+
   [
     'initialize.js',
     'pointermap.js',
