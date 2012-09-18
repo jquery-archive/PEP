@@ -17,7 +17,7 @@ semantics are changed.
 - Click events are not fired if the content of the page changes in a mousemove
   or mouseover event.
 - Click events are fired 300ms after the touch sequence ends.
-- More information: [Apple Developer Documentation](http://developer.apple.com/library/safari/#documentation/appleapplications/reference/safariwebcontent/HandlingEvents/HandlingEvents.htmls).
+- More information: [Apple Developer Documentation](http://developer.apple.com/library/safari/#documentation/appleapplications/reference/safariwebcontent/HandlingEvents/HandlingEvents.html).
 
 Additionally, Touch events are sent only to the element that received the
 touchstart. This is fundamentally different than mouse events, which fire on the
