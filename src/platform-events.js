@@ -173,7 +173,7 @@
    * The only way to disable mouse event emulation by native touch systems is to
    * preventDefault every touch event, which we feel is inelegant.
    *
-   * Therefore we choose to only listen to native touche events if they exist.
+   * Therefore we choose to only listen to native touch events if they exist.
    */
 
   if ('ontouchstart' in window) {
