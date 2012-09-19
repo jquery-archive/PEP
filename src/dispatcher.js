@@ -156,6 +156,20 @@
       return inEvent.__srcTarget__.dispatchEvent(inEvent);
     }
   };
-  scope.dispatcher = dispatcher;
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
+  scope.dispatcher = dispatcher;
+  /*
+   * convenience function for users to register targets that may be out of the
+   * scope of document
+   */
+  scope.register = function(inTarget) {
+    dispatcher.registerTarget(inTarget);
+  };
+  /*
+   * convenience function for users to unregister targets that may be out of the
+   * scope of document
+   */
+  scope.unregister = function(inTarget) {
+    dispatcher.unregisterTarget(inTarget);
+  };
 })(window.__PointerEventShim__);
