@@ -6,23 +6,21 @@
 (function() {
   var thisFile = 'pointerevents.js';
   var libLocation = '';
+
   var require = function(inSrc) {
     document.write('<script src="' + libLocation + inSrc + '"></script>');
   };
-  var s$ = document.querySelectorAll('script[src]');
-  Array.prototype.some.call(s$, function(s) {
+
+  var s = document.querySelector('script[src $= "' + thisFile + '"]');
+  if (s) {
     var src = s.getAttribute('src');
-    if (src.slice(-thisFile.length) == thisFile) {
-      libLocation = src.slice(0, -thisFile.length);
-      return true;
-    }
-  });
+    libLocation = src.slice(0, -thisFile.length);
+  }
+
   [
     'initialize.js',
     'pointermap.js',
     'dispatcher.js',
     'platform-events.js',
-    'flick.js',
-    'finalize.js'
   ].forEach(require);
 })();

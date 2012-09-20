@@ -22,37 +22,30 @@
   var pointermap = scope.pointermap;
   var getPointerList = pointermap.getPointerList.bind(pointermap);
   var dispatcher = {
-    /*
-     * Hooks are event handlers that use pointer events and create different pointer events.
-     * Hooks are called before the base pointer events are dispatched, and have
-     * the ability to cancel the dispatch by returning true.
-     *
-     * Hooks are how rich gesture events are created: by listening to normalized
-     * pointer events, gesture code can be much simpler.
-     *
-     * Users can add custom hooks with `registerHook` to create new pointer events.
-     */
-    hooks: [],
-    // native platform events being listened for
-    events: {},
+    events: [],
+    eventMap: {},
     /*
      * Scope objects for native events.
      * This exists for ease of testing.
      */
     eventSources: {},
-    // add a new event source and listen for those events
-    registerSource: function(inName, inScope, inEvents) {
-      inEvents.forEach(function(e) {
+    // add a new event source
+    registerSource: function(inName, inScope) {
+      this.events = inScope.events;
+      this.events.forEach(function(e) {
         if (inScope[e]) {
-          this.events[e] = inScope[e].bind(inScope);
+          this.eventMap[e] = inScope[e].bind(inScope);
         }
       }, this);
-      this.listen(inEvents);
       this.eventSources[inName] = inScope;
     },
-    // add a new event module that needs pointer events
-    registerHook: function(inName, inScope, inEvents) {
-      this.hooks.push({scope: inScope, events: inEvents, name: inName});
+    // add event listeners for inTarget
+    registerTarget: function(inTarget) {
+      this.listen(this.events, inTarget);
+    },
+    // remove event listeners for inTarget
+    unregisterTarget: function(inTarget) {
+      this.unlisten(this.events, inTarget);
     },
     // EVENTS
     down: function(inEvent) {
@@ -77,29 +70,39 @@
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
+      /*
+       * __pointerHandled__ is used to prevent multiple dispatch of
+       * pointerevents from platform events. This can happen when two elements
+       * in different scopes are set up to create pointer events, which is
+       * relevant to Shadow DOM.
+       */
+      if (inEvent.__pointerHandled__) {
+        return;
+      }
       var type = inEvent.type;
-      var fn = this.events && this.events[type];
+      var fn = this.eventMap && this.eventMap[type];
       if (fn) {
         fn(inEvent);
       }
+      inEvent.__pointerHandled__ = true;
     },
     // set up event listeners
-    listen: function(inEvents) {
+    listen: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
-        this.addEvent(e, this.boundHandler);
+        this.addEvent(e, this.boundHandler, false, inTarget);
       }, this);
     },
     // remove event listeners
     unlisten: function(inEvents) {
       inEvents.forEach(function(e) {
-        this.removeEvent(e, this.boundHandler);
+        this.removeEvent(e, this.boundHandler, false, inTarget);
       }, this);
     },
-    addEvent: function(inEventName, inEventHandler, inCapture) {
-      document.addEventListener(inEventName, inEventHandler, inCapture);
+    addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
+      inTarget.addEventListener(inEventName, inEventHandler, inCapture);
     },
-    removeEvent: function(inEventName, inEventHandler, inCapture) {
-      document.removeEventListener(inEventName, inEventHandler, inCapture);
+    removeEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
+      inTarget.removeEventListener(inEventName, inEventHandler, inCapture);
     },
     // EVENT CREATION AND TRACKING
     makeEvent: function(inEvent, inType) {
@@ -140,7 +143,7 @@
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
       // TODO(dfreedm) do these properties need to be readonly?
-      e.srcEvent = inEvent.srcEvent || inEvent;
+      e.__srcTarget__ = inEvent.__srcTarget__ || inEvent.target;
       e.pointerId = inEvent.pointerId || -1;
       e.getPointerList = getPointerList;
       return e;
@@ -152,24 +155,25 @@
     cloneEvent: function(inEvent) {
       return clone({}, inEvent);
     },
-    findTarget: function(inEvent) {
-      return inEvent.target;
-    },
     // dispatch events
     dispatchEvent: function(inEvent) {
-      var et = inEvent.type;
-      for (var i = 0, h, fn; (h = this.hooks[i]); i++) {
-        if (h.events.indexOf(et) > -1) {
-          fn = h.scope[et];
-          // if a hook for this event returns true, do not dispatch
-          if (fn && fn.call(h.scope, inEvent) === true) {
-            return;
-          }
-        }
-      }
-      return this.findTarget(inEvent.srcEvent).dispatchEvent(inEvent);
+      return inEvent.__srcTarget__.dispatchEvent(inEvent);
     }
   };
-  scope.dispatcher = dispatcher;
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
-})(window.PointerEventShim);
+  scope.dispatcher = dispatcher;
+  /*
+   * convenience function for users to register targets that may be out of the
+   * scope of document
+   */
+  scope.register = function(inTarget) {
+    dispatcher.registerTarget(inTarget);
+  };
+  /*
+   * convenience function for users to unregister targets that may be out of the
+   * scope of document
+   */
+  scope.unregister = function(inTarget) {
+    dispatcher.unregisterTarget(inTarget);
+  };
+})(window.__PointerEventShim__);

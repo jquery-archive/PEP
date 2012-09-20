@@ -51,4 +51,4 @@
     }
   };
   scope.pointermap = pointermap;
-})(window.PointerEventShim);
+})(window.__PointerEventShim__);
