@@ -4,18 +4,23 @@
  * license that can be found in the LICENSE file.
  */
 (function(scope) {
+  var toArray = function(inArgs, inStart) {
+    return Array.prototype.slice.call(inArgs, inStart || 0);
+  };
   // Function bind is required, iOS is missing it :(
   if (!Function.prototype.bind) {
-    Function.prototype.bind = function(scope) {
+    Function.prototype.bind = function(scope/*, ...arguments*/) {
       var _this = this;
+      var args = toArray(arguments, 1);
       return function() {
-        return _this.apply(scope, arguments);
+        var newArgs = toArray(arguments, 0);
+        return _this.apply(scope, args.concat(newArgs));
       }
-    }
+    };
   }
   scope = scope || {};
   scope.clone = function(inSink, inSource) {
-    var p$ = [].slice.call(arguments, 1);
+    var p$ = toArray(arguments, 1);
     for (var i=0, p; p=p$[i]; i++) {
       if (p) {
         for (var n in p) {
@@ -25,5 +30,5 @@
     }
     return inSink;
   };
-  window.PointerEventShim = scope;
-})(window.PointerEventShim);
+  window.__PointerEventShim__ = scope;
+})(window.__PointerEventShim__);

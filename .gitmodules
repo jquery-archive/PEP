@@ -1,3 +1,6 @@
 [submodule "third_party/uglifyjs"]
 	path = third_party/uglifyjs
 	url = https://github.com/mishoo/UglifyJS.git
+[submodule "third_party/mocha"]
+	path = third_party/mocha
+	url = https://github.com/visionmedia/mocha.git
