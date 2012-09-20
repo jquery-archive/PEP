@@ -70,6 +70,12 @@
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
+      /*
+       * __pointerHandled__ is used to prevent multiple dispatch of
+       * pointerevents from platform events. This can happen when two elements
+       * in different scopes are set up to create pointer events, which is
+       * relevant to Shadow DOM.
+       */
       if (inEvent.__pointerHandled__) {
         return;
       }
@@ -93,12 +99,10 @@
       }, this);
     },
     addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
-      var t = inTarget || document;
-      t.addEventListener(inEventName, inEventHandler, inCapture);
+      inTarget.addEventListener(inEventName, inEventHandler, inCapture);
     },
     removeEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
-      var t = inTarget || document;
-      t.removeEventListener(inEventName, inEventHandler, inCapture);
+      inTarget.removeEventListener(inEventName, inEventHandler, inCapture);
     },
     // EVENT CREATION AND TRACKING
     makeEvent: function(inEvent, inType) {
