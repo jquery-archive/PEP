@@ -22,6 +22,8 @@
   var pointermap = scope.pointermap;
   var getPointerList = pointermap.getPointerList.bind(pointermap);
   var dispatcher = {
+    targets: new SideTable('target'),
+    handledEvents: new SideTable('pointer'),
     events: [],
     eventMap: {},
     /*
@@ -76,7 +78,7 @@
        * in different scopes are set up to create pointer events, which is
        * relevant to Shadow DOM.
        */
-      if (inEvent.__pointerHandled__) {
+      if (this.handledEvents.get(inEvent)) {
         return;
       }
       var type = inEvent.type;
@@ -84,7 +86,7 @@
       if (fn) {
         fn(inEvent);
       }
-      inEvent.__pointerHandled__ = true;
+      this.handledEvents.set(inEvent, true);
     },
     // set up event listeners
     listen: function(inEvents, inTarget) {
@@ -143,7 +145,7 @@
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
       // TODO(dfreedm) do these properties need to be readonly?
-      e.__srcTarget__ = inEvent.__srcTarget__ || inEvent.target;
+      this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
       e.pointerId = inEvent.pointerId || -1;
       e.getPointerList = getPointerList;
       return e;
@@ -152,12 +154,18 @@
       var e = this.makeEvent(inEvent, inType);
       return this.dispatchEvent(e);
     },
+    // returns a snapshot of inEvent, so properties are malleable
     cloneEvent: function(inEvent) {
-      return clone({}, inEvent);
+      var eventCopy = {};
+      for (var n in inEvent) {
+        eventCopy[n] = inEvent[n];
+      }
+      return eventCopy;
     },
     // dispatch events
     dispatchEvent: function(inEvent) {
-      return inEvent.__srcTarget__.dispatchEvent(inEvent);
+      var t = this.targets.get(inEvent);
+      return t.dispatchEvent(inEvent);
     }
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
