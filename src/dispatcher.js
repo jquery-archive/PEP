@@ -4,7 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 
-/*
+/**
  * This module is for normalizing events. Mouse and Touch events will be
  * collected here, and fire Pointer events that have the same semantics, no
  * matter the source. We hope that eventually a system like this one will be
@@ -73,7 +73,7 @@
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
       /*
-       * __pointerHandled__ is used to prevent multiple dispatch of
+       * This is used to prevent multiple dispatch of
        * pointerevents from platform events. This can happen when two elements
        * in different scopes are set up to create pointer events, which is
        * relevant to Shadow DOM.
@@ -107,6 +107,14 @@
       inTarget.removeEventListener(inEventName, inEventHandler, inCapture);
     },
     // EVENT CREATION AND TRACKING
+    /**
+     * Creates a new Event of type `inType`, based on the information in
+     * `inEvent`.
+     *
+     * @param {Event} inEvent A platform event with a target
+     * @param {string} inType A string representing the type of event to create
+     * @return {Event} A Gesture event of type `inType`
+     */
     makeEvent: function(inEvent, inType) {
       /*
        * According to the w3c spec,
@@ -170,16 +178,20 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
-  /*
-   * convenience function for users to register targets that may be out of the
-   * scope of document
+  /**
+   * Convenience function for users to register targets that may be out of the
+   * scope of document.
+   *
+   * @param {Element} InTarget A scope that will create and route gesture events
    */
   scope.register = function(inTarget) {
     dispatcher.registerTarget(inTarget);
   };
-  /*
-   * convenience function for users to unregister targets that may be out of the
-   * scope of document
+  /**
+   * Convenience function for users to unregister targets that may be out of the
+   * scope of document.
+   *
+   * @param {Element} InTarget A scope created and routed gesture events
    */
   scope.unregister = function(inTarget) {
     dispatcher.unregisterTarget(inTarget);
