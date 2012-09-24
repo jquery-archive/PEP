@@ -4,7 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 
-/*
+/**
  * This module implements an ordered list of pointer states
  * Each pointer object here has two properties:
  *  - id: the id of the pointer
@@ -45,7 +45,7 @@
       }
       return -1;
     },
-    // TODO(dfreedm) should this return a clone of pointer list?
+    // TODO(dfreedman): should this return a clone of pointer list?
     getPointerList: function() {
       return this.pointers;
     }

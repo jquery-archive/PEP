@@ -116,32 +116,30 @@
      * @return {Event} A Gesture event of type `inType`
      */
     makeEvent: function(inEvent, inType) {
-      /*
-       * According to the w3c spec,
-       * http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-MouseEvent
-       * MouseEvent.button == 0 can mean either no mouse button depressed, or
-       * the left mouse button depressed.
-       *
-       * As of now, the only way to distinguish between the two states of
-       * MouseEvent.button is by using the deprecated MouseEvent.which property,
-       * as this maps mouse buttons to positive integers > 0, and uses 0 to mean
-       * that no mouse button is held.
-       *
-       * MouseEvent.which is derived from MouseEvent.button at MouseEvent
-       * creation, but initMouseEvent does not expose an argument with which to
-       * set MouseEvent.which. Calling initMouseEvent with a buttonArg of 0 will
-       * set MouseEvent.button == 0 and MouseEvent.which == 1, breaking the
-       * expectations of app developers.
-       *
-       * The only way to propagate the correct state of MouseEvent.which and
-       * MouseEvent.button to a new MouseEvent.button == 0 and MouseEvent.which == 0
-       * is to call initMouseEvent with a buttonArg value of -1.
-       *
-       * For user agents implementing DOM Level 3 events, Event.buttons has to
-       * be used instead, which is a bitmap of depressed buttons.
-       */
+      //According to the w3c spec,
+      //http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-MouseEvent
+      //MouseEvent.button == 0 can mean either no mouse button depressed, or
+      //the left mouse button depressed.
+      //
+      //As of now, the only way to distinguish between the two states of
+      //MouseEvent.button is by using the deprecated MouseEvent.which property,
+      //as this maps mouse buttons to positive integers > 0, and uses 0 to mean
+      //that no mouse button is held.
+      //
+      //MouseEvent.which is derived from MouseEvent.button at MouseEvent
+      //creation, but initMouseEvent does not expose an argument with which to
+      //set MouseEvent.which. Calling initMouseEvent with a buttonArg of 0 will
+      //set MouseEvent.button == 0 and MouseEvent.which == 1, breaking the
+      //expectations of app developers.
+      //
+      //The only way to propagate the correct state of MouseEvent.which and
+      //MouseEvent.button to a new MouseEvent.button == 0 and MouseEvent.which == 0
+      //is to call initMouseEvent with a buttonArg value of -1.
+      //
+      //For user agents implementing DOM Level 3 events, Event.buttons has to
+      //be used instead, which is a bitmap of depressed buttons.
       var b;
-      if (typeof inEvent.buttons !== 'undefined') {
+      if (inEvent.buttons === undefined) {
         b = inEvent.buttons ? inEvent.button : -1;
       } else {
         b = inEvent.which ? inEvent.button : -1;
@@ -152,7 +150,7 @@
                        inEvent.screenY, inEvent.clientX, inEvent.clientY,
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
-      // TODO(dfreedm) do these properties need to be readonly?
+      // TODO(dfreedman): do these properties need to be readonly?
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
       e.pointerId = inEvent.pointerId || -1;
       e.getPointerList = getPointerList;

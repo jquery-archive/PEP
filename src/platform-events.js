@@ -4,7 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 
-/*
+/**
  * This module contains the handlers for native platform events.
  * From here, the dispatcher is called to create unified pointer events.
  * Included are touch events (v1) and mouse events.
@@ -46,7 +46,7 @@
     findTarget: function(inEvent) {
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
-    // TODO(dfreedm) should click even be here, or watch up/down pairs for tap?
+    // TODO(dfreedman): should click even be here, or watch up/down pairs for tap?
     click: function(inEvent) {
       dispatcher.tap(inEvent);
     },
@@ -102,11 +102,9 @@
   // handler block for native mouse events
   var mouseEvents = {
     POINTER_ID: -1,
-    /*
-     * Mouse can only count as one pointer ever, so we keep track of the number of
-     * mouse buttons held down to keep number of pointerdown / pointerup events
-     * correct
-     */
+    // Mouse can only count as one pointer ever, so we keep track of the number of
+    // mouse buttons held down to keep number of pointerdown / pointerup events
+    // correct
     buttons: 0,
     events: [
       'click',
@@ -160,21 +158,19 @@
     }
   };
 
-  /*
-   * We fork the initialization of dispatcher event listeners here because
-   * current native touch event systems emulate mouse events. These
-   * touch-emulated mouse events behave differently than normal mouse events.
-   *
-   * Touch-emulated mouse events will only occur if the target element has
-   * either a native click handler, or the onclick attribute is set. In
-   * addition, the touch-emulated mouse events fire only after the finger has
-   * left the screen, negating any live-tracking ability a developer might want.
-   *
-   * The only way to disable mouse event emulation by native touch systems is to
-   * preventDefault every touch event, which we feel is inelegant.
-   *
-   * Therefore we choose to only listen to native touch events if they exist.
-   */
+  // We fork the initialization of dispatcher event listeners here because
+  // current native touch event systems emulate mouse events. These
+  // touch-emulated mouse events behave differently than normal mouse events.
+  //
+  // Touch-emulated mouse events will only occur if the target element has
+  // either a native click handler, or the onclick attribute is set. In
+  // addition, the touch-emulated mouse events fire only after the finger has
+  // left the screen, negating any live-tracking ability a developer might want.
+  //
+  // The only way to disable mouse event emulation by native touch systems is to
+  // preventDefault every touch event, which we feel is inelegant.
+  //
+  // Therefore we choose to only listen to native touch events if they exist.
 
   if ('ontouchstart' in window) {
     dispatcher.registerSource('touch', touchEvents);
