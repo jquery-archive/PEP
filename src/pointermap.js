@@ -44,10 +44,6 @@
         }
       }
       return -1;
-    },
-    // TODO(dfreedman): should this return a clone of pointer list?
-    getPointerList: function() {
-      return this.pointers;
     }
   };
   scope.pointermap = pointermap;

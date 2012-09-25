@@ -12,20 +12,9 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var pointermap = scope.pointermap;
-  // returns true if a === b or a is inside b
-  var isDescendant = function(inA, inB) {
-    var a = inA;
-    while(a) {
-      if (a === inB) {
-        return true;
-      }
-      a = a.parentNode;
-    }
-  };
   // handler block for native touch events
   var touchEvents = {
     events: [
-      'click',
       'touchstart',
       'touchmove',
       'touchend'
@@ -33,12 +22,15 @@
     splitEvents: function(inEvent) {
       var es = Array.prototype.map.call(inEvent.changedTouches, function(inTouch) {
         var e = dispatcher.cloneEvent(inTouch);
-        e.pointerId = inTouch.identifier;
+        // pointerId starts at 1 for mouse, touches can start at 0
+        // move up 2 for compatibility
+        e.pointerId = e.identifier + 2;
         e.target = this.findTarget(e);
         e.bubbles = true;
         e.cancelable = true;
         e.which = 1;
         e.button = 0;
+        e.isPrimary = Array.prototype.indexOf.call(inEvent.touches, inTouch) == 0;
         return e;
       }, this);
       return es;
@@ -46,26 +38,20 @@
     findTarget: function(inEvent) {
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
-    // TODO(dfreedman): should click even be here, or watch up/down pairs for tap?
-    click: function(inEvent) {
-      dispatcher.tap(inEvent);
-    },
     touchstart: function(inEvent) {
       var es = this.splitEvents(inEvent);
       es.forEach(this.downEnter, this);
     },
     downEnter: function(inTouch) {
-      var p = pointermap.addPointer(inTouch.pointerId, inTouch, null);
+      var p = pointermap.addPointer(inTouch.pointerId, inTouch);
       dispatcher.down(inTouch);
       p.over = inTouch;
-      dispatcher.enter(inTouch);
+      dispatcher.over(inTouch);
     },
     touchmove: function(inEvent) {
-      /*
-       * must preventDefault first touchmove or document will scroll otherwise
-       * Per Touch event spec section 5.6
-       * http://www.w3.org/TR/touch-events/#the-touchmove-event
-       */
+      // must preventDefault first touchmove or document will scroll otherwise
+      // Per Touch event spec section 5.6
+      // http://www.w3.org/TR/touch-events/#the-touchmove-event
       inEvent.preventDefault();
       var es = this.splitEvents(inEvent);
       es.forEach(this.moveEnterLeave, this);
@@ -79,12 +65,8 @@
       if (overEvent && overEvent.target !== event.target) {
         overEvent.relatedTarget = event.target;
         event.relatedTarget = overEvent.target;
-        if (!isDescendant(overEvent.relatedTarget, overEvent.target)) {
-          dispatcher.leave(overEvent);
-        }
-        if (!isDescendant(event.relatedTarget, event.target)) {
-          dispatcher.enter(event);
-        }
+        dispatcher.over(overEvent);
+        dispatcher.enter(event);
       }
       pointer.over = event;
     },
@@ -94,67 +76,62 @@
     },
     upLeave: function(inTouch) {
       dispatcher.up(inTouch);
-      dispatcher.leave(inTouch);
+      dispatcher.out(inTouch);
       pointermap.removePointer(inTouch.pointerId);
     },
   };
 
   // handler block for native mouse events
   var mouseEvents = {
-    POINTER_ID: -1,
+    POINTER_ID: 1,
     // Mouse can only count as one pointer ever, so we keep track of the number of
     // mouse buttons held down to keep number of pointerdown / pointerup events
     // correct
     buttons: 0,
     events: [
-      'click',
       'mousedown',
       'mousemove',
       'mouseup',
       'mouseover',
       'mouseout'
     ],
-    click: function(inEvent) {
-      dispatcher.tap(inEvent);
+    prepareEvent: function(inEvent) {
+      var e = dispatcher.cloneEvent(inEvent);
+      e.pointerId = this.POINTER_ID;
+      e.isPrimary = true;
+      return e;
     },
     mousedown: function(inEvent) {
-      // Right mouse button does not fire up events in some user agents
-      if (inEvent.button == 2) {
-        return;
-      }
       if (this.buttons == 0) {
-        pointermap.addPointer(this.POINTER_ID, inEvent);
-        dispatcher.down(inEvent);
+        var e = this.prepareEvent(inEvent);
+        pointermap.addPointer(this.POINTER_ID, e);
+        dispatcher.down(e);
       }
       this.buttons++;
     },
     mousemove: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
       var p = pointermap.getPointerById(this.POINTER_ID);
       if (p) {
-        p.event = inEvent;
+        p.event = e;
       }
-      dispatcher.move(inEvent);
+      dispatcher.move(e);
     },
     mouseup: function(inEvent) {
       this.buttons--;
       if (this.buttons == 0) {
-        dispatcher.up(inEvent);
+        var e = this.prepareEvent(inEvent);
+        dispatcher.up(e);
         pointermap.removePointer(this.POINTER_ID);
       }
     },
     mouseover: function(inEvent) {
-      if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
-        var e = dispatcher.cloneEvent(inEvent);
-        e.bubbles = false;
-        dispatcher.enter(e);
-      }
+      var e = this.prepareEvent(inEvent);
+      dispatcher.over(e);
     },
     mouseout: function(inEvent) {
-      if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
-        var e = dispatcher.cloneEvent(inEvent);
-        e.bubbles = false;
-        dispatcher.leave(e);
-      }
+      var e = this.prepareEvent(inEvent);
+      dispatcher.out(e);
     }
   };
 

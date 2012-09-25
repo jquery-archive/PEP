@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta charset="UTF-8">
     <title>PointerEventShim testing ground</title>
     <style>
       body, html {
@@ -49,13 +49,12 @@
     <script>
       var events = [
         // base events
+        'click',
         'pointerdown',
         'pointerup',
         'pointermove',
-        'pointertap',
-        'pointerenter',
-        'pointerleave',
-        'pointerflick'
+        'pointerover',
+        'pointerout'
       ];
       function find(/*...inEls*/) {
         [].forEach.call(arguments, function(e) {
@@ -69,14 +68,13 @@
       find('capture', 'output', 'enterleave');
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
-          var pl = inEvent.getPointerList().map(function(p) { return p.id });
-          appendOutput(inEvent.type + ' [' + pl.join(', ') + ']');
+          appendOutput(inEvent.type + ' [' + inEvent.pointerId + ']');
         });
       });
-      enterleave.addEventListener('pointerenter', function(e) {
+      enterleave.addEventListener('pointerover', function(e) {
         appendOutput('enterleave entered');
       });
-      enterleave.addEventListener('pointerleave', function(e) {
+      enterleave.addEventListener('pointerout', function(e) {
         appendOutput('enterleave left');
       });
     </script>

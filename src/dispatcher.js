@@ -20,7 +20,6 @@
 (function(scope) {
   var clone = scope.clone;
   var pointermap = scope.pointermap;
-  var getPointerList = pointermap.getPointerList.bind(pointermap);
   var dispatcher = {
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
@@ -59,16 +58,17 @@
     up: function(inEvent) {
       this.fireEvent(inEvent, 'pointerup');
     },
-    tap: function(inEvent) {
-      if (!this.disableTap) {
-        this.fireEvent(inEvent, 'pointertap');
-      }
-    },
     enter: function(inEvent) {
       this.fireEvent(inEvent, 'pointerenter')
     },
     leave: function(inEvent) {
       this.fireEvent(inEvent, 'pointerleave');
+    },
+    over: function(inEvent) {
+      this.fireEvent(inEvent, 'pointerover')
+    },
+    out: function(inEvent) {
+      this.fireEvent(inEvent, 'pointerout');
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
@@ -150,11 +150,27 @@
                        inEvent.screenY, inEvent.clientX, inEvent.clientY,
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
-      // TODO(dfreedman): do these properties need to be readonly?
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
-      e.pointerId = inEvent.pointerId || -1;
-      e.getPointerList = getPointerList;
+      var o = this.makeDescriptors({
+        pointerId: inEvent.pointerId,
+        width: inEvent.width || 0,
+        height: inEvent.height || 0,
+        pressure: inEvent.pressure || 0,
+        tiltX: inEvent.tiltX || 0,
+        tiltY: inEvent.tiltY || 0,
+        pointerType: inEvent.pointerType || 'unavailable',
+        hwTimestamp: inEvent.hwTimestamp || 0,
+        isPrimary: inEvent.isPrimary || false
+      });
+      Object.defineProperties(e, o);
       return e;
+    },
+    makeDescriptors: function(inProps) {
+      var o = {};
+      for (var p in inProps) {
+        o[p] = {value: inProps[p], enumerable: true};
+      }
+      return o;
     },
     fireEvent: function(inEvent, inType) {
       var e = this.makeEvent(inEvent, inType);
