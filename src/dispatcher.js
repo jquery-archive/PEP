@@ -6,11 +6,9 @@
 
 /**
  * This module is for normalizing events. Mouse and Touch events will be
- * collected here, and fire Pointer events that have the same semantics, no
- * matter the source. We hope that eventually a system like this one will be
- * standard and available from the platform.
+ * collected here, and fire PointerEvents that have the same semantics, no
+ * matter the source.
  * Events fired:
- *   - pointertap: click
  *   - pointerdown: a pointing is added
  *   - pointerup: a pointer is removed
  *   - pointermove: a pointer is moved
@@ -72,12 +70,9 @@
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
-      /*
-       * This is used to prevent multiple dispatch of
-       * pointerevents from platform events. This can happen when two elements
-       * in different scopes are set up to create pointer events, which is
-       * relevant to Shadow DOM.
-       */
+      // This is used to prevent multiple dispatch of pointerevents from
+      // platform events. This can happen when two elements in different scopes
+      // are set up to create pointer events, which is relevant to Shadow DOM.
       if (this.handledEvents.get(inEvent)) {
         return;
       }
@@ -113,7 +108,7 @@
      *
      * @param {Event} inEvent A platform event with a target
      * @param {string} inType A string representing the type of event to create
-     * @return {Event} A Gesture event of type `inType`
+     * @return {Event} A PointerEvent of type `inType`
      */
     makeEvent: function(inEvent, inType) {
       // According to the w3c spec,
@@ -158,12 +153,11 @@
         pressure: inEvent.pressure || 0,
         tiltX: inEvent.tiltX || 0,
         tiltY: inEvent.tiltY || 0,
-        pointerType: inEvent.pointerType || 'unavailable',
+        pointerType: inEvent.pointerType || 'unknown',
         hwTimestamp: inEvent.hwTimestamp || 0,
         isPrimary: inEvent.isPrimary || false
       });
-      Object.defineProperties(e, o);
-      return e;
+      return Object.defineProperties(e, o);
     },
     makeDescriptors: function(inProps) {
       var o = {};
@@ -196,7 +190,7 @@
    * Convenience function for users to register targets that may be out of the
    * scope of document.
    *
-   * @param {Element} InTarget A scope that will create and route gesture events
+   * @param {Element} InTarget A scope that will create and route PointerEvents
    */
   scope.register = function(inTarget) {
     dispatcher.registerTarget(inTarget);
@@ -205,7 +199,7 @@
    * Convenience function for users to unregister targets that may be out of the
    * scope of document.
    *
-   * @param {Element} InTarget A scope created and routed gesture events
+   * @param {Element} InTarget A scope created and routed PointerEvents
    */
   scope.unregister = function(inTarget) {
     dispatcher.unregisterTarget(inTarget);
