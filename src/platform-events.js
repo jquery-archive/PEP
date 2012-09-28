@@ -20,12 +20,12 @@
       'touchend'
     ],
     indexOfTouch: Array.prototype.indexOf.call.bind(Array.prototype.indexOf),
-    splitEvents: function(inEvent) {
+    processTouches: function(inEvent, inFunction) {
       var es = Array.prototype.map.call(inEvent.changedTouches, function(inTouch) {
         var e = dispatcher.cloneEvent(inTouch);
         // pointerId starts at 1 for mouse, touch even ids can start at 0
         // move up 2 for compatibility
-        e.pointerId = e.identifier + 2;
+        e.pointerId = inTouch.identifier + 2;
         e.target = this.findTarget(e);
         e.bubbles = true;
         e.cancelable = true;
@@ -35,30 +35,30 @@
         e.pointerType = 'touch';
         return e;
       }, this);
-      return es;
+      es.forEach(inFunction, this);
     },
     findTarget: function(inEvent) {
       // TODO (dfreedman): support shadow.elementFromPoint here, when available
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
     touchstart: function(inEvent) {
-      this.splitEvents(inEvent).forEach(this.overDown, this);
+      this.processTouches(inEvent, this.overDown);
     },
-    overDown: function(inTouch) {
-      var p = pointermap.addPointer(inTouch.pointerId, inTouch);
-      dispatcher.over(inTouch);
-      dispatcher.down(inTouch);
-      p.out = inTouch;
+    overDown: function(inPointer) {
+      var p = pointermap.addPointer(inPointer.pointerId, inPointer);
+      dispatcher.over(inPointer);
+      dispatcher.down(inPointer);
+      p.out = inPointer;
     },
     touchmove: function(inEvent) {
       // must preventDefault first touchmove or document will scroll otherwise
       // Per Touch event spec section 5.6
       // http://www.w3.org/TR/touch-events/#the-touchmove-event
       inEvent.preventDefault();
-      this.splitEvents(inEvent).forEach(this.moveOverOut, this);
+      this.processTouches(inEvent, this.moveOverOut);
     },
-    moveEnterLeave: function(inTouch) {
-      var event = inTouch;
+    moveOverOut: function(inPointer) {
+      var event = inPointer;
       var pointer = pointermap.getPointerById(event.pointerId);
       var outEvent = pointer.out;
       pointer.event = event;
@@ -72,12 +72,12 @@
       pointer.out = event;
     },
     touchend: function(inEvent) {
-      this.splitEvents(inEvent).forEach(this.upOut, this);
+      this.processTouches(inEvent, this.upOut);
     },
-    upOut: function(inTouch) {
-      dispatcher.up(inTouch);
-      dispatcher.out(inTouch);
-      pointermap.removePointer(inTouch.pointerId);
+    upOut: function(inPointer) {
+      dispatcher.up(inPointer);
+      dispatcher.out(inPointer);
+      pointermap.removePointer(inPointer.pointerId);
     },
   };
 
