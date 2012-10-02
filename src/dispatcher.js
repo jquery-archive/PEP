@@ -17,16 +17,17 @@
  */
 (function(scope) {
   var clone = scope.clone;
-  var pointermap = scope.pointermap;
   var dispatcher = {
+    POINTER_TYPE_UNAVAILABLE: 'unavailable',
+    POINTER_TYPE_TOUCH: 'touch',
+    POINTER_TYPE_PEN: 'pen',
+    POINTER_TYPE_MOUSE: 'mouse',
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
     events: [],
     eventMap: {},
-    /*
-     * Scope objects for native events.
-     * This exists for ease of testing.
-     */
+    // Scope objects for native events.
+    // This exists for ease of testing.
     eventSources: {},
     // add a new event source
     registerSource: function(inName, inScope) {
@@ -153,7 +154,7 @@
         pressure: inEvent.pressure || 0,
         tiltX: inEvent.tiltX || 0,
         tiltY: inEvent.tiltY || 0,
-        pointerType: inEvent.pointerType || 'unknown',
+        pointerType: inEvent.pointerType || this.POINTER_TYPE_UNAVAILABLE,
         hwTimestamp: inEvent.hwTimestamp || 0,
         isPrimary: inEvent.isPrimary || false
       });
@@ -178,10 +179,23 @@
       }
       return eventCopy;
     },
+    // TODO (dfreedman): Implement pointer capturing
+    getTarget: function(inEvent) {
+      // if pointer capture is set, route all events for the specified pointerId
+      // to the capture target
+      if (this.captureInfo) {
+        if (this.captureInfo.id === inEvent.pointerId) {
+          return this.captureInfo.target;
+        }
+      }
+      return this.targets.get(inEvent);
+    },
     // dispatch events
     dispatchEvent: function(inEvent) {
-      var t = this.targets.get(inEvent);
-      return t.dispatchEvent(inEvent);
+      var t = this.getTarget(inEvent);
+      if (t) {
+        return t.dispatchEvent(inEvent);
+      }
     }
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
