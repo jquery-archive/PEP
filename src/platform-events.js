@@ -19,33 +19,36 @@
       'touchmove',
       'touchend'
     ],
-    indexOfTouch: Array.prototype.indexOf.call.bind(Array.prototype.indexOf),
+    firstTouch: null,
     processTouches: function(inEvent, inFunction) {
-      var es = Array.prototype.map.call(inEvent.changedTouches, function(inTouch) {
+      Array.prototype.forEach.call(inEvent.changedTouches, function(inTouch) {
         var e = dispatcher.cloneEvent(inTouch);
-        // pointerId starts at 1 for mouse, touch even ids can start at 0
-        // move up 2 for compatibility
+        // Spec specifies that pointerId 1 is reserved for Mouse.
+        // Touch identifiers can start at 0.
+        // Add 2 to the touch identifier for compatibility.
         e.pointerId = inTouch.identifier + 2;
         e.target = this.findTarget(e);
         e.bubbles = true;
         e.cancelable = true;
-        e.which = 1;
         e.button = 0;
-        e.isPrimary = this.indexOfTouch(inEvent.touches, inTouch) == 0;
-        e.pointerType = 'touch';
-        return e;
+        e.buttons = 1;
+        e.isPrimary = this.firstTouch === inTouch.identifier;
+        e.pointerType = dispatcher.POINTER_TYPE_TOUCH;
+        inFunction.call(this, e);
       }, this);
-      es.forEach(inFunction, this);
     },
     findTarget: function(inEvent) {
       // TODO (dfreedman): support shadow.elementFromPoint here, when available
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
     touchstart: function(inEvent) {
+      if (this.firstTouch === null) {
+        this.firstTouch = inEvent.changedTouches[0].identifier;
+      }
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
-      var p = pointermap.addPointer(inPointer.pointerId, inPointer);
+      var p = pointermap.addPointer(inPointer.pointerId);
       dispatcher.over(inPointer);
       dispatcher.down(inPointer);
       p.out = inPointer;
@@ -61,7 +64,6 @@
       var event = inPointer;
       var pointer = pointermap.getPointerById(event.pointerId);
       var outEvent = pointer.out;
-      pointer.event = event;
       dispatcher.move(event);
       if (outEvent && outEvent.target !== event.target) {
         outEvent.relatedTarget = event.target;
@@ -73,6 +75,9 @@
     },
     touchend: function(inEvent) {
       this.processTouches(inEvent, this.upOut);
+      if (this.firstTouch === inEvent.changedTouches[0].identifier) {
+        this.firstTouch = null;
+      }
     },
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
@@ -85,10 +90,6 @@
   var mouseEvents = {
     // Mouse is required to have a pointerId of 1
     POINTER_ID: 1,
-    // Mouse can only count as one pointer ever, so we keep track of the number of
-    // mouse buttons held down to keep number of pointerdown / pointerup events
-    // correct
-    buttons: 0,
     events: [
       'mousedown',
       'mousemove',
@@ -100,28 +101,24 @@
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
       e.isPrimary = true;
-      e.pointerType = 'mouse';
+      e.pointerType = dispatcher.POINTER_TYPE_MOUSE;
       return e;
     },
     mousedown: function(inEvent) {
-      if (this.buttons == 0) {
+      if (pointermap.getPointerIndex(this.POINTER_ID) == -1) {
         var e = this.prepareEvent(inEvent);
-        pointermap.addPointer(this.POINTER_ID, e);
+        var p = pointermap.addPointer(this.POINTER_ID);
+        p.button = inEvent.button;
         dispatcher.down(e);
       }
-      this.buttons++;
     },
     mousemove: function(inEvent) {
       var e = this.prepareEvent(inEvent);
-      var p = pointermap.getPointerById(this.POINTER_ID);
-      if (p) {
-        p.event = e;
-      }
       dispatcher.move(e);
     },
     mouseup: function(inEvent) {
-      this.buttons--;
-      if (this.buttons == 0) {
+      var p = pointermap.getPointerById(this.POINTER_ID);
+      if (p && p.button === inEvent.button) {
         var e = this.prepareEvent(inEvent);
         dispatcher.up(e);
         pointermap.removePointer(this.POINTER_ID);
