@@ -29,15 +29,22 @@
     // Scope objects for native events.
     // This exists for ease of testing.
     eventSources: {},
-    // add a new event source
-    registerSource: function(inName, inScope) {
-      this.events = inScope.events;
+    /**
+     * Add a new event source that will generate pointer events.
+     * @param {string} inName A name for the event source
+     * @param {Object} inSource A new source of platform events. inSource must
+     *   contain an array of event names named 'events', and functions with the
+     *   names specified in the 'events' array.
+     */
+    registerSource: function(inName, inSource) {
+      var s = inSource;
+      this.events = s.events;
       this.events.forEach(function(e) {
-        if (inScope[e]) {
-          this.eventMap[e] = inScope[e].bind(inScope);
+        if (s[e]) {
+          this.eventMap[e] = s[e].bind(s);
         }
       }, this);
-      this.eventSources[inName] = inScope;
+      this.eventSources[inName] = s;
     },
     // add event listeners for inTarget
     registerTarget: function(inTarget) {
@@ -147,7 +154,12 @@
                        inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
                        inEvent.metaKey, b, inEvent.relatedTarget);
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
-      var o = this.makeDescriptors({
+      /**
+       * Add readonly properties to an event
+       * @param {Event} inEvent The event to add properties to.
+       * @param {Object} inProps A mapping of property names to values
+       */
+      this.setProperties(e, {
         pointerId: inEvent.pointerId,
         width: inEvent.width || 0,
         height: inEvent.height || 0,
@@ -158,20 +170,32 @@
         hwTimestamp: inEvent.hwTimestamp || 0,
         isPrimary: inEvent.isPrimary || false
       });
-      return Object.defineProperties(e, o);
+      return e;
     },
-    makeDescriptors: function(inProps) {
-      var o = {};
+    /**
+     * Add readonly properties to an event
+     * @param {Event} inEvent The event to add properties to.
+     * @param {Object} inProps A mapping of property names to values.
+     */
+    setProperties: function(inEvent, inProps) {
+      var d = {};
       for (var p in inProps) {
-        o[p] = {value: inProps[p], enumerable: true};
+        d[p] = {value: inProps[p], enumerable: true};
       }
-      return o;
+      Object.defineProperties(inEvent, d);
     },
+    // make and dispatch an event in one call
     fireEvent: function(inEvent, inType) {
       var e = this.makeEvent(inEvent, inType);
       return this.dispatchEvent(e);
     },
-    // returns a snapshot of inEvent, so properties are malleable
+    /**
+     * Returns a snapshot of inEvent, with writable properties.
+     *
+     * @param {Event} inEvent An event that contains properties to copy.
+     * @return {Object} An object containing shallow copies of `inEvent`'s
+     *    properties.
+     */
     cloneEvent: function(inEvent) {
       var eventCopy = {};
       for (var n in inEvent) {
@@ -190,7 +214,12 @@
       }
       return this.targets.get(inEvent);
     },
-    // dispatch events
+    /**
+     * Dispatches the event to its target.
+     *
+     * @param {Event} inEvent The event to be dispatched.
+     * @return {Boolean} True if an event handler returns true, false otherwise.
+     */
     dispatchEvent: function(inEvent) {
       var t = this.getTarget(inEvent);
       if (t) {
