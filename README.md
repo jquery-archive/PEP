@@ -1,6 +1,8 @@
 # Pointer Events
 > A unified event system for the web platform
 
+A polyfill implementation of the [Pointer Events Specification](http://www.w3.org/Submission/2012/SUBM-pointer-events-20120907/).
+
 ## Why Pointer Events?
 
 Mouse events and Touch events are fundamentally different beasts in browsers
@@ -74,10 +76,8 @@ even more information.
 - `pointerup`: a pointer is deactivated, or a device button released.
 - `pointerenter`: a pointer crosses into an element’s bounding box.
 - `pointerleave`: a pointer leaves an element’s bounding box.
-- `pointertap`: an up/down pair is seen in rapid succession.
-  information.
 
 ## What about gesture events?
 
 The goal of this library is to provide a standards compliant polyfill for
-pointer events. Gestures are provided in the *upcoming* PointerGestures library.
+Pointer Events. Gestures are provided in the *upcoming* PointerGestures library.
