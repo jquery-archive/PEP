@@ -20,6 +20,9 @@
       'touchend'
     ],
     firstTouch: null,
+    isPrimaryTouch: function(inTouch) {
+      return this.firstTouch === inTouch.identifier;
+    },
     processTouches: function(inEvent, inFunction) {
       Array.prototype.forEach.call(inEvent.changedTouches, function(inTouch) {
         var e = dispatcher.cloneEvent(inTouch);
@@ -32,7 +35,7 @@
         e.cancelable = true;
         e.button = 0;
         e.buttons = 1;
-        e.isPrimary = this.firstTouch === inTouch.identifier;
+        e.isPrimary = this.isPrimaryTouch(inTouch);
         e.pointerType = dispatcher.POINTER_TYPE_TOUCH;
         inFunction.call(this, e);
       }, this);
@@ -75,7 +78,8 @@
     },
     touchend: function(inEvent) {
       this.processTouches(inEvent, this.upOut);
-      if (this.firstTouch === inEvent.changedTouches[0].identifier) {
+      var touch = inEvent.changedTouches[0];
+      if (this.isPrimaryTouch(touch)) {
         this.firstTouch = null;
       }
     },
