@@ -16,7 +16,6 @@
  *   - pointerleave: a pointer leaves the boundaries of an element
  */
 (function(scope) {
-  var clone = scope.clone;
   var dispatcher = {
     POINTER_TYPE_UNAVAILABLE: 'unavailable',
     POINTER_TYPE_TOUCH: 'touch',
