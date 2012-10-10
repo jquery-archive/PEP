@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width user-scalable=no">
     <title>PointerEventShim testing ground</title>
     <style>
+      * {
+        -webkit-user-select: none;
+      }
       body, html {
         margin: 0;
         height: 100%;
@@ -36,48 +40,43 @@
         overflow: scroll;
       }
     </style>
-    <script>
-      // Keep PointerEventShim around for mucking with
-      window.PointerEventShim = {keep: true};
-    </script>
     <script src="../src/pointerevents.js"></script>
   </head>
   <body>
     <div id="capture">
-      Capture Target
       <div id="enterleave">
-        Enter and leave here
       </div>
     </div>
     <div id="output"></div>
     <script>
       var events = [
         // base events
+        'click',
         'pointerdown',
         'pointerup',
         'pointermove',
-        'pointertap',
-        'pointerenter',
-        'pointerleave',
-        'pointerflick'
+        'pointerover',
+        'pointerout'
       ];
-      var target = document.getElementById('capture');
-      var output = document.getElementById('output');
-      var enleav = document.getElementById('enterleave');
-      var appendOutput = function(inString) {
+      function find(/*...inEls*/) {
+        [].forEach.call(arguments, function(e) {
+          window[e] = document.getElementById(e);
+        });
+      }
+      function appendOutput(inString) {
         var it = output.innerText;
         output.innerText = inString + '\n' + it;
-      };
+      }
+      find('capture', 'output', 'enterleave');
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
-          var pl = inEvent.getPointerList().map(function(p) { return p.id });
-          appendOutput(inEvent.type + ' [' + pl.join(', ') + ']');
+          appendOutput(inEvent.type + ' [' + inEvent.pointerId + ']');
         });
       });
-      enleav.addEventListener('pointerenter', function(e) {
+      enterleave.addEventListener('pointerover', function(e) {
         appendOutput('enterleave entered');
       });
-      enleav.addEventListener('pointerleave', function(e) {
+      enterleave.addEventListener('pointerout', function(e) {
         appendOutput('enterleave left');
       });
     </script>

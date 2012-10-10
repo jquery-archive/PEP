@@ -1,6 +1,7 @@
 #!/bin/bash
 UGLIFY='../third_party/uglifyjs/bin/uglifyjs'
 FILES=(
+  '../src/sidetable.js'
   '../src/initialize.js'
   '../src/pointermap.js'
   '../src/dispatcher.js'

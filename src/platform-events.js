@@ -4,7 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 
-/*
+/**
  * This module contains the handlers for native platform events.
  * From here, the dispatcher is called to create unified pointer events.
  * Included are touch events (v1) and mouse events.
@@ -12,174 +12,154 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var pointermap = scope.pointermap;
-  // returns true if a === b or a is inside b
-  var isDescendant = function(inA, inB) {
-    var a = inA;
-    while(a) {
-      if (a === inB) {
-        return true;
-      }
-      a = a.parentNode;
-    }
-  };
   // handler block for native touch events
   var touchEvents = {
     events: [
-      'click',
       'touchstart',
       'touchmove',
       'touchend'
     ],
-    splitEvents: function(inEvent) {
-      var es = Array.prototype.map.call(inEvent.changedTouches, function(inTouch) {
+    firstTouch: null,
+    isPrimaryTouch: function(inTouch) {
+      return this.firstTouch === inTouch.identifier;
+    },
+    processTouches: function(inEvent, inFunction) {
+      Array.prototype.forEach.call(inEvent.changedTouches, function(inTouch) {
         var e = dispatcher.cloneEvent(inTouch);
-        e.pointerId = inTouch.identifier;
+        // Spec specifies that pointerId 1 is reserved for Mouse.
+        // Touch identifiers can start at 0.
+        // Add 2 to the touch identifier for compatibility.
+        e.pointerId = inTouch.identifier + 2;
         e.target = this.findTarget(e);
         e.bubbles = true;
         e.cancelable = true;
-        e.which = 1;
         e.button = 0;
-        return e;
+        e.buttons = 1;
+        e.isPrimary = this.isPrimaryTouch(inTouch);
+        e.pointerType = dispatcher.POINTER_TYPE_TOUCH;
+        inFunction.call(this, e);
       }, this);
-      return es;
     },
     findTarget: function(inEvent) {
+      // TODO (dfreedman): support shadow.elementFromPoint here, when available
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
     },
-    // TODO(dfreedm) should click even be here, or watch up/down pairs for tap?
-    click: function(inEvent) {
-      dispatcher.tap(inEvent);
-    },
     touchstart: function(inEvent) {
-      var es = this.splitEvents(inEvent);
-      es.forEach(this.downEnter, this);
+      if (this.firstTouch === null) {
+        this.firstTouch = inEvent.changedTouches[0].identifier;
+      }
+      this.processTouches(inEvent, this.overDown);
     },
-    downEnter: function(inTouch) {
-      var p = pointermap.addPointer(inTouch.pointerId, inTouch, null);
-      dispatcher.down(inTouch);
-      p.over = inTouch;
-      dispatcher.enter(inTouch);
+    overDown: function(inPointer) {
+      var p = pointermap.addPointer(inPointer.pointerId);
+      dispatcher.over(inPointer);
+      dispatcher.down(inPointer);
+      p.out = inPointer;
     },
     touchmove: function(inEvent) {
-      /*
-       * must preventDefault first touchmove or document will scroll otherwise
-       * Per Touch event spec section 5.6
-       * http://www.w3.org/TR/touch-events/#the-touchmove-event
-       */
+      // must preventDefault first touchmove or document will scroll otherwise
+      // Per Touch event spec section 5.6
+      // http://www.w3.org/TR/touch-events/#the-touchmove-event
       inEvent.preventDefault();
-      var es = this.splitEvents(inEvent);
-      es.forEach(this.moveEnterLeave, this);
+      this.processTouches(inEvent, this.moveOverOut);
     },
-    moveEnterLeave: function(inTouch) {
-      var event = inTouch;
+    moveOverOut: function(inPointer) {
+      var event = inPointer;
       var pointer = pointermap.getPointerById(event.pointerId);
-      var overEvent = pointer.over;
-      pointer.event = event;
+      var outEvent = pointer.out;
       dispatcher.move(event);
-      if (overEvent && overEvent.target !== event.target) {
-        overEvent.relatedTarget = event.target;
-        event.relatedTarget = overEvent.target;
-        if (!isDescendant(overEvent.relatedTarget, overEvent.target)) {
-          dispatcher.leave(overEvent);
-        }
-        if (!isDescendant(event.relatedTarget, event.target)) {
-          dispatcher.enter(event);
-        }
+      if (outEvent && outEvent.target !== event.target) {
+        outEvent.relatedTarget = event.target;
+        event.relatedTarget = outEvent.target;
+        dispatcher.out(outEvent);
+        dispatcher.over(event);
       }
-      pointer.over = event;
+      pointer.out = event;
     },
     touchend: function(inEvent) {
-      var es = this.splitEvents(inEvent);
-      es.forEach(this.upLeave, this);
+      this.processTouches(inEvent, this.upOut);
+      var touch = inEvent.changedTouches[0];
+      if (this.isPrimaryTouch(touch)) {
+        this.firstTouch = null;
+      }
     },
-    upLeave: function(inTouch) {
-      dispatcher.up(inTouch);
-      dispatcher.leave(inTouch);
-      pointermap.removePointer(inTouch.pointerId);
+    upOut: function(inPointer) {
+      dispatcher.up(inPointer);
+      dispatcher.out(inPointer);
+      pointermap.removePointer(inPointer.pointerId);
     },
   };
 
   // handler block for native mouse events
   var mouseEvents = {
-    POINTER_ID: -1,
-    /*
-     * Mouse can only count as one pointer ever, so we keep track of the number of
-     * mouse buttons held down to keep number of pointerdown / pointerup events
-     * correct
-     */
-    buttons: 0,
+    // Mouse is required to have a pointerId of 1
+    POINTER_ID: 1,
     events: [
-      'click',
       'mousedown',
       'mousemove',
       'mouseup',
       'mouseover',
       'mouseout'
     ],
-    click: function(inEvent) {
-      dispatcher.tap(inEvent);
+    prepareEvent: function(inEvent) {
+      var e = dispatcher.cloneEvent(inEvent);
+      e.pointerId = this.POINTER_ID;
+      e.isPrimary = true;
+      e.pointerType = dispatcher.POINTER_TYPE_MOUSE;
+      return e;
     },
     mousedown: function(inEvent) {
-      // Right mouse button does not fire up events in some user agents
-      if (inEvent.button == 2) {
-        return;
+      if (pointermap.getPointerIndex(this.POINTER_ID) == -1) {
+        var e = this.prepareEvent(inEvent);
+        var p = pointermap.addPointer(this.POINTER_ID);
+        p.button = inEvent.button;
+        dispatcher.down(e);
       }
-      if (this.buttons == 0) {
-        pointermap.addPointer(this.POINTER_ID, inEvent);
-        dispatcher.down(inEvent);
-      }
-      this.buttons++;
     },
     mousemove: function(inEvent) {
-      var p = pointermap.getPointerById(this.POINTER_ID);
-      if (p) {
-        p.event = inEvent;
-      }
-      dispatcher.move(inEvent);
+      var e = this.prepareEvent(inEvent);
+      dispatcher.move(e);
     },
     mouseup: function(inEvent) {
-      this.buttons--;
-      if (this.buttons == 0) {
-        dispatcher.up(inEvent);
+      var p = pointermap.getPointerById(this.POINTER_ID);
+      if (p && p.button === inEvent.button) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.up(e);
         pointermap.removePointer(this.POINTER_ID);
       }
     },
     mouseover: function(inEvent) {
-      if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
-        var e = dispatcher.cloneEvent(inEvent);
-        e.bubbles = false;
-        dispatcher.enter(e);
-      }
+      var e = this.prepareEvent(inEvent);
+      dispatcher.over(e);
     },
     mouseout: function(inEvent) {
-      if (!isDescendant(inEvent.relatedTarget, inEvent.target)) {
-        var e = dispatcher.cloneEvent(inEvent);
-        e.bubbles = false;
-        dispatcher.leave(e);
-      }
+      var e = this.prepareEvent(inEvent);
+      dispatcher.out(e);
     }
   };
 
-  /*
-   * We fork the initialization of dispatcher event listeners here because
-   * current native touch event systems emulate mouse events. These
-   * touch-emulated mouse events behave differently than normal mouse events.
-   *
-   * Touch-emulated mouse events will only occur if the target element has
-   * either a native click handler, or the onclick attribute is set. In
-   * addition, the touch-emulated mouse events fire only after the finger has
-   * left the screen, negating any live-tracking ability a developer might want.
-   *
-   * The only way to disable mouse event emulation by native touch systems is to
-   * preventDefault every touch event, which we feel is inelegant.
-   *
-   * Therefore we choose to only listen to native touch events if they exist.
-   */
+  // only activate if this platform does not have pointer events
+  if (window.navigator.pointerEnabled === undefined) {
+    // We fork the initialization of dispatcher event listeners here because
+    // current native touch event systems emulate mouse events. These
+    // touch-emulated mouse events behave differently than normal mouse events.
+    //
+    // Touch-emulated mouse events will only occur if the target element has
+    // either a native click handler, or the onclick attribute is set. In
+    // addition, the touch-emulated mouse events fire only after the finger has
+    // left the screen, negating any live-tracking ability a developer might want.
+    //
+    // The only way to disable mouse event emulation by native touch systems is to
+    // preventDefault every touch event, which we feel is inelegant.
+    //
+    // Therefore we choose to only listen to native touch events if they exist.
 
-  if ('ontouchstart' in window) {
-    dispatcher.registerSource('touch', touchEvents);
-  } else {
-    dispatcher.registerSource('mouse', mouseEvents);
+    if ('ontouchstart' in window) {
+      dispatcher.registerSource('touch', touchEvents);
+    } else {
+      dispatcher.registerSource('mouse', mouseEvents);
+    }
+    dispatcher.registerTarget(document);
+    Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
-  dispatcher.registerTarget(document);
 })(window.__PointerEventShim__);
