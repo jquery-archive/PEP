@@ -13,11 +13,11 @@
 
   var s = document.querySelector('script[src $= "' + thisFile + '"]');
   if (s) {
-    var src = s.getAttribute('src');
-    libLocation = src.slice(0, -thisFile.length);
+    libLocation = s.src.slice(0, -thisFile.length);
   }
 
   [
+    'sidetable.js',
     'initialize.js',
     'pointermap.js',
     'dispatcher.js',
