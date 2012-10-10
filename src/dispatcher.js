@@ -158,7 +158,7 @@
        * @param {Event} inEvent The event to add properties to.
        * @param {Object} inProps A mapping of property names to values
        */
-      this.setProperties(e, {
+      this.setEventProperties(e, {
         pointerId: inEvent.pointerId,
         width: inEvent.width || 0,
         height: inEvent.height || 0,
@@ -176,7 +176,7 @@
      * @param {Event} inEvent The event to add properties to.
      * @param {Object} inProps A mapping of property names to values.
      */
-    setProperties: function(inEvent, inProps) {
+    setEventProperties: function(inEvent, inProps) {
       var d = {};
       for (var p in inProps) {
         d[p] = {value: inProps[p], enumerable: true};
