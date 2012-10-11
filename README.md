@@ -74,8 +74,8 @@ even more information.
 - `pointermove`: a pointer moves, similar to touchmove or mousemove.
 - `pointerdown`: a pointer is activated, or a device button held.
 - `pointerup`: a pointer is deactivated, or a device button released.
-- `pointerenter`: a pointer crosses into an element’s bounding box.
-- `pointerleave`: a pointer leaves an element’s bounding box.
+- `pointerover`: a pointer crosses into an element.
+- `pointerout`: a pointer leaves an element.
 
 ## What about gesture events?
 
