@@ -119,7 +119,7 @@
      */
     makeEvent: function(inEvent, inType) {
       // According to the w3c spec,
-      // http://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-MouseEvent
+      // http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-button
       // MouseEvent.button == 0 can mean either no mouse button depressed, or
       // the left mouse button depressed.
       //
