@@ -12,8 +12,9 @@
  *   - pointerdown: a pointing is added
  *   - pointerup: a pointer is removed
  *   - pointermove: a pointer is moved
- *   - pointerenter: a pointer enters the boundaries of an element
- *   - pointerleave: a pointer leaves the boundaries of an element
+ *   - pointerover: a pointer crosses into an element
+ *   - pointerout: a pointer leaves an element
+ *   - pointercancel: a pointer will no longer generate events
  */
 (function(scope) {
   var dispatcher = {
@@ -55,25 +56,28 @@
     },
     // EVENTS
     down: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerdown')
+      this.fireEvent('pointerdown', inEvent)
     },
     move: function(inEvent) {
-      this.fireEvent(inEvent, 'pointermove');
+      this.fireEvent('pointermove', inEvent);
     },
     up: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerup');
+      this.fireEvent('pointerup', inEvent);
     },
     enter: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerenter')
+      this.fireEvent('pointerenter', inEvent)
     },
     leave: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerleave');
+      this.fireEvent('pointerleave', inEvent);
     },
     over: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerover')
+      this.fireEvent('pointerover', inEvent)
     },
     out: function(inEvent) {
-      this.fireEvent(inEvent, 'pointerout');
+      this.fireEvent('pointerout', inEvent);
+    },
+    cancel: function(inEvent) {
+      this.fireEvent('pointercancel', inEvent);
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
@@ -113,11 +117,11 @@
      * Creates a new Event of type `inType`, based on the information in
      * `inEvent`.
      *
-     * @param {Event} inEvent A platform event with a target
      * @param {string} inType A string representing the type of event to create
+     * @param {Event} inEvent A platform event with a target
      * @return {Event} A PointerEvent of type `inType`
      */
-    makeEvent: function(inEvent, inType) {
+    makeEvent: function(inType, inEvent) {
       // According to the w3c spec,
       // http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-button
       // MouseEvent.button == 0 can mean either no mouse button depressed, or
@@ -184,8 +188,8 @@
       Object.defineProperties(inEvent, d);
     },
     // make and dispatch an event in one call
-    fireEvent: function(inEvent, inType) {
-      var e = this.makeEvent(inEvent, inType);
+    fireEvent: function(inType, inEvent) {
+      var e = this.makeEvent(inType, inEvent);
       return this.dispatchEvent(e);
     },
     /**
