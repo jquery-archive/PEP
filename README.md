@@ -76,6 +76,7 @@ even more information.
 - `pointerup`: a pointer is deactivated, or a device button released.
 - `pointerover`: a pointer crosses into an element.
 - `pointerout`: a pointer leaves an element.
+- `pointercancel`: a pointer will no longer generate events.
 
 ## What about gesture events?
 
