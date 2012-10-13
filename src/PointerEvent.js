@@ -19,7 +19,7 @@ function PointerEvent(inType, inDict) {
   //
   // {e}->{PointerEvent}->{MouseEvent}->{UIEvent}...
   var e = document.createEvent('MouseEvent');
-  e.__proto__ = this.__proto__;
+  e.__proto__ = PointerEvent.prototype;
   e.initPointerEvent(inType, inDict);
   return e;
 };
