@@ -122,57 +122,8 @@
      * @return {Event} A PointerEvent of type `inType`
      */
     makeEvent: function(inType, inEvent) {
-      // According to the w3c spec,
-      // http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-button
-      // MouseEvent.button == 0 can mean either no mouse button depressed, or
-      // the left mouse button depressed.
-      //
-      // As of now, the only way to distinguish between the two states of
-      // MouseEvent.button is by using the deprecated MouseEvent.which property,
-      // as this maps mouse buttons to positive integers > 0, and uses 0 to mean
-      // that no mouse button is held.
-      //
-      // MouseEvent.which is derived from MouseEvent.button at MouseEvent
-      // creation, but initMouseEvent does not expose an argument with which to
-      // set MouseEvent.which. Calling initMouseEvent with a buttonArg of 0 will
-      // set MouseEvent.button == 0 and MouseEvent.which == 1, breaking the
-      // expectations of app developers.
-      //
-      // The only way to propagate the correct state of MouseEvent.which and
-      // MouseEvent.button to a new MouseEvent.button == 0 and MouseEvent.which == 0
-      // is to call initMouseEvent with a buttonArg value of -1.
-      //
-      // For user agents implementing DOM Level 3 events, Event.buttons has to
-      // be used instead, which is a bitmap of depressed buttons.
-      var b;
-      if (inEvent.buttons === undefined) {
-        b = inEvent.buttons ? inEvent.button : -1;
-      } else {
-        b = inEvent.which ? inEvent.button : -1;
-      }
-      var e = document.createEvent('MouseEvent');
-      e.initMouseEvent(inType, inEvent.bubbles, inEvent.cancelable,
-                       inEvent.view, inEvent.detail, inEvent.screenX,
-                       inEvent.screenY, inEvent.clientX, inEvent.clientY,
-                       inEvent.ctrlKey, inEvent.altKey, inEvent.shiftKey,
-                       inEvent.metaKey, b, inEvent.relatedTarget);
+      var e = new PointerEvent(inType, inEvent);
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
-      /**
-       * Add readonly properties to an event
-       * @param {Event} inEvent The event to add properties to.
-       * @param {Object} inProps A mapping of property names to values
-       */
-      this.setEventProperties(e, {
-        pointerId: inEvent.pointerId,
-        width: inEvent.width || 0,
-        height: inEvent.height || 0,
-        pressure: inEvent.pressure || 0,
-        tiltX: inEvent.tiltX || 0,
-        tiltY: inEvent.tiltY || 0,
-        pointerType: inEvent.pointerType || this.POINTER_TYPE_UNAVAILABLE,
-        hwTimestamp: inEvent.hwTimestamp || 0,
-        isPrimary: inEvent.isPrimary || false
-      });
       return e;
     },
     /**

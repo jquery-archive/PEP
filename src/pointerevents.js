@@ -17,10 +17,11 @@
   }
 
   [
+    'PointerEvent.js',
     'sidetable.js',
     'initialize.js',
     'pointermap.js',
     'dispatcher.js',
-    'platform-events.js',
+    'platform-events.js'
   ].forEach(require);
 })();
