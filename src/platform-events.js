@@ -25,6 +25,11 @@
     isPrimaryTouch: function(inTouch) {
       return this.firstTouch === inTouch.identifier;
     },
+    removePrimaryTouch: function(inTouch) {
+      if (this.isPrimaryTouch(inTouch)) {
+        this.firstTouch = null;
+      }
+    },
     touchToPointer: function(inTouch) {
       var e = dispatcher.cloneEvent(inTouch);
       // Spec specifies that pointerId 1 is reserved for Mouse.
@@ -83,28 +88,21 @@
     },
     touchend: function(inEvent) {
       this.processTouches(inEvent, this.upOut);
-      var touch = inEvent.changedTouches[0];
-      this.removeFirstTouch(touch);
     },
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
       dispatcher.out(inPointer);
       pointermap.removePointer(inPointer.pointerId);
+      this.removePrimaryTouch(inPointer);
     },
     touchcancel: function(inEvent) {
       this.processTouches(inEvent, this.cancelOut);
-      var touch = inEvent.changedTouches[0];
-      this.removeFirstTouch(touch);
     },
-    cancel: function(inPointer) {
+    cancelOut: function(inPointer) {
       dispatcher.cancel(inPointer);
       dispatcher.out(inPointer);
       pointermap.removePointer(inPointer.pointerId);
-    },
-    removeFirstTouch: function(inTouch) {
-      if (this.isPrimaryTouch(inTouch)) {
-        this.firstTouch = null;
-      }
+      this.removePrimaryTouch(inPointer);
     }
   };
 
