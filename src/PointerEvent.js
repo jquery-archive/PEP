@@ -1,12 +1,27 @@
-/*
+/*!
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
  */
 
+/**
+ * This is the constructor for new PointerEvents.
+ *
+ * New Pointer Events must be given a type, and an optional dictionary of
+ * initialization properties.
+ *
+ * Due to certain platform requirements, events returned from the constructor
+ * identify as MouseEvents.
+ *
+ * @constructor
+ * @param {string} inType The type of the event to create.
+ * @param {Object=} inDict An optional dictionary of initial event properties.
+ * @return {Event} A new PointerEvent of type `inType` and with properties from `inDict`.
+ */
 function PointerEvent(inType, inDict) {
-  // we dance a merry jig, and insert a new MouseEvent into the prototype chain
-  // this keeps the PointerEvent prototype around, and lets the event maintain
+  // We dance a merry jig, and insert a new MouseEvent into the prototype chain.
+  //
+  // This keeps the PointerEvent prototype around, and lets the event maintain
   // the necessary MouseEvent instance wrapper, and prototype.
   //
   // Step 1, this a PointerEvent instance
@@ -26,6 +41,11 @@ function PointerEvent(inType, inDict) {
 
 PointerEvent.prototype.__proto__ = MouseEvent.prototype;
 
+/**
+ * Initialize a PointerEvent
+ * @param {string} inType The type of the event to create.
+ * @param {Object=} inDict An optional dictionary of initial event properties.
+ */
 PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
   // defaults for all the necessary properties
   var props = {
