@@ -126,18 +126,6 @@
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
       return e;
     },
-    /**
-     * Add readonly properties to an event
-     * @param {Event} inEvent The event to add properties to.
-     * @param {Object} inProps A mapping of property names to values.
-     */
-    setEventProperties: function(inEvent, inProps) {
-      var d = {};
-      for (var p in inProps) {
-        d[p] = {value: inProps[p], enumerable: true};
-      }
-      Object.defineProperties(inEvent, d);
-    },
     // make and dispatch an event in one call
     fireEvent: function(inType, inEvent) {
       var e = this.makeEvent(inType, inEvent);
