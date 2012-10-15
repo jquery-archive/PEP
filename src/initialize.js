@@ -8,7 +8,7 @@
   scope = scope || {};
   // Function bind is required for dispatcher
   if (!Function.prototype.bind) {
-    Function.prototype.bind = function(inScope/*, ...arguments*/) {
+    Function.prototype.bind = function(inScope) {
       var args = scope.toArray(arguments, 1);
       var self = this;
       return function() {
