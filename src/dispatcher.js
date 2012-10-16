@@ -4,21 +4,20 @@
  * license that can be found in the LICENSE file.
  */
 
-/**
- * This module is for normalizing events. Mouse and Touch events will be
- * collected here, and fire PointerEvents that have the same semantics, no
- * matter the source.
- * Events fired:
- *   - pointerdown: a pointing is added
- *   - pointerup: a pointer is removed
- *   - pointermove: a pointer is moved
- *   - pointerover: a pointer crosses into an element
- *   - pointerout: a pointer leaves an element
- *   - pointercancel: a pointer will no longer generate events
- */
 (function(scope) {
+ /**
+  * This module is for normalizing events. Mouse and Touch events will be
+  * collected here, and fire PointerEvents that have the same semantics, no
+  * matter the source.
+  * Events fired:
+  *   - pointerdown: a pointing is added
+  *   - pointerup: a pointer is removed
+  *   - pointermove: a pointer is moved
+  *   - pointerover: a pointer crosses into an element
+  *   - pointerout: a pointer leaves an element
+  *   - pointercancel: a pointer will no longer generate events
+  */
   var dispatcher = {
-    POINTER_TYPE_UNAVAILABLE: 'unavailable',
     POINTER_TYPE_TOUCH: 'touch',
     POINTER_TYPE_PEN: 'pen',
     POINTER_TYPE_MOUSE: 'mouse',
@@ -31,10 +30,11 @@
     eventSources: {},
     /**
      * Add a new event source that will generate pointer events.
+     *
+     * `inSource` must contain an array of event names named `events`, and
+     * functions with the names specified in the `events` array.
      * @param {string} inName A name for the event source
-     * @param {Object} inSource A new source of platform events. inSource must
-     *   contain an array of event names named 'events', and functions with the
-     *   names specified in the 'events' array.
+     * @param {Object} inSource A new source of platform events.
      */
     registerSource: function(inName, inSource) {
       var s = inSource;
