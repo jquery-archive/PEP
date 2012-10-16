@@ -18,9 +18,6 @@
   *   - pointercancel: a pointer will no longer generate events
   */
   var dispatcher = {
-    POINTER_TYPE_TOUCH: 'touch',
-    POINTER_TYPE_PEN: 'pen',
-    POINTER_TYPE_MOUSE: 'mouse',
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
     events: [],

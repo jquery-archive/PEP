@@ -21,6 +21,7 @@
       'touchend',
       'touchcancel'
     ],
+    POINTER_TYPE: 'touch',
     firstTouch: null,
     isPrimaryTouch: function(inTouch) {
       return this.firstTouch === inTouch.identifier;
@@ -42,7 +43,7 @@
       e.button = 0;
       e.buttons = 1;
       e.isPrimary = this.isPrimaryTouch(inTouch);
-      e.pointerType = dispatcher.POINTER_TYPE_TOUCH;
+      e.pointerType = this.POINTER_TYPE;
       return e;
     },
     processTouches: function(inEvent, inFunction) {
@@ -110,6 +111,7 @@
   var mouseEvents = {
     // Mouse is required to have a pointerId of 1
     POINTER_ID: 1,
+    POINTER_TYPE: 'mouse',
     events: [
       'mousedown',
       'mousemove',
@@ -121,7 +123,7 @@
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
       e.isPrimary = true;
-      e.pointerType = dispatcher.POINTER_TYPE_MOUSE;
+      e.pointerType = this.POINTER_TYPE;
       return e;
     },
     mousedown: function(inEvent) {
