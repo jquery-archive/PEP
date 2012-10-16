@@ -15,7 +15,7 @@
  *
  * @constructor
  * @param {string} inType The type of the event to create.
- * @param {Object=} inDict An optional dictionary of initial event properties.
+ * @param {Object?} inDict An optional dictionary of initial event properties.
  * @return {Event} A new PointerEvent of type `inType` and with properties from `inDict`.
  */
 function PointerEvent(inType, inDict) {
@@ -39,12 +39,13 @@ function PointerEvent(inType, inDict) {
   return e;
 };
 
+// chain to the MouseEvent prototype
 PointerEvent.prototype.__proto__ = MouseEvent.prototype;
 
 /**
  * Initialize a PointerEvent
  * @param {string} inType The type of the event to create.
- * @param {Object=} inDict An optional dictionary of initial event properties.
+ * @param {Object?} inDict An optional dictionary of initial event properties.
  */
 PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
   // defaults for all the necessary properties
