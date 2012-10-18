@@ -1,6 +1,7 @@
 #!/bin/bash
 UGLIFY='../third_party/uglifyjs/bin/uglifyjs'
 FILES=(
+  '../src/PointerEvent.js'
   '../src/sidetable.js'
   '../src/initialize.js'
   '../src/pointermap.js'
@@ -16,4 +17,5 @@ EOF
 exit 1
 fi
 
-cat ${FILES[@]} | ${UGLIFY} -o pointerevents.js
+head -n 5 <../src/pointerevents.js >pointerevents.js
+cat ${FILES[@]} | ${UGLIFY} -nc >> pointerevents.js

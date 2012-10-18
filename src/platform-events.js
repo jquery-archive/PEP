@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
@@ -12,33 +12,44 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var pointermap = scope.pointermap;
+  var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
   var touchEvents = {
     events: [
       'touchstart',
       'touchmove',
-      'touchend'
+      'touchend',
+      'touchcancel'
     ],
+    POINTER_TYPE: 'touch',
     firstTouch: null,
     isPrimaryTouch: function(inTouch) {
       return this.firstTouch === inTouch.identifier;
     },
+    removePrimaryTouch: function(inTouch) {
+      if (this.isPrimaryTouch(inTouch)) {
+        this.firstTouch = null;
+      }
+    },
+    touchToPointer: function(inTouch) {
+      var e = dispatcher.cloneEvent(inTouch);
+      // Spec specifies that pointerId 1 is reserved for Mouse.
+      // Touch identifiers can start at 0.
+      // Add 2 to the touch identifier for compatibility.
+      e.pointerId = inTouch.identifier + 2;
+      e.target = this.findTarget(e);
+      e.bubbles = true;
+      e.cancelable = true;
+      e.button = 0;
+      e.buttons = 1;
+      e.isPrimary = this.isPrimaryTouch(inTouch);
+      e.pointerType = this.POINTER_TYPE;
+      return e;
+    },
     processTouches: function(inEvent, inFunction) {
-      Array.prototype.forEach.call(inEvent.changedTouches, function(inTouch) {
-        var e = dispatcher.cloneEvent(inTouch);
-        // Spec specifies that pointerId 1 is reserved for Mouse.
-        // Touch identifiers can start at 0.
-        // Add 2 to the touch identifier for compatibility.
-        e.pointerId = inTouch.identifier + 2;
-        e.target = this.findTarget(e);
-        e.bubbles = true;
-        e.cancelable = true;
-        e.button = 0;
-        e.buttons = 1;
-        e.isPrimary = this.isPrimaryTouch(inTouch);
-        e.pointerType = dispatcher.POINTER_TYPE_TOUCH;
-        inFunction.call(this, e);
-      }, this);
+      var tl = inEvent.changedTouches;
+      var pointers = touchMap(tl, this.touchToPointer, this);
+      pointers.forEach(inFunction, this);
     },
     findTarget: function(inEvent) {
       // TODO (dfreedman): support shadow.elementFromPoint here, when available
@@ -78,22 +89,29 @@
     },
     touchend: function(inEvent) {
       this.processTouches(inEvent, this.upOut);
-      var touch = inEvent.changedTouches[0];
-      if (this.isPrimaryTouch(touch)) {
-        this.firstTouch = null;
-      }
     },
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
       dispatcher.out(inPointer);
       pointermap.removePointer(inPointer.pointerId);
+      this.removePrimaryTouch(inPointer);
     },
+    touchcancel: function(inEvent) {
+      this.processTouches(inEvent, this.cancelOut);
+    },
+    cancelOut: function(inPointer) {
+      dispatcher.cancel(inPointer);
+      dispatcher.out(inPointer);
+      pointermap.removePointer(inPointer.pointerId);
+      this.removePrimaryTouch(inPointer);
+    }
   };
 
   // handler block for native mouse events
   var mouseEvents = {
     // Mouse is required to have a pointerId of 1
     POINTER_ID: 1,
+    POINTER_TYPE: 'mouse',
     events: [
       'mousedown',
       'mousemove',
@@ -105,7 +123,7 @@
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
       e.isPrimary = true;
-      e.pointerType = dispatcher.POINTER_TYPE_MOUSE;
+      e.pointerType = this.POINTER_TYPE;
       return e;
     },
     mousedown: function(inEvent) {
