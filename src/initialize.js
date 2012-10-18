@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
@@ -8,7 +8,7 @@
   scope = scope || {};
   // Function bind is required for dispatcher
   if (!Function.prototype.bind) {
-    Function.prototype.bind = function(inScope/*, ...arguments*/) {
+    Function.prototype.bind = function(inScope) {
       var args = scope.toArray(arguments, 1);
       var self = this;
       return function() {
