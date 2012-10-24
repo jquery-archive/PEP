@@ -38,9 +38,10 @@
         width: 300px;
         height: 150px;
         overflow: scroll;
+        white-space: pre;
       }
     </style>
-    <script src="../src/pointerevents.js"></script>
+    <script src="../../src/pointerevents.js"></script>
   </head>
   <body>
     <div id="capture">
@@ -64,8 +65,8 @@
         });
       }
       function appendOutput(inString) {
-        var it = output.innerText;
-        output.innerText = inString + '\n' + it;
+        var it = output.textContent;
+        output.textContent = inString + '\n' + it;
       }
       find('capture', 'output', 'enterleave');
       events.forEach(function(en) {
