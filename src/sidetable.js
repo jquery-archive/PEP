@@ -7,7 +7,8 @@
 // SideTable is a weak map where possible. If WeakMap is not available the
 // association is stored as an expando property.
 var SideTable;
-if (typeof WeakMap !== 'undefined') {
+// TODO(dfreedman): WeakMap does not allow for Events to be keys in Firefox
+if (typeof WeakMap !== 'undefined' && navigator.userAgent.indexOf('Firefox/') < 0) {
   SideTable = WeakMap;
 } else {
   SideTable = function(name) {
