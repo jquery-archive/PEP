@@ -53,7 +53,7 @@
     },
     findTarget: function(inEvent) {
       // TODO (dfreedman): support shadow.elementFromPoint here, when available
-      return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
+      return document.elementFromPoint(inEvent.clientX, inEvent.clientY) || document;
     },
     touchstart: function(inEvent) {
       if (this.firstTouch === null) {
