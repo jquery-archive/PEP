@@ -52,11 +52,20 @@ that we think make them not suitable:
 
 Therefore, we felt the need to create PointerEvents.
 
+## Hey, I'm using MSPointerEvents in IE10, why do I need this?
+
+Microsoft's implementation of MSPointerEvents differs from the spec they have proposed to the W3C.
+
+The key differences are the naming scheme (MSPointerDown vs pointerdown), and a few property values.
+
+Where possible, MSPointerEvents are used as the base for PointerEvent creation, so the information
+found in MSPointerEvents is maintained.
+
 ## Where can I use PointerEvents?
 
 PointerEvents should work on all "Evergreen" (self-updating) browsers.
 
-So far, it has been tested on Chrome.
+It has been tested on Chrome, Firefox, Opera, and IE 10.
 
 ## How does PointerEvents work?
 
