@@ -53,7 +53,7 @@
     },
     findTarget: function(inEvent) {
       // TODO (dfreedman): support shadow.elementFromPoint here, when available
-      return document.elementFromPoint(inEvent.clientX, inEvent.clientY);
+      return document.elementFromPoint(inEvent.clientX, inEvent.clientY) || document;
     },
     touchstart: function(inEvent) {
       if (this.firstTouch === null) {
@@ -156,6 +156,53 @@
     }
   };
 
+  var msEvents = {
+    events: [
+      'MSPointerDown',
+      'MSPointerMove',
+      'MSPointerUp',
+      'MSPointerOut',
+      'MSPointerOver',
+      'MSPointerCancel'
+    ],
+    POINTER_TYPES: [
+      'NOT USED',
+      'unavailable',
+      'touch',
+      'pen',
+      'mouse'
+    ],
+    prepareEvent: function(inEvent) {
+      var e = dispatcher.cloneEvent(inEvent);
+      e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
+      return e;
+    },
+    MSPointerDown: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.down(e);
+    },
+    MSPointerMove: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.move(e);
+    },
+    MSPointerUp: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.up(e);
+    },
+    MSPointerOut: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.out(e);
+    },
+    MSPointerOver: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.over(e);
+    },
+    MSPointerCancel: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.cancel(e);
+    }
+  }
+
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {
     // We fork the initialization of dispatcher event listeners here because
@@ -172,11 +219,17 @@
     //
     // Therefore we choose to only listen to native touch events if they exist.
 
-    if ('ontouchstart' in window) {
+    if (window.navigator.msPointerEnabled) {
+      dispatcher.registerSource('ms', msEvents);
+      if (window.navigator.msMaxTouchPoints !== undefined) {
+        Object.defineProperty(window.navigator, 'maxTouchPoints', {value: window.navigator.msMaxTouchPoints, enumerable: true});
+      }
+    } else if ('ontouchstart' in window) {
       dispatcher.registerSource('touch', touchEvents);
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
     }
+
     dispatcher.registerTarget(document);
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
