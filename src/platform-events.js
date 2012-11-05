@@ -11,7 +11,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
-  var pointermap = scope.pointermap;
+  var pointermap = new PointerMap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
   var touchEvents = {
@@ -76,7 +76,7 @@
     },
     moveOverOut: function(inPointer) {
       var event = inPointer;
-      var pointer = pointermap.getPointerById(event.pointerId);
+      var pointer = pointermap.getPointer(event.pointerId);
       var outEvent = pointer.out;
       dispatcher.move(event);
       if (outEvent && outEvent.target !== event.target) {
@@ -127,7 +127,7 @@
       return e;
     },
     mousedown: function(inEvent) {
-      if (pointermap.getPointerIndex(this.POINTER_ID) == -1) {
+      if (pointermap.indexOf(this.POINTER_ID) == -1) {
         var e = this.prepareEvent(inEvent);
         var p = pointermap.addPointer(this.POINTER_ID);
         p.button = inEvent.button;
@@ -139,7 +139,7 @@
       dispatcher.move(e);
     },
     mouseup: function(inEvent) {
-      var p = pointermap.getPointerById(this.POINTER_ID);
+      var p = pointermap.getPointer(this.POINTER_ID);
       if (p && p.button === inEvent.button) {
         var e = this.prepareEvent(inEvent);
         dispatcher.up(e);
