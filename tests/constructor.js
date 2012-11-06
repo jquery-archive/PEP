@@ -6,8 +6,12 @@
 
 suite('constructor', function() {
   test('new PointerEvent makes a PointerEvent', function() {
-    var p = new PointerEvent('type');
+    var p = new PointerEvent;
     expect(p).to.be.a(PointerEvent);
+  });
+  test('PointerEvent extends MouseEvent', function() {
+    var p = new PointerEvent;
+    expect(p).to.be.a(MouseEvent);
   });
   test('PointerEvents have the required properties', function() {
     var props = [
@@ -37,13 +41,31 @@ suite('constructor', function() {
       'isPrimary'
     ];
     var p = new PointerEvent();
-    props.forEach(function(k) {
-      expect(p).to.have.property(k);
-    });
+    expect(p).to.have.keys(props);
   });
   test('PointerEvent can be initialized from an object', function() {
-    var p = new PointerEvent('foo', {clientX: 40, clientY: 50});
-    expect(p.clientX).to.be(40);
-    expect(p.clientY).to.be(50);
+    var p = new PointerEvent('foo', {pointerType: 'pen', button: 0});
+    expect(p).to.have.property('pointerType', 'pen');
+    expect(p).to.have.property('button', 0);
+  });
+  test('Readonly properties must be readonly', function() {
+    var props = [
+      'pointerId',
+      'width',
+      'height',
+      'pressure',
+      'tiltX',
+      'tiltY',
+      'pointerType',
+      'hwTimestamp',
+      'isPrimary'
+    ];
+    var p = new PointerEvent;
+    var v;
+    props.forEach(function(k) {
+      v = p[k];
+      p[k] = NaN;
+      expect(p[k]).to.be(v);
+    });
   });
 });
