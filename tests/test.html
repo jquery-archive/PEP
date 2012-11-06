@@ -7,7 +7,7 @@ license that can be found in the LICENSE file.
 <title>PointerEvent tests</title>
 <meta charset="UTF8">
 <!-- Mocha -->
-<link rel="stylesheet" href="../third_party/mocha/mocha/css">
+<link rel="stylesheet" href="../third_party/mocha/mocha.css">
 <script src="../third_party/expect.js/expect.js"></script>
 <script src="../third_party/mocha/mocha.js"></script>
 <!-- PointerEvents -->
@@ -16,6 +16,9 @@ license that can be found in the LICENSE file.
 <div id="mocha"></div>
 <script>
   mocha.setup({ui: 'tdd'});
+  document.addEventListener('DOMContentLoaded', function() {
+    mocha.run();
+  });
   function makeMouseEvent(inType, x, y, target, button) {
     var e = document.createEvent('MouseEvent');
     e.initMouseEvent(inType, true, true, null, null, x, y, x, y, false, false,
@@ -24,3 +27,4 @@ license that can be found in the LICENSE file.
   }
 </script>
 <!-- Tests -->
+<script src="constructor.js"></script>
