@@ -19,12 +19,7 @@ license that can be found in the LICENSE file.
   document.addEventListener('DOMContentLoaded', function() {
     mocha.run();
   });
-  function makeMouseEvent(inType, x, y, target, button) {
-    var e = document.createEvent('MouseEvent');
-    e.initMouseEvent(inType, true, true, null, null, x, y, x, y, false, false,
-                     false, false, button, null);
-    return e;
-  }
 </script>
 <!-- Tests -->
 <script src="constructor.js"></script>
+<script src="mouse.js"></script>
