@@ -4,15 +4,17 @@
  * license that can be found in the LICENSE file.
  */
 
-suite('constructor', function() {
+suite('Constructor', function() {
   test('new PointerEvent makes a PointerEvent', function() {
     var p = new PointerEvent;
     expect(p).to.be.a(PointerEvent);
   });
+
   test('PointerEvent extends MouseEvent', function() {
     var p = new PointerEvent;
     expect(p).to.be.a(MouseEvent);
   });
+
   test('PointerEvents have the required properties', function() {
     var props = [
       'bubbles',
@@ -43,11 +45,13 @@ suite('constructor', function() {
     var p = new PointerEvent();
     expect(p).to.have.keys(props);
   });
+
   test('PointerEvent can be initialized from an object', function() {
     var p = new PointerEvent('foo', {pointerType: 'pen', button: 0});
     expect(p).to.have.property('pointerType', 'pen');
     expect(p).to.have.property('button', 0);
   });
+
   test('Readonly properties must be readonly', function() {
     var props = [
       'pointerId',
