@@ -65,7 +65,7 @@ suite('Event Generation', function() {
     });
   });
 
-  test('Multiple downs should be ignored', function() {
+  test('Multiple downs from same pointerId should be ignored', function() {
     // called
     fire('down');
     // ignored
