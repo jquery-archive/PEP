@@ -48,8 +48,8 @@ suite('Constructor', function() {
 
   test('PointerEvent can be initialized from an object', function() {
     var p = new PointerEvent('foo', {pointerType: 'pen', button: 0});
-    expect(p).to.have.property('pointerType', 'pen');
-    expect(p).to.have.property('button', 0);
+    expect(p.pointerType).to.be('pen');
+    expect(p.button).to.be(0);
   });
 
   test('Readonly properties must be readonly', function() {
