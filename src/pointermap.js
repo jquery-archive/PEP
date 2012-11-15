@@ -19,33 +19,38 @@
  * preserved until the pointer is removed from the pointermap.
  */
 function PointerMap() {
+  this.ids = [];
   this.pointers = [];
 };
 
 PointerMap.prototype = {
-  addPointer: function(inId) {
-    var p = {id: inId};
-    this.pointers.push(p);
-    return p;
+  set: function(inId, inEvent) {
+    var i = this.ids.indexOf(inId);
+    if (i > - 1) {
+      this.pointers[i] = inEvent;
+    } else {
+      this.ids.push(inId);
+      this.pointers.push(inEvent);
+    }
   },
-  removePointer: function(inId) {
-    var i = this.indexOf(inId);
+  has: function(inId) {
+    return this.ids.indexOf(inId) > -1;
+  },
+  'delete': function(inId) {
+    var i = this.ids.indexOf(inId);
     if (i > -1) {
-      return this.pointers.splice(i, 1)[0];
+      this.ids.splice(i, 1);
+      this.pointers.splice(i, 1);
     }
   },
-  getPointer: function(inId) {
-    return this.pointers[this.indexOf(inId)];
+  get: function(inId) {
+    var i = this.ids.indexOf(inId);
+    return this.pointers[i];
   },
-  indexOf: function(inId) {
-    for (var i = 0, l = this.pointers.length, p; (i < l) && (p = this.pointers[i]); i++) {
-      if (p.id === inId) {
-        return i;
-      }
-    }
-    return -1;
+  item: function(inIndex) {
+    return this.pointers[inIndex];
   },
-  size: function() {
+  get size() {
     return this.pointers.length;
   }
 };
