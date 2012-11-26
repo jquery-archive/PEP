@@ -4,7 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 
-suite('Event Generation', function() {
+suite('Event Generation and Dispatching', function() {
   var makeMouseEvent = function (inType) {
     var e = document.createEvent('MouseEvent');
     e.initMouseEvent(inType, true, true, null, null, 0, 0, 0, 0, false, false,
@@ -45,6 +45,9 @@ suite('Event Generation', function() {
     if (!c.called && !noFire) {
       throw new Error(pointer + ' callback was not called');
     }
+    if (c.called && noFire) {
+      throw new Error(pointer + ' was generated, and should not have been');
+    }
   };
 
   var correctTarget = function(expected, actual) {
@@ -52,6 +55,15 @@ suite('Event Generation', function() {
       throw new Error('target is incorrect');
     }
   };
+
+  setup(function() {
+    document.body.setAttribute('touch-action', 'none');
+  });
+
+  test('PointerEvents only fire on touch-action: none areas', function() {
+    document.body.setAttribute('touch-action', 'auto');
+    fire('move', null, document.body, true);
+  });
 
   test('MouseEvent makes a PointerEvent', function() {
     fire('move', function(e){
