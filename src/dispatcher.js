@@ -98,7 +98,7 @@
       }, this);
     },
     // remove event listeners
-    unlisten: function(inEvents) {
+    unlisten: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
         this.removeEvent(e, this.boundHandler, false, inTarget);
       }, this);
