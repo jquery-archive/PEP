@@ -11,6 +11,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  var installer = scope.installer;
   var pointermap = new PointerMap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
@@ -220,16 +221,18 @@
 
     if (window.navigator.msPointerEnabled) {
       dispatcher.registerSource('ms', msEvents);
+      installer.installOnDocument();
       if (window.navigator.msMaxTouchPoints !== undefined) {
         Object.defineProperty(window.navigator, 'maxTouchPoints', {value: window.navigator.msMaxTouchPoints, enumerable: true});
       }
     } else if ('ontouchstart' in window) {
       dispatcher.registerSource('touch', touchEvents);
+      installer.installOnElements();
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
+      installer.installOnDocument();
     }
 
-    dispatcher.registerTarget(document);
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
 })(window.__PointerEventShim__);
