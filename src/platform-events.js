@@ -221,18 +221,16 @@
 
     if (window.navigator.msPointerEnabled) {
       dispatcher.registerSource('ms', msEvents);
-      installer.installOnDocument();
       if (window.navigator.msMaxTouchPoints !== undefined) {
         Object.defineProperty(window.navigator, 'maxTouchPoints', {value: window.navigator.msMaxTouchPoints, enumerable: true});
       }
     } else if ('ontouchstart' in window) {
       dispatcher.registerSource('touch', touchEvents);
-      installer.installOnElements();
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
-      installer.installOnDocument();
     }
 
+    installer.installOnElements();
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
 })(window.__PointerEventShim__);

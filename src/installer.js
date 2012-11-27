@@ -13,10 +13,13 @@
       this.elementAdded(document);
     },
     installOnElements: function() {
-      var fn = this.installOnLoad.bind(this);
-      document.addEventListener('DOMContentLoaded', fn);
-      var watcher = this.mutationWatcher.bind(this);
       var MO = window.WebKitMutationObserver || window.MutationObserver;
+      if (!MO) {
+        // This UA has no Mutation Observer, falling back to document listener
+        this.installOnDocument();
+        return;
+      }
+      var watcher = this.mutationWatcher.bind(this);
       var observer = new MO(watcher);
       observer.observe(document, {
         childList: true,
@@ -24,6 +27,8 @@
         attributes: true,
         attributeFilter: ['touch-action']
       });
+      var fn = this.installOnLoad.bind(this);
+      document.addEventListener('DOMContentLoaded', fn);
     },
     findElements: function() {
       var nl = document.querySelectorAll(this.SELECTOR);
