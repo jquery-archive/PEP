@@ -4,6 +4,13 @@
  * license that can be found in the LICENSE file.
  */
 
+/**
+ * This module uses Mutation Observers to dynamically adjust which nodes will
+ * generate Pointer Events.
+ *
+ * All nodes that wish to generate Pointer Events must have the attribute
+ * `touch-action` set to `none`.
+ */
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
@@ -27,8 +34,7 @@
         attributes: true,
         attributeFilter: ['touch-action']
       });
-      var fn = this.installOnLoad.bind(this);
-      document.addEventListener('DOMContentLoaded', fn);
+      this.installOnLoad();
     },
     findElements: function() {
       var nl = document.querySelectorAll(this.SELECTOR);
@@ -40,9 +46,11 @@
     elementAdded: function(inEl) {
       dispatcher.registerTarget(inEl);
     },
+    // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      this.findElements();
+      document.addEventListener('DOMContentLoaded', this.findElements.bind(this));
     },
+    // only nodes with `touch-action = none` attribute need to fire events
     shouldListen: function(inEl) {
       return inEl.getAttribute && inEl.getAttribute('touch-action') === 'none';
     },
@@ -50,6 +58,7 @@
       inMutations.forEach(this.mutationHandler.bind(this));
     },
     mutationHandler: function(inMutation) {
+      // a node with touch-action has changed value
       if (inMutation.type === 'attributes') {
         var t = inMutation.target;
         if (this.shouldListen(t)) {
@@ -58,7 +67,9 @@
           this.elementRemoved(t);
         }
       } else if (inMutation.type === 'childList') {
+        // nodes were removed, remove listeners (noop on nodes without)
         forEach(inMutation.removedNodes, this.elementRemoved);
+        // new nodes added, they may have `touch-action: none`
         forEach(inMutation.addedNodes, function(n) {
           if (this.shouldListen(n)) {
             this.elementAdded(n);
