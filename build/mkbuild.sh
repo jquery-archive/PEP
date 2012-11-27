@@ -6,6 +6,7 @@ FILES=(
   '../src/initialize.js'
   '../src/pointermap.js'
   '../src/dispatcher.js'
+  '../src/installer.js'
   '../src/platform-events.js'
 )
 
