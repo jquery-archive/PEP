@@ -16,29 +16,17 @@
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
   var installer = {
     SELECTOR: '[touch-action=none]',
-    OBSERVER_OPTIONS: {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['touch-action']
-    },
-    initObserver: function() {
-      if (!this.observer) {
-        var watcher = this.mutationWatcher.bind(this);
-        var MO = window.WebKitMutationObserver || window.MutationObserver;
-        if (MO) {
-          this.observer = new MO(watcher);
-        }
-      }
+    watchSubtree: function(inScope) {
+      new MutationSummary({
+        callback: boundWatcher,
+        rootNode: inScope,
+        queries: [{element: this.SELECTOR}]
+      });
     },
     enableOnSubtree: function(inScope) {
-      this.initObserver();
-      if (!this.observer) {
-        return;
-      }
       // TODO(dfreedman): need to handle no MO and touch events (old webkit)
       var scope = inScope || document;
-      this.observer.observe(scope, this.OBSERVER_OPTIONS);
+      this.watchSubtree(inScope);
       if (scope === document && document.readyState !== 'complete') {
         this.installOnLoad();
       } else {
@@ -52,7 +40,7 @@
       var scope = inScope || document;
       if (scope.querySelectorAll) {
         var nl = scope.querySelectorAll(this.SELECTOR);
-        forEach(nl, this.elementAdded);
+        forEach(nl, this.elementAdded, this);
       }
     },
     elementRemoved: function(inEl) {
@@ -66,36 +54,15 @@
       var fn = function() { this.findElements() }.bind(this);
       document.addEventListener('DOMContentLoaded', fn);
     },
-    // only nodes with `touch-action = none` attribute need to fire events
-    shouldListen: function(inEl) {
-      return inEl.getAttribute && inEl.getAttribute('touch-action') === 'none';
+    summaryWatcher: function(inSummaries) {
+      inSummaries.forEach(this.summaryHandler, this);
     },
-    mutationWatcher: function(inMutations) {
-      inMutations.forEach(this.mutationHandler, this);
-    },
-    mutationHandler: function(inMutation) {
-      // a node with touch-action has changed value
-      if (inMutation.type === 'attributes') {
-        var t = inMutation.target;
-        if (this.shouldListen(t)) {
-          this.elementAdded(t);
-        } else {
-          this.elementRemoved(t);
-        }
-      } else if (inMutation.type === 'childList') {
-        // nodes were removed, remove listeners (noop on nodes without)
-        forEach(inMutation.removedNodes, this.elementRemoved, this);
-        // new nodes added, they may have `touch-action: none`
-        forEach(inMutation.addedNodes, function(n) {
-          if (this.shouldListen(n)) {
-            this.elementAdded(n);
-          }
-          // children might have `touch-action: none` as well
-          this.findElements(n);
-        }, this);
-      }
+    summaryHandler: function(inSummary) {
+      inSummary.added.forEach(this.elementAdded, this);
+      inSummary.removed.forEach(this.elementRemoved, this);
     },
   };
+  var boundWatcher = installer.summaryWatcher.bind(installer);
   scope.installer = installer;
   scope.enablePointerEvents = installer.enableOnSubtree.bind(installer);
 })(window.__PointerEventShim__);
