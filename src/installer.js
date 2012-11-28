@@ -50,8 +50,10 @@
     },
     findElements: function(inScope) {
       var scope = inScope || document;
-      var nl = scope.querySelectorAll(this.SELECTOR);
-      forEach(nl, this.elementAdded);
+      if (scope.querySelectorAll) {
+        var nl = scope.querySelectorAll(this.SELECTOR);
+        forEach(nl, this.elementAdded);
+      }
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
@@ -88,6 +90,8 @@
           if (this.shouldListen(n)) {
             this.elementAdded(n);
           }
+          // children might have `touch-action: none` as well
+          this.findElements(n);
         }, this);
       }
     },
