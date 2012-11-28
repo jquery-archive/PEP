@@ -11,7 +11,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
-  var pointermap = scope.pointermap;
+  var pointermap = new PointerMap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
   var touchEvents = {
@@ -62,7 +62,7 @@
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
-      var p = pointermap.addPointer(inPointer.pointerId);
+      var p = pointermap.set(inPointer.pointerId, {});
       dispatcher.over(inPointer);
       dispatcher.down(inPointer);
       p.out = inPointer;
@@ -76,7 +76,7 @@
     },
     moveOverOut: function(inPointer) {
       var event = inPointer;
-      var pointer = pointermap.getPointerById(event.pointerId);
+      var pointer = pointermap.get(event.pointerId);
       var outEvent = pointer.out;
       dispatcher.move(event);
       if (outEvent && outEvent.target !== event.target) {
@@ -93,7 +93,7 @@
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
       dispatcher.out(inPointer);
-      pointermap.removePointer(inPointer.pointerId);
+      pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
     },
     touchcancel: function(inEvent) {
@@ -102,7 +102,7 @@
     cancelOut: function(inPointer) {
       dispatcher.cancel(inPointer);
       dispatcher.out(inPointer);
-      pointermap.removePointer(inPointer.pointerId);
+      pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
     }
   };
@@ -127,10 +127,9 @@
       return e;
     },
     mousedown: function(inEvent) {
-      if (pointermap.getPointerIndex(this.POINTER_ID) == -1) {
+      if (!pointermap.has(this.POINTER_ID)) {
         var e = this.prepareEvent(inEvent);
-        var p = pointermap.addPointer(this.POINTER_ID);
-        p.button = inEvent.button;
+        var p = pointermap.set(this.POINTER_ID, inEvent);
         dispatcher.down(e);
       }
     },
@@ -139,11 +138,11 @@
       dispatcher.move(e);
     },
     mouseup: function(inEvent) {
-      var p = pointermap.getPointerById(this.POINTER_ID);
+      var p = pointermap.get(this.POINTER_ID);
       if (p && p.button === inEvent.button) {
         var e = this.prepareEvent(inEvent);
         dispatcher.up(e);
-        pointermap.removePointer(this.POINTER_ID);
+        pointermap.delete(this.POINTER_ID);
       }
     },
     mouseover: function(inEvent) {
