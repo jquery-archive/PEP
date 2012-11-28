@@ -221,8 +221,12 @@
 
     if (window.navigator.msPointerEnabled) {
       dispatcher.registerSource('ms', msEvents);
-      if (window.navigator.msMaxTouchPoints !== undefined) {
-        Object.defineProperty(window.navigator, 'maxTouchPoints', {value: window.navigator.msMaxTouchPoints, enumerable: true});
+      var tp = window.navigator.msMaxTouchPoints;
+      if (tp !== undefined) {
+        Object.defineProperty(window.navigator, 'maxTouchPoints', {
+          value: tp,
+          enumerable: true
+        });
       }
     } else if ('ontouchstart' in window) {
       dispatcher.registerSource('touch', touchEvents);
