@@ -60,6 +60,10 @@
       if (this.firstTouch === null) {
         this.firstTouch = inEvent.changedTouches[0].identifier;
       }
+      // must preventDefault touchstart or document will scroll
+      // Per Touch event spec section 5.4
+      // http://www.w3.org/TR/touch-events/#the-touchstart-event
+      inEvent.preventDefault();
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
@@ -69,10 +73,6 @@
       p.out = inPointer;
     },
     touchmove: function(inEvent) {
-      // must preventDefault first touchmove or document will scroll otherwise
-      // Per Touch event spec section 5.6
-      // http://www.w3.org/TR/touch-events/#the-touchmove-event
-      inEvent.preventDefault();
       this.processTouches(inEvent, this.moveOverOut);
     },
     moveOverOut: function(inPointer) {
