@@ -205,19 +205,6 @@
 
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {
-    // We fork the initialization of dispatcher event listeners here because
-    // current native touch event systems emulate mouse events. These
-    // touch-emulated mouse events behave differently than normal mouse events.
-    //
-    // Touch-emulated mouse events will only occur if the target element has
-    // either a native click handler, or the onclick attribute is set. In
-    // addition, the touch-emulated mouse events fire only after the finger has
-    // left the screen, negating any live-tracking ability a developer might want.
-    //
-    // The only way to disable mouse event emulation by native touch systems is to
-    // preventDefault every touch event, which we feel is inelegant.
-    //
-    // Therefore we choose to only listen to native touch events if they exist.
 
     if (window.navigator.msPointerEnabled) {
       dispatcher.registerSource('ms', msEvents);
@@ -228,13 +215,15 @@
           enumerable: true
         });
       }
-    } else if ('ontouchstart' in window) {
-      dispatcher.registerSource('touch', touchEvents);
+      installer.listenOnDocument();
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
+      if ('ontouchstart' in window) {
+        dispatcher.registerSource('touch', touchEvents);
+      }
+      installer.enableOnSubtree(document);
     }
 
-    installer.installOnElements();
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
 })(window.__PointerEventShim__);
