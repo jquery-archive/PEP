@@ -215,7 +215,7 @@
           enumerable: true
         });
       }
-      installer.listenOnDocument();
+      installer.installOnDocument();
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
       if ('ontouchstart' in window) {
