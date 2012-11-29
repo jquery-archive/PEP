@@ -10,15 +10,13 @@ body {
   padding: 0; margin: 0;
 }
   canvas {
-    -ms-touch-action: none;
-    touch-action: none;
     background: lightgreen;
     margin: 0 auto;
     overflow: hidden;
   }
 </style>
 
-<canvas width="800" height="600"></canvas>
+<canvas width="800" height="600" touch-action="none"></canvas>
 
 <!-- Pointer events library. -->
 <script src="../../src/pointerevents.js"></script>

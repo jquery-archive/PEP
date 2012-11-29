@@ -11,6 +11,7 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  var installer = scope.installer;
   var pointermap = new PointerMap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
@@ -59,19 +60,19 @@
       if (this.firstTouch === null) {
         this.firstTouch = inEvent.changedTouches[0].identifier;
       }
+      // must preventDefault touchstart or document will scroll
+      // Per Touch event spec section 5.4
+      // http://www.w3.org/TR/touch-events/#the-touchstart-event
+      inEvent.preventDefault();
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
-      var p = pointermap.set(inPointer.pointerId, {});
+      var p = pointermap.set(inPointer.pointerId, {target: inPointer.target});
       dispatcher.over(inPointer);
       dispatcher.down(inPointer);
       p.out = inPointer;
     },
     touchmove: function(inEvent) {
-      // must preventDefault first touchmove or document will scroll otherwise
-      // Per Touch event spec section 5.6
-      // http://www.w3.org/TR/touch-events/#the-touchmove-event
-      inEvent.preventDefault();
       this.processTouches(inEvent, this.moveOverOut);
     },
     moveOverOut: function(inPointer) {
@@ -93,8 +94,14 @@
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
       dispatcher.out(inPointer);
-      pointermap.delete(inPointer.pointerId);
-      this.removePrimaryTouch(inPointer);
+      // simulate a click event if the targets of the down and up are the same
+      var down = pointermap.get(inPointer.pointerId);
+      if (down.target === inPointer.target) {
+        // TODO(dfreedman): is it acceptable to fire a PointerEvent of type
+        // click here?
+        dispatcher.fireEvent('click', inPointer);
+      }
+      this.cleanUpPointer(inPointer);
     },
     touchcancel: function(inEvent) {
       this.processTouches(inEvent, this.cancelOut);
@@ -102,6 +109,9 @@
     cancelOut: function(inPointer) {
       dispatcher.cancel(inPointer);
       dispatcher.out(inPointer);
+      this.cleanUpPointer(inPointer);
+    },
+    cleanUpPointer: function(inPointer) {
       pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
     }
@@ -204,32 +214,25 @@
 
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {
-    // We fork the initialization of dispatcher event listeners here because
-    // current native touch event systems emulate mouse events. These
-    // touch-emulated mouse events behave differently than normal mouse events.
-    //
-    // Touch-emulated mouse events will only occur if the target element has
-    // either a native click handler, or the onclick attribute is set. In
-    // addition, the touch-emulated mouse events fire only after the finger has
-    // left the screen, negating any live-tracking ability a developer might want.
-    //
-    // The only way to disable mouse event emulation by native touch systems is to
-    // preventDefault every touch event, which we feel is inelegant.
-    //
-    // Therefore we choose to only listen to native touch events if they exist.
 
     if (window.navigator.msPointerEnabled) {
       dispatcher.registerSource('ms', msEvents);
-      if (window.navigator.msMaxTouchPoints !== undefined) {
-        Object.defineProperty(window.navigator, 'maxTouchPoints', {value: window.navigator.msMaxTouchPoints, enumerable: true});
+      var tp = window.navigator.msMaxTouchPoints;
+      if (tp !== undefined) {
+        Object.defineProperty(window.navigator, 'maxTouchPoints', {
+          value: tp,
+          enumerable: true
+        });
       }
-    } else if ('ontouchstart' in window) {
-      dispatcher.registerSource('touch', touchEvents);
+      installer.installOnDocument();
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
+      if ('ontouchstart' in window) {
+        dispatcher.registerSource('touch', touchEvents);
+      }
+      installer.enableOnSubtree(document);
     }
 
-    dispatcher.registerTarget(document);
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
 })(window.__PointerEventShim__);

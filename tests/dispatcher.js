@@ -27,7 +27,7 @@ suite('Event Generation and Dispatching', function() {
 
   // down -> mousedown && pointerdown
   var fire = function(type, callback, target, noFire) {
-    var t = target || document;
+    var t = target || host;
     var c = callback || function(){};
     var fn = watch(c);
     var mouse = 'mouse' + type;
@@ -39,7 +39,7 @@ suite('Event Generation and Dispatching', function() {
     if (c.error) {
       throw c.error;
     }
-    if (!__PointerEventShim__.dispatcher.handledEvents.get(e)) {
+    if (!__PointerEventShim__.dispatcher.handledEvents.get(e) && !noFire) {
       throw new Error(mouse + ' was not handled');
     }
     if (!c.called && !noFire) {
@@ -52,17 +52,29 @@ suite('Event Generation and Dispatching', function() {
 
   var correctTarget = function(expected, actual) {
     if (expected !== actual) {
+      console.log(expected, actual);
       throw new Error('target is incorrect');
     }
   };
 
-  setup(function() {
-    document.body.setAttribute('touch-action', 'none');
+  test('MouseEvents are a source', function() {
+    expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('mouse');
+  });
+
+  test('TouchEvents are a source in touch environments', function() {
+    if ('ontouchstart' in window) {
+      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('touch');
+    }
+  });
+
+  test('MSPointerEvents are a source in MSPointerEvent environments', function() {
+    if (window.navigator.msPointerEnabled) {
+      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('ms');
+    }
   });
 
   test('PointerEvents only fire on touch-action: none areas', function() {
-    document.body.setAttribute('touch-action', 'auto');
-    fire('move', null, document.body, true);
+    fire('move', null, container, true);
   });
 
   test('MouseEvent makes a PointerEvent', function() {
@@ -86,22 +98,13 @@ suite('Event Generation and Dispatching', function() {
     fire('up');
   });
 
-  test('Event bubbles correctly', function() {
-    var d = document.createElement('div');
-    document.body.appendChild(d);
+  test('Event targets correctly with touch-action: none', function() {
     var handler = function(e) {
-      correctTarget(e.target, d);
-      correctTarget(e.currentTarget, document);
+      correctTarget(e.target, inner);
+      correctTarget(e.currentTarget, host);
     };
-    var fn = watch(handler);
-    document.addEventListener('pointermove', fn);
-    fire('move', function(e) {
-      correctTarget(e.target, d);
-    }, d);
-    document.removeEventListener('pointermove', fn);
-    document.body.removeChild(d);
-    if (!handler.called) {
-      throw new Error('pointerdown event did not bubble to document');
-    }
+    host.addEventListener('pointermove', handler);
+    fire('move', null, inner);
+    host.removeEventListener('pointermove', handler);
   });
 });
