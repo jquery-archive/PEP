@@ -57,6 +57,22 @@ suite('Event Generation and Dispatching', function() {
     }
   };
 
+  test('MouseEvents are a source', function() {
+    expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('mouse');
+  });
+
+  test('TouchEvents are a source in touch environments', function() {
+    if ('ontouchstart' in window) {
+      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('touch');
+    }
+  });
+
+  test('MSPointerEvents are a source in MSPointerEvent environments', function() {
+    if (window.navigator.msPointerEnabled) {
+      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('ms');
+    }
+  });
+
   test('PointerEvents only fire on touch-action: none areas', function() {
     fire('move', null, container, true);
   });
