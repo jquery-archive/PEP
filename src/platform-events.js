@@ -67,7 +67,7 @@
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
-      var p = pointermap.set(inPointer.pointerId, {});
+      var p = pointermap.set(inPointer.pointerId, {target: inPointer.target});
       dispatcher.over(inPointer);
       dispatcher.down(inPointer);
       p.out = inPointer;
@@ -94,6 +94,13 @@
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
       dispatcher.out(inPointer);
+      // simulate a click event if the targets of the down and up are the same
+      var down = pointermap.get(inPointer.pointerId);
+      if (down.target === inPointer.target) {
+        // TODO(dfreedman): is it acceptable to fire a PointerEvent of type
+        // click here?
+        dispatcher.fireEvent('click', inPointer);
+      }
       pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
     },
