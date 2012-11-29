@@ -35,13 +35,16 @@
      */
     registerSource: function(inName, inSource) {
       var s = inSource;
-      this.events = s.events;
-      this.events.forEach(function(e) {
-        if (s[e]) {
-          this.eventMap[e] = s[e].bind(s);
-        }
-      }, this);
-      this.eventSources[inName] = s;
+      var newEvents = s.events;
+      if (newEvents) {
+        this.events = this.events.concat(newEvents);
+        newEvents.forEach(function(e) {
+          if (s[e]) {
+            this.eventMap[e] = s[e].bind(s);
+          }
+        }, this);
+        this.eventSources[inName] = s;
+      }
     },
     // add event listeners for inTarget
     registerTarget: function(inTarget) {
