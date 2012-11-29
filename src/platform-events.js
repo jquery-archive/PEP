@@ -101,8 +101,7 @@
         // click here?
         dispatcher.fireEvent('click', inPointer);
       }
-      pointermap.delete(inPointer.pointerId);
-      this.removePrimaryTouch(inPointer);
+      this.cleanUpPointer(inPointer);
     },
     touchcancel: function(inEvent) {
       this.processTouches(inEvent, this.cancelOut);
@@ -110,6 +109,9 @@
     cancelOut: function(inPointer) {
       dispatcher.cancel(inPointer);
       dispatcher.out(inPointer);
+      this.cleanUpPointer(inPointer);
+    },
+    cleanUpPointer: function(inPointer) {
       pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
     }
