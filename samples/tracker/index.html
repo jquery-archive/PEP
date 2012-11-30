@@ -18,8 +18,6 @@
       body {
         background-color: #000000;
         margin: 0px;
-        -ms-touch-action: none;
-        touch-action: none;
       }
       canvas {
         background-color:#111133;
@@ -126,6 +124,7 @@ function onPointerUp(e) {
 function setupCanvas() {
 
   canvas = document.createElement( 'canvas' );
+  canvas.setAttribute( 'touch-action', 'none' );
   c = canvas.getContext( '2d' );
   container = document.createElement( 'div' );
   container.className = "container";

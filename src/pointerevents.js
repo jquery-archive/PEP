@@ -16,12 +16,15 @@
     libLocation = s.src.slice(0, -thisFile.length);
   }
 
+  document.write('<style>[touch-action=none]{-ms-touch-action: none; touch-action: none;}</style>');
   [
+    '../third_party/mutation_summary/mutation_summary.js',
     'PointerEvent.js',
     'sidetable.js',
     'initialize.js',
     'pointermap.js',
     'dispatcher.js',
+    'installer.js',
     'platform-events.js'
   ].forEach(require);
 })();

@@ -7,3 +7,6 @@
 [submodule "third_party/expect.js"]
 	path = third_party/expect.js
 	url = https://github.com/LearnBoost/expect.js.git
+[submodule "third_party/mutation_summary"]
+	path = third_party/mutation_summary
+	url = https://code.google.com/p/mutation-summary/
