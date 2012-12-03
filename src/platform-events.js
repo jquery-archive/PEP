@@ -67,10 +67,13 @@
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
-      var p = pointermap.set(inPointer.pointerId, {target: inPointer.target});
+      var p = pointermap.set(inPointer.pointerId, {
+        target: inPointer.target,
+        out: inPointer,
+        outTarget: inPointer.target
+      });
       dispatcher.over(inPointer);
       dispatcher.down(inPointer);
-      p.out = inPointer;
     },
     touchmove: function(inEvent) {
       this.processTouches(inEvent, this.moveOverOut);
@@ -79,14 +82,18 @@
       var event = inPointer;
       var pointer = pointermap.get(event.pointerId);
       var outEvent = pointer.out;
+      var outTarget = pointer.outTarget;
       dispatcher.move(event);
-      if (outEvent && outEvent.target !== event.target) {
+      if (outEvent && outTarget !== event.target) {
         outEvent.relatedTarget = event.target;
-        event.relatedTarget = outEvent.target;
+        event.relatedTarget = outTarget;
+        // recover from retargeting by shadow
+        outEvent.target = outTarget;
         dispatcher.out(outEvent);
         dispatcher.over(event);
       }
       pointer.out = event;
+      pointer.outTarget = event.target;
     },
     touchend: function(inEvent) {
       this.processTouches(inEvent, this.upOut);
