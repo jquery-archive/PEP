@@ -159,6 +159,28 @@
       }
       return this.targets.get(inEvent);
     },
+    setCapture: function(inPointerId, inTarget) {
+      if (this.captureInfo) {
+        this.releaseCapture(this.captureInfo.id);
+      }
+      this.captureInfo = {id: inPointerId, target: inTarget};
+      var e = new PointerEvent('gotpointercapture', {
+        bubbles: true, cancelable: false
+      });
+      inTarget.dispatchEvent(e);
+      this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
+      document.addEventListener('pointerup', this.implicitRelease);
+    },
+    releaseCapture: function(inPointerId) {
+      if (this.captureInfo.id === inPointerId) {
+        var e = new PointerEvent('lostpointercapture', {
+          bubbles: true, cancelable: false
+        });
+        this.captureInfo.target.dispatchEvent(e);
+        this.captureInfo = null;
+        document.removeEventListener('pointerup', this.implicitRelease);
+      }
+    },
     /**
      * Dispatches the event to its target.
      *
