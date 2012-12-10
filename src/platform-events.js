@@ -7,7 +7,7 @@
 /**
  * This module contains the handlers for native platform events.
  * From here, the dispatcher is called to create unified pointer events.
- * Included are touch events (v1) and mouse events.
+ * Included are touch events (v1), mouse events, and MSPointerEvents.
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
@@ -26,6 +26,11 @@
     firstTouch: null,
     isPrimaryTouch: function(inTouch) {
       return this.firstTouch === inTouch.identifier;
+    },
+    setPrimaryTouch: function(inTouch) {
+      if (this.firstTouch === null) {
+        this.firstTouch = inTouch.identifier;
+      }
     },
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
@@ -57,9 +62,7 @@
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY) || document;
     },
     touchstart: function(inEvent) {
-      if (this.firstTouch === null) {
-        this.firstTouch = inEvent.changedTouches[0].identifier;
-      }
+      this.setPrimaryTouch(inEvent.changedTouches[0]);
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
@@ -210,7 +213,7 @@
       var e = this.prepareEvent(inEvent);
       dispatcher.cancel(e);
     }
-  }
+  };
 
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {
@@ -227,6 +230,8 @@
       installer.installOnDocument();
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
+      // mouse events must be on at all times
+      dispatcher.listen(mouseEvents.events, document);
       if ('ontouchstart' in window) {
         dispatcher.registerSource('touch', touchEvents);
       }
