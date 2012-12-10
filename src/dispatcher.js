@@ -97,13 +97,13 @@
     // set up event listeners
     listen: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
-        this.addEvent(e, this.boundHandler, false, inTarget);
+        this.addEvent(e, this.boundHandler, true, inTarget);
       }, this);
     },
     // remove event listeners
     unlisten: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
-        this.removeEvent(e, this.boundHandler, false, inTarget);
+        this.removeEvent(e, this.boundHandler, true, inTarget);
       }, this);
     },
     addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
@@ -141,7 +141,9 @@
     cloneEvent: function(inEvent) {
       var eventCopy = {};
       for (var n in inEvent) {
-        eventCopy[n] = inEvent[n];
+        if (inEvent.hasOwnProperty(n)) {
+          eventCopy[n] = inEvent[n];
+        }
       }
       return eventCopy;
     },
@@ -171,22 +173,4 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
-  /**
-   * Convenience function for users to register targets that may be out of the
-   * scope of document.
-   *
-   * @param {Element} InTarget A scope that will create and route PointerEvents
-   */
-  scope.register = function(inTarget) {
-    dispatcher.registerTarget(inTarget);
-  };
-  /**
-   * Convenience function for users to unregister targets that may be out of the
-   * scope of document.
-   *
-   * @param {Element} InTarget A scope created and routed PointerEvents
-   */
-  scope.unregister = function(inTarget) {
-    dispatcher.unregisterTarget(inTarget);
-  };
 })(window.__PointerEventShim__);
