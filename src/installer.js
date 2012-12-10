@@ -51,8 +51,7 @@
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      var fn = function() { this.findElements() }.bind(this);
-      document.addEventListener('DOMContentLoaded', fn);
+      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document));
     },
     summaryWatcher: function(inSummaries) {
       inSummaries.forEach(this.summaryHandler, this);
