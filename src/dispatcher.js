@@ -20,6 +20,7 @@
   var dispatcher = {
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
+    pointermap: new PointerMap,
     events: [],
     eventMap: {},
     // Scope objects for native events.

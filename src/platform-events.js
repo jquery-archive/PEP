@@ -12,7 +12,7 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var installer = scope.installer;
-  var pointermap = new PointerMap;
+  var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
   var touchEvents = {
