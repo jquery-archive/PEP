@@ -148,7 +148,6 @@
       }
       return eventCopy;
     },
-    // TODO (dfreedman): Implement pointer capturing
     getTarget: function(inEvent) {
       // if pointer capture is set, route all events for the specified pointerId
       // to the capture target
@@ -164,21 +163,18 @@
         this.releaseCapture(this.captureInfo.id);
       }
       this.captureInfo = {id: inPointerId, target: inTarget};
-      var e = new PointerEvent('gotpointercapture', {
-        bubbles: true, cancelable: false
-      });
-      inTarget.dispatchEvent(e);
+      var e = new PointerEvent('gotpointercapture', { bubbles: true });
       this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
       document.addEventListener('pointerup', this.implicitRelease);
+      setTimeout(function() { inTarget.dispatchEvent(e) }, 0);
     },
     releaseCapture: function(inPointerId) {
-      if (this.captureInfo.id === inPointerId) {
-        var e = new PointerEvent('lostpointercapture', {
-          bubbles: true, cancelable: false
-        });
-        this.captureInfo.target.dispatchEvent(e);
+      if (this.captureInfo && this.captureInfo.id === inPointerId) {
+        var e = new PointerEvent('lostpointercapture', { bubbles: true });
+        var t = this.captureInfo.target;
         this.captureInfo = null;
         document.removeEventListener('pointerup', this.implicitRelease);
+        setTimeout(function(){ t.dispatchEvent(e) }, 0);
       }
     },
     /**
