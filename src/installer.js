@@ -64,4 +64,9 @@
   var boundWatcher = installer.summaryWatcher.bind(installer);
   scope.installer = installer;
   scope.enablePointerEvents = installer.enableOnSubtree.bind(installer);
+  if (!window.MutationSummary) {
+    installer.watchSubtree = function(){
+      console.warn('MutationSummary not found, touch-action will not be dynamically detected');
+    };
+  }
 })(window.__PointerEventShim__);
