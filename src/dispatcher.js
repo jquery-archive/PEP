@@ -142,9 +142,7 @@
     cloneEvent: function(inEvent) {
       var eventCopy = {};
       for (var n in inEvent) {
-        if (inEvent.hasOwnProperty(n)) {
-          eventCopy[n] = inEvent[n];
-        }
+        eventCopy[n] = inEvent[n];
       }
       return eventCopy;
     },
