@@ -33,9 +33,6 @@
         this.findElements(scope);
       }
     },
-    installOnDocument: function() {
-      this.elementAdded(document);
-    },
     findElements: function(inScope) {
       var scope = inScope || document;
       if (scope.querySelectorAll) {

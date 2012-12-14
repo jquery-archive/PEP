@@ -219,7 +219,6 @@
   if (window.navigator.pointerEnabled === undefined) {
 
     if (window.navigator.msPointerEnabled) {
-      dispatcher.registerSource('ms', msEvents);
       var tp = window.navigator.msMaxTouchPoints;
       if (tp !== undefined) {
         Object.defineProperty(window.navigator, 'maxTouchPoints', {
@@ -227,7 +226,8 @@
           enumerable: true
         });
       }
-      installer.installOnDocument();
+      dispatcher.registerSource('ms', msEvents);
+      dispatcher.registerTarget(document);
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
       // mouse events must be on at all times
