@@ -230,12 +230,12 @@
       dispatcher.registerTarget(document);
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
-      // mouse events must be on at all times
-      dispatcher.listen(mouseEvents.events, document);
       if ('ontouchstart' in window) {
         dispatcher.registerSource('touch', touchEvents);
       }
       installer.enableOnSubtree(document);
+      // mouse move events must be on at all times
+      dispatcher.listen(['mousemove'], document);
     }
 
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
