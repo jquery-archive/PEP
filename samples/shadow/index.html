@@ -12,7 +12,7 @@
 
 <script>
   var n = document.getElementById('host');
-  var s = new WebKitShadowRoot(n);
+  var s = n.webkitCreateShadowRoot();
   var d = document.createElement('div');
   var pd = document.createElement('div');
   pd.appendChild(d);
