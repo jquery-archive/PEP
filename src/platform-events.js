@@ -7,12 +7,12 @@
 /**
  * This module contains the handlers for native platform events.
  * From here, the dispatcher is called to create unified pointer events.
- * Included are touch events (v1) and mouse events.
+ * Included are touch events (v1), mouse events, and MSPointerEvents.
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var installer = scope.installer;
-  var pointermap = new PointerMap;
+  var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // handler block for native touch events
   var touchEvents = {
@@ -26,6 +26,11 @@
     firstTouch: null,
     isPrimaryTouch: function(inTouch) {
       return this.firstTouch === inTouch.identifier;
+    },
+    setPrimaryTouch: function(inTouch) {
+      if (this.firstTouch === null) {
+        this.firstTouch = inTouch.identifier;
+      }
     },
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
@@ -57,36 +62,41 @@
       return document.elementFromPoint(inEvent.clientX, inEvent.clientY) || document;
     },
     touchstart: function(inEvent) {
-      if (this.firstTouch === null) {
-        this.firstTouch = inEvent.changedTouches[0].identifier;
-      }
-      // must preventDefault touchstart or document will scroll
-      // Per Touch event spec section 5.4
-      // http://www.w3.org/TR/touch-events/#the-touchstart-event
-      inEvent.preventDefault();
+      this.setPrimaryTouch(inEvent.changedTouches[0]);
       this.processTouches(inEvent, this.overDown);
     },
     overDown: function(inPointer) {
-      var p = pointermap.set(inPointer.pointerId, {target: inPointer.target});
+      var p = pointermap.set(inPointer.pointerId, {
+        target: inPointer.target,
+        out: inPointer,
+        outTarget: inPointer.target
+      });
       dispatcher.over(inPointer);
       dispatcher.down(inPointer);
-      p.out = inPointer;
     },
     touchmove: function(inEvent) {
+      // must preventDefault first touchmove or document will scroll otherwise
+      // Per Touch event spec section 5.6
+      // http://www.w3.org/TR/touch-events/#the-touchmove-event
+      inEvent.preventDefault();
       this.processTouches(inEvent, this.moveOverOut);
     },
     moveOverOut: function(inPointer) {
       var event = inPointer;
       var pointer = pointermap.get(event.pointerId);
       var outEvent = pointer.out;
+      var outTarget = pointer.outTarget;
       dispatcher.move(event);
-      if (outEvent && outEvent.target !== event.target) {
+      if (outEvent && outTarget !== event.target) {
         outEvent.relatedTarget = event.target;
-        event.relatedTarget = outEvent.target;
+        event.relatedTarget = outTarget;
+        // recover from retargeting by shadow
+        outEvent.target = outTarget;
         dispatcher.out(outEvent);
         dispatcher.over(event);
       }
       pointer.out = event;
+      pointer.outTarget = event.target;
     },
     touchend: function(inEvent) {
       this.processTouches(inEvent, this.upOut);
@@ -94,13 +104,6 @@
     upOut: function(inPointer) {
       dispatcher.up(inPointer);
       dispatcher.out(inPointer);
-      // simulate a click event if the targets of the down and up are the same
-      var down = pointermap.get(inPointer.pointerId);
-      if (down.target === inPointer.target) {
-        // TODO(dfreedman): is it acceptable to fire a PointerEvent of type
-        // click here?
-        dispatcher.fireEvent('click', inPointer);
-      }
       this.cleanUpPointer(inPointer);
     },
     touchcancel: function(inEvent) {
@@ -129,6 +132,12 @@
       'mouseover',
       'mouseout'
     ],
+    global: [
+      'mousedown',
+      'mouseup',
+      'mouseover',
+      'mouseout'
+    ],
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
@@ -141,6 +150,7 @@
         var e = this.prepareEvent(inEvent);
         var p = pointermap.set(this.POINTER_ID, inEvent);
         dispatcher.down(e);
+        dispatcher.listen(this.global, document);
       }
     },
     mousemove: function(inEvent) {
@@ -153,6 +163,7 @@
         var e = this.prepareEvent(inEvent);
         dispatcher.up(e);
         pointermap.delete(this.POINTER_ID);
+        dispatcher.unlisten(this.global, document);
       }
     },
     mouseover: function(inEvent) {
@@ -210,13 +221,12 @@
       var e = this.prepareEvent(inEvent);
       dispatcher.cancel(e);
     }
-  }
+  };
 
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {
 
     if (window.navigator.msPointerEnabled) {
-      dispatcher.registerSource('ms', msEvents);
       var tp = window.navigator.msMaxTouchPoints;
       if (tp !== undefined) {
         Object.defineProperty(window.navigator, 'maxTouchPoints', {
@@ -224,13 +234,16 @@
           enumerable: true
         });
       }
-      installer.installOnDocument();
+      dispatcher.registerSource('ms', msEvents);
+      dispatcher.registerTarget(document);
     } else {
       dispatcher.registerSource('mouse', mouseEvents);
       if ('ontouchstart' in window) {
         dispatcher.registerSource('touch', touchEvents);
       }
       installer.enableOnSubtree(document);
+      // mouse move events must be on at all times
+      dispatcher.listen(['mousemove'], document);
     }
 
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});

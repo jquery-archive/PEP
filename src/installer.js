@@ -33,9 +33,6 @@
         this.findElements(scope);
       }
     },
-    installOnDocument: function() {
-      this.elementAdded(document);
-    },
     findElements: function(inScope) {
       var scope = inScope || document;
       if (scope.querySelectorAll) {
@@ -51,8 +48,7 @@
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      var fn = function() { this.findElements() }.bind(this);
-      document.addEventListener('DOMContentLoaded', fn);
+      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document));
     },
     summaryWatcher: function(inSummaries) {
       inSummaries.forEach(this.summaryHandler, this);
@@ -65,4 +61,9 @@
   var boundWatcher = installer.summaryWatcher.bind(installer);
   scope.installer = installer;
   scope.enablePointerEvents = installer.enableOnSubtree.bind(installer);
+  if (!window.MutationSummary) {
+    installer.watchSubtree = function(){
+      console.warn('MutationSummary not found, touch-action will not be dynamically detected');
+    };
+  }
 })(window.__PointerEventShim__);
