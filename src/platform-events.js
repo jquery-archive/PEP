@@ -132,6 +132,12 @@
       'mouseover',
       'mouseout'
     ],
+    global: [
+      'mousedown',
+      'mouseup',
+      'mouseover',
+      'mouseout'
+    ],
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
@@ -144,6 +150,7 @@
         var e = this.prepareEvent(inEvent);
         var p = pointermap.set(this.POINTER_ID, inEvent);
         dispatcher.down(e);
+        dispatcher.listen(this.global, document);
       }
     },
     mousemove: function(inEvent) {
@@ -156,6 +163,7 @@
         var e = this.prepareEvent(inEvent);
         dispatcher.up(e);
         pointermap.delete(this.POINTER_ID);
+        dispatcher.unlisten(this.global, document);
       }
     },
     mouseover: function(inEvent) {

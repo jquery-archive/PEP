@@ -73,10 +73,6 @@ suite('Event Generation and Dispatching', function() {
     }
   });
 
-  test('PointerEvents only fire on touch-action: none areas', function() {
-    fire('move', null, container, true);
-  });
-
   test('MouseEvent makes a PointerEvent', function() {
     fire('move', function(e){
       expect(e.type).to.be('pointermove');
@@ -106,5 +102,20 @@ suite('Event Generation and Dispatching', function() {
     host.addEventListener('pointermove', handler);
     fire('move', null, inner);
     host.removeEventListener('pointermove', handler);
+  });
+
+  test('PointerEvents only fire on touch-action: none areas', function() {
+    // move always fires
+    fire('down', null, container, true);
+    fire('up', null, container, true);
+    fire('over', null, container, true);
+    fire('out', null, container, true);
+  });
+
+  test('PointerEvents will fire anywhere after a down in a touch-action: none area', function() {
+    fire('down');
+    fire('over', null, container);
+    fire('up');
+    fire('over', null, container, true);
   });
 });
