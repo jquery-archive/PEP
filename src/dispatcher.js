@@ -20,6 +20,7 @@
   var dispatcher = {
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
+    pointermap: new PointerMap,
     events: [],
     eventMap: {},
     // Scope objects for native events.
@@ -97,13 +98,13 @@
     // set up event listeners
     listen: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
-        this.addEvent(e, this.boundHandler, false, inTarget);
+        this.addEvent(e, this.boundHandler, true, inTarget);
       }, this);
     },
     // remove event listeners
     unlisten: function(inEvents, inTarget) {
       inEvents.forEach(function(e) {
-        this.removeEvent(e, this.boundHandler, false, inTarget);
+        this.removeEvent(e, this.boundHandler, true, inTarget);
       }, this);
     },
     addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
@@ -145,7 +146,6 @@
       }
       return eventCopy;
     },
-    // TODO (dfreedman): Implement pointer capturing
     getTarget: function(inEvent) {
       // if pointer capture is set, route all events for the specified pointerId
       // to the capture target
@@ -155,6 +155,25 @@
         }
       }
       return this.targets.get(inEvent);
+    },
+    setCapture: function(inPointerId, inTarget) {
+      if (this.captureInfo) {
+        this.releaseCapture(this.captureInfo.id);
+      }
+      this.captureInfo = {id: inPointerId, target: inTarget};
+      var e = new PointerEvent('gotpointercapture', { bubbles: true });
+      this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
+      document.addEventListener('pointerup', this.implicitRelease);
+      setTimeout(function() { inTarget.dispatchEvent(e) }, 0);
+    },
+    releaseCapture: function(inPointerId) {
+      if (this.captureInfo && this.captureInfo.id === inPointerId) {
+        var e = new PointerEvent('lostpointercapture', { bubbles: true });
+        var t = this.captureInfo.target;
+        this.captureInfo = null;
+        document.removeEventListener('pointerup', this.implicitRelease);
+        setTimeout(function(){ t.dispatchEvent(e) }, 0);
+      }
     },
     /**
      * Dispatches the event to its target.
@@ -171,22 +190,4 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
-  /**
-   * Convenience function for users to register targets that may be out of the
-   * scope of document.
-   *
-   * @param {Element} InTarget A scope that will create and route PointerEvents
-   */
-  scope.register = function(inTarget) {
-    dispatcher.registerTarget(inTarget);
-  };
-  /**
-   * Convenience function for users to unregister targets that may be out of the
-   * scope of document.
-   *
-   * @param {Element} InTarget A scope created and routed PointerEvents
-   */
-  scope.unregister = function(inTarget) {
-    dispatcher.unregisterTarget(inTarget);
-  };
 })(window.__PointerEventShim__);

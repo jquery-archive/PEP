@@ -25,6 +25,7 @@
     'pointermap.js',
     'dispatcher.js',
     'installer.js',
-    'platform-events.js'
+    'platform-events.js',
+    'capture.js'
   ].forEach(require);
 })();
