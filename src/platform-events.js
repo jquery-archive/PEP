@@ -58,8 +58,27 @@
       pointers.forEach(inFunction, this);
     },
     findTarget: function(inEvent) {
-      // TODO (dfreedman): support shadow.elementFromPoint here, when available
-      return document.elementFromPoint(inEvent.clientX, inEvent.clientY) || document;
+      var x = inEvent.clientX, y = inEvent.clientY;
+      // find target from light dom
+      var t = document.elementFromPoint(x, y);
+      var st, sr, os;
+      // is element a shadow host?
+      sr = t && (t.webkitShadowRoot || t.shadowRoot);
+      while (sr) {
+        // find the the element inside the shadow root
+        st = sr.elementFromPoint(x, y);
+        if (!st) {
+          // check for older shadows
+          os = sr.querySelector('shadow');
+          // check the older shadow if available
+          sr = os ? os.olderShadowRoot : null;
+        } else {
+          // shadowed element is the target
+          return st;
+        }
+      }
+      // light dom element is the target
+      return t;
     },
     touchstart: function(inEvent) {
       this.setPrimaryTouch(inEvent.changedTouches[0]);
