@@ -118,6 +118,7 @@
       pointer.outTarget = event.target;
     },
     touchend: function(inEvent) {
+      this.dedupSynthMouse(inEvent);
       this.processTouches(inEvent, this.upOut);
     },
     upOut: function(inPointer) {
@@ -136,6 +137,21 @@
     cleanUpPointer: function(inPointer) {
       pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
+    },
+    // prevent synth mouse events from creating pointer events
+    dedupSynthMouse: function(inEvent) {
+      var lts = mouseEvents.lastTouches;
+      var t = inEvent.changedTouches[0];
+      // only the primary finger will synth mouse events
+      if (this.isPrimaryTouch(t)) {
+        // remember x/y of last touch
+        var lt = {x: t.clientX, y: t.clientY};
+        lts.push(lt);
+        var fn = (function(lts, lt){
+          lts.splice(lts.indexOf(lt), 1);
+        }).bind(null, lts, lt);
+        setTimeout(fn, 1000);
+      }
     }
   };
 
@@ -157,6 +173,17 @@
       'mouseover',
       'mouseout'
     ],
+    lastTouches: [],
+    isTouchEmulated: function(inEvent) {
+      var lts = this.lastTouches;
+      var x = inEvent.clientX, y = inEvent.clientY;
+      for (var i = 0, l = lts.length, t; i < l && (t = lts[i]); i++) {
+        // simulated mouse events are on the same x/y as the touchend
+        if (t.x == x && t.y == y) {
+          return true;
+        }
+      }
+    },
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
@@ -165,6 +192,9 @@
       return e;
     },
     mousedown: function(inEvent) {
+      if (this.isTouchEmulated(inEvent)) {
+        return;
+      }
       if (!pointermap.has(this.POINTER_ID)) {
         var e = this.prepareEvent(inEvent);
         var p = pointermap.set(this.POINTER_ID, inEvent);
@@ -173,10 +203,15 @@
       }
     },
     mousemove: function(inEvent) {
-      var e = this.prepareEvent(inEvent);
-      dispatcher.move(e);
+      if (!this.isTouchEmulated(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.move(e);
+      }
     },
     mouseup: function(inEvent) {
+      if (this.isTouchEmulated(inEvent)) {
+        return;
+      }
       var p = pointermap.get(this.POINTER_ID);
       if (p && p.button === inEvent.button) {
         var e = this.prepareEvent(inEvent);
@@ -186,10 +221,16 @@
       }
     },
     mouseover: function(inEvent) {
+      if (this.isTouchEmulated(inEvent)) {
+        return;
+      }
       var e = this.prepareEvent(inEvent);
       dispatcher.over(e);
     },
     mouseout: function(inEvent) {
+      if (this.isTouchEmulated(inEvent)) {
+        return;
+      }
       var e = this.prepareEvent(inEvent);
       dispatcher.out(e);
     }
