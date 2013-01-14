@@ -14,6 +14,8 @@
   var installer = scope.installer;
   var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
+  // This should be long enough to ignore compat mouse events made by touch
+  var DEDUP_TIMEOUT = 1000;
   // handler block for native touch events
   var touchEvents = {
     events: [
@@ -148,9 +150,12 @@
         var lt = {x: t.clientX, y: t.clientY};
         lts.push(lt);
         var fn = (function(lts, lt){
-          lts.splice(lts.indexOf(lt), 1);
+          var i = lts.indexOf(lt);
+          if (i > -1) {
+            lts.splice(i, 1)
+          }
         }).bind(null, lts, lt);
-        setTimeout(fn, 1000);
+        setTimeout(fn, DEDUP_TIMEOUT);
       }
     }
   };
