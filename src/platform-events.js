@@ -15,7 +15,9 @@
   var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
-  var DEDUP_TIMEOUT = 1000;
+  var DEDUP_TIMEOUT = 2500;
+  // radius around touchend that swallows mouse events
+  var DEDUP_DIST = 25;
   // handler block for native touch events
   var touchEvents = {
     events: [
@@ -183,8 +185,9 @@
       var lts = this.lastTouches;
       var x = inEvent.clientX, y = inEvent.clientY;
       for (var i = 0, l = lts.length, t; i < l && (t = lts[i]); i++) {
-        // simulated mouse events are on the same x/y as the touchend
-        if (t.x == x && t.y == y) {
+        // simulated mouse events will be swallowed near a primary touchend
+        var dx = Math.abs(x - t.x), dy = Math.abs(y - t.y);
+        if (dx <= DEDUP_DIST && dy <= DEDUP_DIST) {
           return true;
         }
       }
