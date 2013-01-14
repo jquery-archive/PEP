@@ -181,7 +181,7 @@
       'mouseout'
     ],
     lastTouches: [],
-    isTouchEmulated: function(inEvent) {
+    isEventSimulatedFromTouch: function(inEvent) {
       var lts = this.lastTouches;
       var x = inEvent.clientX, y = inEvent.clientY;
       for (var i = 0, l = lts.length, t; i < l && (t = lts[i]); i++) {
@@ -200,47 +200,43 @@
       return e;
     },
     mousedown: function(inEvent) {
-      if (this.isTouchEmulated(inEvent)) {
-        return;
-      }
-      if (!pointermap.has(this.POINTER_ID)) {
-        var e = this.prepareEvent(inEvent);
-        var p = pointermap.set(this.POINTER_ID, inEvent);
-        dispatcher.down(e);
-        dispatcher.listen(this.global, document);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        if (!pointermap.has(this.POINTER_ID)) {
+          var e = this.prepareEvent(inEvent);
+          var p = pointermap.set(this.POINTER_ID, inEvent);
+          dispatcher.down(e);
+          dispatcher.listen(this.global, document);
+        }
       }
     },
     mousemove: function(inEvent) {
-      if (!this.isTouchEmulated(inEvent)) {
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
         var e = this.prepareEvent(inEvent);
         dispatcher.move(e);
       }
     },
     mouseup: function(inEvent) {
-      if (this.isTouchEmulated(inEvent)) {
-        return;
-      }
-      var p = pointermap.get(this.POINTER_ID);
-      if (p && p.button === inEvent.button) {
-        var e = this.prepareEvent(inEvent);
-        dispatcher.up(e);
-        pointermap.delete(this.POINTER_ID);
-        dispatcher.unlisten(this.global, document);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var p = pointermap.get(this.POINTER_ID);
+        if (p && p.button === inEvent.button) {
+          var e = this.prepareEvent(inEvent);
+          dispatcher.up(e);
+          pointermap.delete(this.POINTER_ID);
+          dispatcher.unlisten(this.global, document);
+        }
       }
     },
     mouseover: function(inEvent) {
-      if (this.isTouchEmulated(inEvent)) {
-        return;
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.over(e);
       }
-      var e = this.prepareEvent(inEvent);
-      dispatcher.over(e);
     },
     mouseout: function(inEvent) {
-      if (this.isTouchEmulated(inEvent)) {
-        return;
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.out(e);
       }
-      var e = this.prepareEvent(inEvent);
-      dispatcher.out(e);
     }
   };
 
