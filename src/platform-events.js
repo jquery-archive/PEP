@@ -14,6 +14,10 @@
   var installer = scope.installer;
   var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
+  // This should be long enough to ignore compat mouse events made by touch
+  var DEDUP_TIMEOUT = 2500;
+  // radius around touchend that swallows mouse events
+  var DEDUP_DIST = 25;
   // handler block for native touch events
   var touchEvents = {
     events: [
@@ -57,9 +61,36 @@
       var pointers = touchMap(tl, this.touchToPointer, this);
       pointers.forEach(inFunction, this);
     },
+    shadow: function(inEl) {
+      return inEl && (inEl.webkitShadowRoot || inEl.shadowRoot);
+    },
+    searchRoot: function(inRoot, x, y) {
+      if (inRoot) {
+        var t = inRoot.elementFromPoint(x, y);
+        var st, sr, os;
+        // is element a shadow host?
+        sr = this.shadow(t);
+        while (sr) {
+          // find the the element inside the shadow root
+          st = sr.elementFromPoint(x, y);
+          if (!st) {
+            // check for older shadows
+            os = sr.querySelector('shadow');
+            // check the older shadow if available
+            sr = os ? os.olderShadowRoot : null;
+          } else {
+            // shadowed element may contain a shadow root
+            var ssr = this.shadow(st);
+            return this.searchRoot(ssr, x, y) || st;
+          }
+        }
+        // light dom element is the target
+        return t;
+      }
+    },
     findTarget: function(inEvent) {
-      // TODO (dfreedman): support shadow.elementFromPoint here, when available
-      return document.elementFromPoint(inEvent.clientX, inEvent.clientY) || document;
+      var x = inEvent.clientX, y = inEvent.clientY;
+      return this.searchRoot(document, x, y);
     },
     touchstart: function(inEvent) {
       this.setPrimaryTouch(inEvent.changedTouches[0]);
@@ -99,6 +130,7 @@
       pointer.outTarget = event.target;
     },
     touchend: function(inEvent) {
+      this.dedupSynthMouse(inEvent);
       this.processTouches(inEvent, this.upOut);
     },
     upOut: function(inPointer) {
@@ -117,6 +149,24 @@
     cleanUpPointer: function(inPointer) {
       pointermap.delete(inPointer.pointerId);
       this.removePrimaryTouch(inPointer);
+    },
+    // prevent synth mouse events from creating pointer events
+    dedupSynthMouse: function(inEvent) {
+      var lts = mouseEvents.lastTouches;
+      var t = inEvent.changedTouches[0];
+      // only the primary finger will synth mouse events
+      if (this.isPrimaryTouch(t)) {
+        // remember x/y of last touch
+        var lt = {x: t.clientX, y: t.clientY};
+        lts.push(lt);
+        var fn = (function(lts, lt){
+          var i = lts.indexOf(lt);
+          if (i > -1) {
+            lts.splice(i, 1)
+          }
+        }).bind(null, lts, lt);
+        setTimeout(fn, DEDUP_TIMEOUT);
+      }
     }
   };
 
@@ -138,6 +188,18 @@
       'mouseover',
       'mouseout'
     ],
+    lastTouches: [],
+    isEventSimulatedFromTouch: function(inEvent) {
+      var lts = this.lastTouches;
+      var x = inEvent.clientX, y = inEvent.clientY;
+      for (var i = 0, l = lts.length, t; i < l && (t = lts[i]); i++) {
+        // simulated mouse events will be swallowed near a primary touchend
+        var dx = Math.abs(x - t.x), dy = Math.abs(y - t.y);
+        if (dx <= DEDUP_DIST && dy <= DEDUP_DIST) {
+          return true;
+        }
+      }
+    },
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerId = this.POINTER_ID;
@@ -146,33 +208,43 @@
       return e;
     },
     mousedown: function(inEvent) {
-      if (!pointermap.has(this.POINTER_ID)) {
-        var e = this.prepareEvent(inEvent);
-        var p = pointermap.set(this.POINTER_ID, inEvent);
-        dispatcher.down(e);
-        dispatcher.listen(this.global, document);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        if (!pointermap.has(this.POINTER_ID)) {
+          var e = this.prepareEvent(inEvent);
+          var p = pointermap.set(this.POINTER_ID, inEvent);
+          dispatcher.down(e);
+          dispatcher.listen(this.global, document);
+        }
       }
     },
     mousemove: function(inEvent) {
-      var e = this.prepareEvent(inEvent);
-      dispatcher.move(e);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.move(e);
+      }
     },
     mouseup: function(inEvent) {
-      var p = pointermap.get(this.POINTER_ID);
-      if (p && p.button === inEvent.button) {
-        var e = this.prepareEvent(inEvent);
-        dispatcher.up(e);
-        pointermap.delete(this.POINTER_ID);
-        dispatcher.unlisten(this.global, document);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var p = pointermap.get(this.POINTER_ID);
+        if (p && p.button === inEvent.button) {
+          var e = this.prepareEvent(inEvent);
+          dispatcher.up(e);
+          pointermap.delete(this.POINTER_ID);
+          dispatcher.unlisten(this.global, document);
+        }
       }
     },
     mouseover: function(inEvent) {
-      var e = this.prepareEvent(inEvent);
-      dispatcher.over(e);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.over(e);
+      }
     },
     mouseout: function(inEvent) {
-      var e = this.prepareEvent(inEvent);
-      dispatcher.out(e);
+      if (!this.isEventSimulatedFromTouch(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.out(e);
+      }
     }
   };
 
