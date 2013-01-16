@@ -20,7 +20,6 @@
   var dispatcher = {
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
-    scrollHandled: new SideTable('scroll'),
     pointermap: new PointerMap,
     events: [],
     eventMap: {},
