@@ -15,12 +15,15 @@
   var dispatcher = scope.dispatcher;
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
   var installer = {
-    SELECTOR: '[touch-action=none]',
+    ATTRIB: 'touch-action',
+    SELECTOR: '[touch-action]',
+    EMITTER: 'none',
+    SCROLLER: 'scroll',
     watchSubtree: function(inScope) {
       new MutationSummary({
         callback: boundWatcher,
         rootNode: inScope,
-        queries: [{element: this.SELECTOR}]
+        queries: [{attribute: this.ATTRIB}]
       });
     },
     enableOnSubtree: function(inScope) {
@@ -33,29 +36,56 @@
         this.findElements(scope);
       }
     },
-    findElements: function(inScope) {
+    scrollerInNoneContainer: function(inEl) {
+      var e = inEl.parentNode;
+      while(e && e.getAttribute) {
+        if (e.getAttribute('touch-action') === this.EMITTER) {
+          return true;
+        }
+        e = e.parentNode;
+      }
+    },
+    findElements: function(inScope, inAddRemove) {
       var scope = inScope || document;
+      var fn = inAddRemove ? this.elementAdded : this.elementRemoved;
       if (scope.querySelectorAll) {
         var nl = scope.querySelectorAll(this.SELECTOR);
-        forEach(nl, this.elementAdded, this);
+        forEach(nl, fn, this);
       }
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
+      this.findElements(inEl, false);
+      dispatcher.unregisterScroller(inEl);
     },
     elementAdded: function(inEl) {
-      dispatcher.registerTarget(inEl);
+      var a = inEl.getAttribute(this.ATTRIB);
+      if (a === this.EMITTER) {
+        dispatcher.registerTarget(inEl);
+        this.findElements(inEl, true);
+      } else if (a === this.SCROLLER) {
+        if (this.scrollerInNoneContainer(inEl)) {
+          dispatcher.registerScroller(inEl);
+        }
+      }
+    },
+    elementChanged: function(inEl) {
+      this.elementRemoved(inEl);
+      this.elementAdded(inEl);
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document));
+      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document, true));
     },
     summaryWatcher: function(inSummaries) {
       inSummaries.forEach(this.summaryHandler, this);
     },
     summaryHandler: function(inSummary) {
+      this.summary = inSummary;
       inSummary.added.forEach(this.elementAdded, this);
       inSummary.removed.forEach(this.elementRemoved, this);
+      inSummary.valueChanged.forEach(this.elementChanged, this);
+      this.summary = null;
     },
   };
   var boundWatcher = installer.summaryWatcher.bind(installer);

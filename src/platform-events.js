@@ -300,12 +300,10 @@
 
     if (window.navigator.msPointerEnabled) {
       var tp = window.navigator.msMaxTouchPoints;
-      if (tp !== undefined) {
-        Object.defineProperty(window.navigator, 'maxTouchPoints', {
-          value: tp,
-          enumerable: true
-        });
-      }
+      Object.defineProperty(window.navigator, 'maxTouchPoints', {
+        value: tp,
+        enumerable: true
+      });
       dispatcher.registerSource('ms', msEvents);
       dispatcher.registerTarget(document);
     } else {
