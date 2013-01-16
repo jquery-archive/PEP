@@ -45,9 +45,9 @@
         e = e.parentNode;
       }
     },
-    findElements: function(inScope, inAddRemove) {
+    findElements: function(inScope, inRemove) {
       var scope = inScope || document;
-      var fn = inAddRemove ? this.elementAdded : this.elementRemoved;
+      var fn = inRemove ? this.elementRemoved : this.elementAdded;
       if (scope.querySelectorAll) {
         var nl = scope.querySelectorAll(this.SELECTOR);
         forEach(nl, fn, this);
@@ -55,14 +55,14 @@
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
-      this.findElements(inEl, false);
+      this.findElements(inEl, true);
       dispatcher.unregisterScroller(inEl);
     },
     elementAdded: function(inEl) {
       var a = inEl.getAttribute(this.ATTRIB);
       if (a === this.EMITTER) {
         dispatcher.registerTarget(inEl);
-        this.findElements(inEl, true);
+        this.findElements(inEl);
       } else if (a === this.SCROLLER) {
         if (this.scrollerInNoneContainer(inEl)) {
           dispatcher.registerScroller(inEl);
@@ -75,7 +75,7 @@
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document, true));
+      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document, false));
     },
     summaryWatcher: function(inSummaries) {
       inSummaries.forEach(this.summaryHandler, this);
