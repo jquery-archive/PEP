@@ -45,6 +45,15 @@
         e = e.parentNode;
       }
     },
+    noneInScrollerContainer: function(inEl) {
+      var e = inEl.parentNode;
+      while(e && e.getAttribute) {
+        if (e.getAttribute('touch-action') === this.SCROLLER) {
+          return true;
+        }
+        e = e.parentNode;
+      }
+    },
     findElements: function(inScope, inRemove) {
       var scope = inScope || document;
       var fn = inRemove ? this.elementRemoved : this.elementAdded;

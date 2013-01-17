@@ -39,6 +39,7 @@
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
         this.firstTouch = null;
+        this.firstMove = null;
       }
     },
     touchToPointer: function(inTouch) {
@@ -92,6 +93,17 @@
       var x = inEvent.clientX, y = inEvent.clientY;
       return this.searchRoot(document, x, y);
     },
+    // TODO(dfreedman): either installer logic needs to be pulled out, or this
+    // needs to live in installer
+    shouldPreventDocumentScroll: function(inEvent) {
+      if (!this.firstMove) {
+        this.firstMove = true;
+        var t = this.findTarget(inEvent.changedTouches[0]);
+        if (!scope.installer.noneInScrollerContainer(t)) {
+          return true;
+        }
+      }
+    },
     touchstart: function(inEvent) {
       this.setPrimaryTouch(inEvent.changedTouches[0]);
       this.processTouches(inEvent, this.overDown);
@@ -109,7 +121,9 @@
       // must preventDefault first touchmove or document will scroll otherwise
       // Per Touch event spec section 5.6
       // http://www.w3.org/TR/touch-events/#the-touchmove-event
-      inEvent.preventDefault();
+      if (this.shouldPreventDocumentScroll(inEvent)) {
+        inEvent.preventDefault();
+      }
       this.processTouches(inEvent, this.moveOverOut);
     },
     moveOverOut: function(inPointer) {
