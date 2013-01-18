@@ -162,7 +162,7 @@
         var fn = (function(lts, lt){
           var i = lts.indexOf(lt);
           if (i > -1) {
-            lts.splice(i, 1)
+            lts.splice(i, 1);
           }
         }).bind(null, lts, lt);
         setTimeout(fn, DEDUP_TIMEOUT);
@@ -264,18 +264,30 @@
       'pen',
       'mouse'
     ],
+    // single tap causes MSPointerDown and MSPointerMove with the same position
+    // prevent the caused pointermove event with this information
+    lastPointerDown: {x: null, y: null},
+    isSamePositionAsLastDown: function(inEvent) {
+      var lastDown = this.lastPointerDown;
+      return (lastDown.x === inEvent.clientX &&
+              lastDown.y === inEvent.clientY);
+    },
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
       return e;
     },
     MSPointerDown: function(inEvent) {
+      this.lastPointerDown.x = inEvent.clientX;
+      this.lastPointerDown.y = inEvent.clientY;
       var e = this.prepareEvent(inEvent);
       dispatcher.down(e);
     },
     MSPointerMove: function(inEvent) {
-      var e = this.prepareEvent(inEvent);
-      dispatcher.move(e);
+      if (!this.isSamePositionAsLastDown(inEvent)) {
+        var e = this.prepareEvent(inEvent);
+        dispatcher.move(e);
+      }
     },
     MSPointerUp: function(inEvent) {
       var e = this.prepareEvent(inEvent);
