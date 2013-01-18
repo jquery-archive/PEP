@@ -266,11 +266,11 @@
     ],
     // single tap causes MSPointerDown and MSPointerMove with the same position
     // prevent the caused pointermove event with this information
-    lastPointerDown: {x: null, y: null},
-    isSamePositionAsLastDown: function(inEvent) {
-      var lastDown = this.lastPointerDown;
-      return (lastDown.x === inEvent.clientX &&
-              lastDown.y === inEvent.clientY);
+    skipMovePosition: {x: null, y: null},
+    shouldSkipMoveEvent: function(inEvent) {
+      var skipPosition = this.skipMovePosition;
+      return (skipPosition.x === inEvent.clientX &&
+              skipPosition.y === inEvent.clientY);
     },
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
@@ -278,13 +278,16 @@
       return e;
     },
     MSPointerDown: function(inEvent) {
-      this.lastPointerDown.x = inEvent.clientX;
-      this.lastPointerDown.y = inEvent.clientY;
+      this.skipMovePosition.x = inEvent.clientX;
+      this.skipMovePosition.y = inEvent.clientY;
       var e = this.prepareEvent(inEvent);
       dispatcher.down(e);
     },
     MSPointerMove: function(inEvent) {
-      if (!this.isSamePositionAsLastDown(inEvent)) {
+      if (!this.shouldSkipMoveEvent(inEvent)) {
+        // Skip only the first move event from the whole swipe.
+        this.skipMovePosition.x = null;
+        this.skipMovePosition.y = null;
         var e = this.prepareEvent(inEvent);
         dispatcher.move(e);
       }
