@@ -18,7 +18,9 @@
     ATTRIB: 'touch-action',
     SELECTOR: '[touch-action]',
     EMITTER: 'none',
-    SCROLLER: 'scroll',
+    XSCROLLER: 'pan-x',
+    YSCROLLER: 'pan-y',
+    SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|scroll$/,
     watchSubtree: function(inScope) {
       new MutationSummary({
         callback: boundWatcher,
@@ -45,15 +47,6 @@
         e = e.parentNode;
       }
     },
-    noneInScrollerContainer: function(inEl) {
-      var e = inEl.parentNode;
-      while(e && e.getAttribute) {
-        if (e.getAttribute('touch-action') === this.SCROLLER) {
-          return true;
-        }
-        e = e.parentNode;
-      }
-    },
     findElements: function(inScope, inRemove) {
       var scope = inScope || document;
       var fn = inRemove ? this.elementRemoved : this.elementAdded;
@@ -64,15 +57,19 @@
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
-      this.findElements(inEl, true);
       dispatcher.unregisterScroller(inEl);
+      this.findElements(inEl, true);
     },
     elementAdded: function(inEl) {
       var a = inEl.getAttribute(this.ATTRIB);
       if (a === this.EMITTER) {
         dispatcher.registerTarget(inEl);
         this.findElements(inEl);
-      } else if (a === this.SCROLLER) {
+      } else if (a === this.XSCROLLER) {
+        // TODO(dfreedman): register a X scroller
+      } else if (a === this.YSCROLLER) {
+        // TODO(dfreedman): register a Y scroller
+      } else if (this.SCROLLER.exec(a)) {
         if (this.scrollerInNoneContainer(inEl)) {
           dispatcher.registerScroller(inEl);
         }
