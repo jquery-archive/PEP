@@ -18,6 +18,8 @@
   var DEDUP_TIMEOUT = 2500;
   // radius around touchend that swallows mouse events
   var DEDUP_DIST = 25;
+  // distance a finger can travel before being a scroll
+  var SCROLL_HYSTERESIS = 10;
   // handler block for native touch events
   var touchEvents = {
     events: [
@@ -34,12 +36,14 @@
     setPrimaryTouch: function(inTouch) {
       if (this.firstTouch === null) {
         this.firstTouch = inTouch.identifier;
+        this.firstXY = {X: inTouch.clientX, Y: inTouch.clientY};
       }
     },
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
         this.firstTouch = null;
-        this.firstMove = null;
+        this.firstXY = null;
+        this.scrolling = false;
       }
     },
     touchToPointer: function(inTouch) {
@@ -93,20 +97,41 @@
       var x = inEvent.clientX, y = inEvent.clientY;
       return this.searchRoot(document, x, y);
     },
-    // TODO(dfreedman): either installer logic needs to be pulled out, or this
-    // needs to live in installer
-    shouldPreventDocumentScroll: function(inEvent) {
-      if (!this.firstMove) {
-        this.firstMove = true;
-        var t = this.findTarget(inEvent.changedTouches[0]);
-        if (!scope.installer.noneInScrollerContainer(t)) {
-          return true;
+    // For single axis scrollers, determines whether the element should emit
+    // pointer events or behave as a scroller
+    shouldScroll: function(inEvent) {
+      if (this.firstXY) {
+        var scrollAxis = dispatcher.scrollType.get(inEvent.currentTarget);
+        // this element is a touch-action: none, should never scroll
+        if (scrollAxis === 'none') {
+          this.firstXY = null;
+          return false;
+        } else {
+          var t = inEvent.changedTouches[0];
+          // check the intended scroll axis, and other axis
+          var a = scrollAxis;
+          var oa = scrollAxis === 'Y' ? 'X' : 'Y';
+          var da = Math.abs(t['client' + a] - this.firstXY[a]);
+          var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
+          // if the delta in the scroll axis is enough, scroll instead of making
+          // events
+          if (da > SCROLL_HYSTERESIS) {
+            this.firstXY = null;
+            return true;
+          // if the delta in the other axis is enough, make events and don't
+          // scroll
+          } else if (doa > SCROLL_HYSTERESIS) {
+            this.firstXY = null;
+            return false;
+          }
         }
       }
     },
     touchstart: function(inEvent) {
       this.setPrimaryTouch(inEvent.changedTouches[0]);
-      this.processTouches(inEvent, this.overDown);
+      if (!this.scrolling) {
+        this.processTouches(inEvent, this.overDown);
+      }
     },
     overDown: function(inPointer) {
       var p = pointermap.set(inPointer.pointerId, {
@@ -118,13 +143,18 @@
       dispatcher.down(inPointer);
     },
     touchmove: function(inEvent) {
-      // must preventDefault first touchmove or document will scroll otherwise
-      // Per Touch event spec section 5.6
-      // http://www.w3.org/TR/touch-events/#the-touchmove-event
-      if (this.shouldPreventDocumentScroll(inEvent)) {
-        inEvent.preventDefault();
+      if (!this.scrolling) {
+        var scroll = this.shouldScroll(inEvent);
+        if (!scroll) {
+          if (!this.firstXY) {
+            inEvent.preventDefault();
+          }
+          this.processTouches(inEvent, this.moveOverOut);
+        } else {
+          this.touchcancel(inEvent);
+          this.scrolling = true;
+        }
       }
-      this.processTouches(inEvent, this.moveOverOut);
     },
     moveOverOut: function(inPointer) {
       var event = inPointer;
@@ -148,8 +178,10 @@
       this.processTouches(inEvent, this.upOut);
     },
     upOut: function(inPointer) {
-      dispatcher.up(inPointer);
-      dispatcher.out(inPointer);
+      if (!this.scrolling) {
+        dispatcher.up(inPointer);
+        dispatcher.out(inPointer);
+      }
       this.cleanUpPointer(inPointer);
     },
     touchcancel: function(inEvent) {
