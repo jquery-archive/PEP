@@ -66,9 +66,9 @@
         dispatcher.registerTarget(inEl);
         this.findElements(inEl);
       } else if (a === this.XSCROLLER) {
-        // TODO(dfreedman): register a X scroller
+        dispatcher.registerOneAxisScroller(inEl, 'X');
       } else if (a === this.YSCROLLER) {
-        // TODO(dfreedman): register a Y scroller
+        dispatcher.registerOneAxisScroller(inEl, 'Y');
       } else if (this.SCROLLER.exec(a)) {
         if (this.scrollerInNoneContainer(inEl)) {
           dispatcher.registerScroller(inEl);

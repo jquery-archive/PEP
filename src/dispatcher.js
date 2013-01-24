@@ -20,6 +20,7 @@
   var dispatcher = {
     targets: new SideTable('target'),
     handledEvents: new SideTable('pointer'),
+    scrollType: new SideTable('scrollType'),
     pointermap: new PointerMap,
     events: [],
     eventMap: {},
@@ -48,6 +49,7 @@
       }
     },
     registerScroller: function(inTarget) {
+      this.scrollType.set(inTarget, null);
       this.events.forEach(function(e) {
         this.addEvent(e, this.boundScrollerHandler, false, inTarget);
       }, this);
@@ -57,12 +59,21 @@
         this.removeEvent(e, this.boundScrollerHandler, false, inTarget);
       }, this);
     },
+    registerOneAxisScroller: function(inTarget, inAxis) {
+      this.registerTarget(inTarget);
+      this.scrollType.set(inTarget, inAxis);
+    },
+    unregisterOneAxisScroller: function(inTarget) {
+      this.unregisterTarget(inTarget);
+    },
     // add event listeners for inTarget
     registerTarget: function(inTarget) {
+      this.scrollType.set(inTarget, 'none');
       this.listen(this.events, inTarget);
     },
     // remove event listeners for inTarget
     unregisterTarget: function(inTarget) {
+      this.scrollType.set(inTarget, null);
       this.unlisten(this.events, inTarget);
     },
     // EVENTS
