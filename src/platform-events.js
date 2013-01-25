@@ -114,7 +114,6 @@
           this.firstXY = null;
           // if delta in the scroll axis > delta other axis, scroll instead of
           // making events
-          console.log(da, doa);
           return da >= doa;
         }
       }
