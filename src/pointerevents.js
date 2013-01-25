@@ -16,7 +16,7 @@
     libLocation = s.src.slice(0, -thisFile.length);
   }
 
-  document.write('<style>[touch-action=none]{-ms-touch-action: none; touch-action: none;}</style>');
+  document.write('<link rel="stylesheet" href="' + libLocation + 'touch-action.css">');
   [
     '../third_party/mutation_summary/mutation_summary.js',
     'PointerEvent.js',
