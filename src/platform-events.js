@@ -18,8 +18,6 @@
   var DEDUP_TIMEOUT = 2500;
   // radius around touchend that swallows mouse events
   var DEDUP_DIST = 25;
-  // distance a finger can travel before being a scroll
-  var SCROLL_HYSTERESIS = 10;
   // handler block for native touch events
   var touchEvents = {
     events: [
