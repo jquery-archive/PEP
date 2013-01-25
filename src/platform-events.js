@@ -37,13 +37,13 @@
       if (this.firstTouch === null) {
         this.firstTouch = inTouch.identifier;
         this.firstXY = {X: inTouch.clientX, Y: inTouch.clientY};
+        this.scrolling = false;
       }
     },
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
         this.firstTouch = null;
         this.firstXY = null;
-        this.scrolling = false;
       }
     },
     touchToPointer: function(inTouch) {
