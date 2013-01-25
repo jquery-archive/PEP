@@ -34,11 +34,14 @@
     setPrimaryTouch: function(inTouch) {
       if (this.firstTouch === null) {
         this.firstTouch = inTouch.identifier;
+        this.firstXY = {X: inTouch.clientX, Y: inTouch.clientY};
+        this.scrolling = false;
       }
     },
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
         this.firstTouch = null;
+        this.firstXY = null;
       }
     },
     touchToPointer: function(inTouch) {
@@ -92,9 +95,38 @@
       var x = inEvent.clientX, y = inEvent.clientY;
       return this.searchRoot(document, x, y);
     },
+    // For single axis scrollers, determines whether the element should emit
+    // pointer events or behave as a scroller
+    shouldScroll: function(inEvent) {
+      if (this.firstXY) {
+        var ret;
+        var scrollAxis = dispatcher.scrollType.get(inEvent.currentTarget);
+        if (scrollAxis === 'none') {
+          // this element is a touch-action: none, should never scroll
+          ret = false;
+        } else if (scrollAxis === 'XY') {
+          // this element should alwasy scroll
+          ret = true;
+        } else {
+          var t = inEvent.changedTouches[0];
+          // check the intended scroll axis, and other axis
+          var a = scrollAxis;
+          var oa = scrollAxis === 'Y' ? 'X' : 'Y';
+          var da = Math.abs(t['client' + a] - this.firstXY[a]);
+          var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
+          // if delta in the scroll axis > delta other axis, scroll instead of
+          // making events
+          ret = da >= doa;
+        }
+        this.firstXY = null;
+        return ret;
+      }
+    },
     touchstart: function(inEvent) {
       this.setPrimaryTouch(inEvent.changedTouches[0]);
-      this.processTouches(inEvent, this.overDown);
+      if (!this.scrolling) {
+        this.processTouches(inEvent, this.overDown);
+      }
     },
     overDown: function(inPointer) {
       var p = pointermap.set(inPointer.pointerId, {
@@ -106,11 +138,15 @@
       dispatcher.down(inPointer);
     },
     touchmove: function(inEvent) {
-      // must preventDefault first touchmove or document will scroll otherwise
-      // Per Touch event spec section 5.6
-      // http://www.w3.org/TR/touch-events/#the-touchmove-event
-      inEvent.preventDefault();
-      this.processTouches(inEvent, this.moveOverOut);
+      if (!this.scrolling) {
+        if (this.shouldScroll(inEvent)) {
+          this.scrolling = true;
+          this.touchcancel(inEvent);
+        } else {
+          inEvent.preventDefault();
+          this.processTouches(inEvent, this.moveOverOut);
+        }
+      }
     },
     moveOverOut: function(inPointer) {
       var event = inPointer;
@@ -134,8 +170,10 @@
       this.processTouches(inEvent, this.upOut);
     },
     upOut: function(inPointer) {
-      dispatcher.up(inPointer);
-      dispatcher.out(inPointer);
+      if (!this.scrolling) {
+        dispatcher.up(inPointer);
+        dispatcher.out(inPointer);
+      }
       this.cleanUpPointer(inPointer);
     },
     touchcancel: function(inEvent) {
@@ -300,12 +338,10 @@
 
     if (window.navigator.msPointerEnabled) {
       var tp = window.navigator.msMaxTouchPoints;
-      if (tp !== undefined) {
-        Object.defineProperty(window.navigator, 'maxTouchPoints', {
-          value: tp,
-          enumerable: true
-        });
-      }
+      Object.defineProperty(window.navigator, 'maxTouchPoints', {
+        value: tp,
+        enumerable: true
+      });
       dispatcher.registerSource('ms', msEvents);
       dispatcher.registerTarget(document);
     } else {

@@ -15,12 +15,17 @@
   var dispatcher = scope.dispatcher;
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
   var installer = {
-    SELECTOR: '[touch-action=none]',
+    ATTRIB: 'touch-action',
+    SELECTOR: '[touch-action]',
+    EMITTER: 'none',
+    XSCROLLER: 'pan-x',
+    YSCROLLER: 'pan-y',
+    SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|scroll$/,
     watchSubtree: function(inScope) {
       new MutationSummary({
         callback: boundWatcher,
         rootNode: inScope,
-        queries: [{element: this.SELECTOR}]
+        queries: [{attribute: this.ATTRIB}]
       });
     },
     enableOnSubtree: function(inScope) {
@@ -33,29 +38,46 @@
         this.findElements(scope);
       }
     },
-    findElements: function(inScope) {
+    findElements: function(inScope, inRemove) {
       var scope = inScope || document;
+      var fn = inRemove ? this.elementRemoved : this.elementAdded;
       if (scope.querySelectorAll) {
         var nl = scope.querySelectorAll(this.SELECTOR);
-        forEach(nl, this.elementAdded, this);
+        forEach(nl, fn, this);
       }
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
     },
     elementAdded: function(inEl) {
-      dispatcher.registerTarget(inEl);
+      var a = inEl.getAttribute(this.ATTRIB);
+      if (a === this.EMITTER) {
+        dispatcher.registerTarget(inEl);
+      } else if (a === this.XSCROLLER) {
+        dispatcher.registerTarget(inEl, 'X');
+      } else if (a === this.YSCROLLER) {
+        dispatcher.registerTarget(inEl, 'Y');
+      } else if (this.SCROLLER.exec(a)) {
+        dispatcher.registerTarget(inEl, 'XY');
+      }
+    },
+    elementChanged: function(inEl) {
+      this.elementRemoved(inEl);
+      this.elementAdded(inEl);
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document));
+      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document, false));
     },
     summaryWatcher: function(inSummaries) {
       inSummaries.forEach(this.summaryHandler, this);
     },
     summaryHandler: function(inSummary) {
+      this.summary = inSummary;
       inSummary.added.forEach(this.elementAdded, this);
       inSummary.removed.forEach(this.elementRemoved, this);
+      inSummary.valueChanged.forEach(this.elementChanged, this);
+      this.summary = null;
     },
   };
   var boundWatcher = installer.summaryWatcher.bind(installer);
