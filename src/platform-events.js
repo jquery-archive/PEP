@@ -113,17 +113,11 @@
           var oa = scrollAxis === 'Y' ? 'X' : 'Y';
           var da = Math.abs(t['client' + a] - this.firstXY[a]);
           var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
-          // if the delta in the scroll axis is enough, scroll instead of making
-          // events
-          if (da > SCROLL_HYSTERESIS) {
-            this.firstXY = null;
-            return true;
-          // if the delta in the other axis is enough, make events and don't
-          // scroll
-          } else if (doa > SCROLL_HYSTERESIS) {
-            this.firstXY = null;
-            return false;
-          }
+          this.firstXY = null;
+          // if delta in the scroll axis > delta other axis, scroll instead of
+          // making events
+          console.log(da, doa);
+          return da >= doa;
         }
       }
     },
@@ -144,15 +138,12 @@
     },
     touchmove: function(inEvent) {
       if (!this.scrolling) {
-        var scroll = this.shouldScroll(inEvent);
-        if (!scroll) {
-          if (!this.firstXY) {
-            inEvent.preventDefault();
-          }
-          this.processTouches(inEvent, this.moveOverOut);
-        } else {
-          this.touchcancel(inEvent);
+        if (this.shouldScroll(inEvent)) {
           this.scrolling = true;
+          this.touchcancel(inEvent);
+        } else {
+          inEvent.preventDefault();
+          this.processTouches(inEvent, this.moveOverOut);
         }
       }
     },
