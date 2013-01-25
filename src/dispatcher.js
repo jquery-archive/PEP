@@ -48,27 +48,9 @@
         this.eventSources[inName] = s;
       }
     },
-    registerScroller: function(inTarget) {
-      this.scrollType.set(inTarget, null);
-      this.events.forEach(function(e) {
-        this.addEvent(e, this.boundScrollerHandler, false, inTarget);
-      }, this);
-    },
-    unregisterScroller: function(inTarget) {
-      this.events.forEach(function(e) {
-        this.removeEvent(e, this.boundScrollerHandler, false, inTarget);
-      }, this);
-    },
-    registerOneAxisScroller: function(inTarget, inAxis) {
-      this.registerTarget(inTarget);
-      this.scrollType.set(inTarget, inAxis);
-    },
-    unregisterOneAxisScroller: function(inTarget) {
-      this.unregisterTarget(inTarget);
-    },
     // add event listeners for inTarget
-    registerTarget: function(inTarget) {
-      this.scrollType.set(inTarget, 'none');
+    registerTarget: function(inTarget, inAxis) {
+      this.scrollType.set(inTarget, inAxis || 'none');
       this.listen(this.events, inTarget);
     },
     // remove event listeners for inTarget

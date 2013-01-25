@@ -99,11 +99,14 @@
     // pointer events or behave as a scroller
     shouldScroll: function(inEvent) {
       if (this.firstXY) {
+        var ret;
         var scrollAxis = dispatcher.scrollType.get(inEvent.currentTarget);
-        // this element is a touch-action: none, should never scroll
         if (scrollAxis === 'none') {
-          this.firstXY = null;
-          return false;
+          // this element is a touch-action: none, should never scroll
+          ret = false;
+        } else if (scrollAxis === 'XY') {
+          // this element should alwasy scroll
+          ret = true;
         } else {
           var t = inEvent.changedTouches[0];
           // check the intended scroll axis, and other axis
@@ -111,11 +114,12 @@
           var oa = scrollAxis === 'Y' ? 'X' : 'Y';
           var da = Math.abs(t['client' + a] - this.firstXY[a]);
           var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
-          this.firstXY = null;
           // if delta in the scroll axis > delta other axis, scroll instead of
           // making events
-          return da >= doa;
+          ret = da >= doa;
         }
+        this.firstXY = null;
+        return ret;
       }
     },
     touchstart: function(inEvent) {

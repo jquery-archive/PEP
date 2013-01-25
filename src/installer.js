@@ -38,15 +38,6 @@
         this.findElements(scope);
       }
     },
-    scrollerInNoneContainer: function(inEl) {
-      var e = inEl.parentNode;
-      while(e && e.getAttribute) {
-        if (e.getAttribute('touch-action') === this.EMITTER) {
-          return true;
-        }
-        e = e.parentNode;
-      }
-    },
     findElements: function(inScope, inRemove) {
       var scope = inScope || document;
       var fn = inRemove ? this.elementRemoved : this.elementAdded;
@@ -57,22 +48,17 @@
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
-      dispatcher.unregisterScroller(inEl);
-      this.findElements(inEl, true);
     },
     elementAdded: function(inEl) {
       var a = inEl.getAttribute(this.ATTRIB);
       if (a === this.EMITTER) {
         dispatcher.registerTarget(inEl);
-        this.findElements(inEl);
       } else if (a === this.XSCROLLER) {
-        dispatcher.registerOneAxisScroller(inEl, 'X');
+        dispatcher.registerTarget(inEl, 'X');
       } else if (a === this.YSCROLLER) {
-        dispatcher.registerOneAxisScroller(inEl, 'Y');
+        dispatcher.registerTarget(inEl, 'Y');
       } else if (this.SCROLLER.exec(a)) {
-        if (this.scrollerInNoneContainer(inEl)) {
-          dispatcher.registerScroller(inEl);
-        }
+        dispatcher.registerTarget(inEl, 'XY');
       }
     },
     elementChanged: function(inEl) {
