@@ -64,36 +64,9 @@
       var pointers = touchMap(tl, this.touchToPointer, this);
       pointers.forEach(inFunction, this);
     },
-    shadow: function(inEl) {
-      return inEl && (inEl.webkitShadowRoot || inEl.shadowRoot);
-    },
-    searchRoot: function(inRoot, x, y) {
-      if (inRoot) {
-        var t = inRoot.elementFromPoint(x, y);
-        var st, sr, os;
-        // is element a shadow host?
-        sr = this.shadow(t);
-        while (sr) {
-          // find the the element inside the shadow root
-          st = sr.elementFromPoint(x, y);
-          if (!st) {
-            // check for older shadows
-            os = sr.querySelector('shadow');
-            // check the older shadow if available
-            sr = os ? os.olderShadowRoot : null;
-          } else {
-            // shadowed element may contain a shadow root
-            var ssr = this.shadow(st);
-            return this.searchRoot(ssr, x, y) || st;
-          }
-        }
-        // light dom element is the target
-        return t;
-      }
-    },
     findTarget: function(inEvent) {
       var x = inEvent.clientX, y = inEvent.clientY;
-      return this.searchRoot(document, x, y);
+      return scope.findTarget(document, x, y);
     },
     // For single axis scrollers, determines whether the element should emit
     // pointer events or behave as a scroller
