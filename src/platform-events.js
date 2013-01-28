@@ -12,6 +12,7 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var installer = scope.installer;
+  var findTarget = scope.findTarget;
   var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
@@ -50,7 +51,7 @@
       // Touch identifiers can start at 0.
       // Add 2 to the touch identifier for compatibility.
       e.pointerId = inTouch.identifier + 2;
-      e.target = this.findTarget(e);
+      e.target = findTarget(e);
       e.bubbles = true;
       e.cancelable = true;
       e.button = 0;
@@ -63,10 +64,6 @@
       var tl = inEvent.changedTouches;
       var pointers = touchMap(tl, this.touchToPointer, this);
       pointers.forEach(inFunction, this);
-    },
-    findTarget: function(inEvent) {
-      var x = inEvent.clientX, y = inEvent.clientY;
-      return scope.findTarget(document, x, y);
     },
     // For single axis scrollers, determines whether the element should emit
     // pointer events or behave as a scroller

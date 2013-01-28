@@ -37,7 +37,12 @@
         // light dom element is the target
         return t;
       }
+    },
+    findTarget: function(inEvent) {
+      var x = inEvent.clientX, y = inEvent.clientY;
+      return this.searchRoot(document, x, y);
     }
   };
-  scope.findTarget = target.searchRoot.bind(target);
+  scope.targetFinding = target;
+  scope.findTarget = target.findTarget.bind(target);
 })(window.__PointerEventShim__);
