@@ -217,9 +217,16 @@
     },
     mousedown: function(inEvent) {
       if (!this.isEventSimulatedFromTouch(inEvent)) {
-        if (!pointermap.has(this.POINTER_ID)) {
+        var p = pointermap.has(this.POINTER_ID);
+        // TODO(dfreedman) workaround for some elements not sending mouseup
+        // http://crbug/149091
+        if (p) {
+          this.cancel(inEvent);
+          p = false;
+        }
+        if (!p) {
           var e = this.prepareEvent(inEvent);
-          var p = pointermap.set(this.POINTER_ID, inEvent);
+          pointermap.set(this.POINTER_ID, inEvent);
           dispatcher.down(e);
           dispatcher.listen(this.global, document);
         }
@@ -237,8 +244,7 @@
         if (p && p.button === inEvent.button) {
           var e = this.prepareEvent(inEvent);
           dispatcher.up(e);
-          pointermap.delete(this.POINTER_ID);
-          dispatcher.unlisten(this.global, document);
+          this.cleanupMouse();
         }
       }
     },
@@ -253,6 +259,15 @@
         var e = this.prepareEvent(inEvent);
         dispatcher.out(e);
       }
+    },
+    cancel: function(inEvent) {
+      var e = this.prepareEvent(inEvent);
+      dispatcher.cancel(e);
+      this.cleanupMouse();
+    },
+    cleanupMouse: function() {
+      pointermap.delete(this.POINTER_ID);
+      dispatcher.unlisten(this.global, document);
     }
   };
 
