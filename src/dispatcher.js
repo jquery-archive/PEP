@@ -173,6 +173,7 @@
       var e = new PointerEvent('gotpointercapture', { bubbles: true });
       this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
       document.addEventListener('pointerup', this.implicitRelease);
+      document.addEventListener('pointercancel', this.implicitRelease);
       this.targets.set(e, inTarget);
       this.asyncDispatchEvent(e);
     },
@@ -182,6 +183,7 @@
         var t = this.captureInfo.target;
         this.captureInfo = null;
         document.removeEventListener('pointerup', this.implicitRelease);
+        document.removeEventListener('pointercancel', this.implicitRelease);
         this.targets.set(e, t);
         this.asyncDispatchEvent(e);
       }
