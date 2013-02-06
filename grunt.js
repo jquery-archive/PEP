@@ -1,7 +1,4 @@
 module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-exec');
-  grunt.renameTask('exec', 'test');
-
   grunt.initConfig({
     concat: {
       'build/pointerevents.css': 'src/*.css',
@@ -9,14 +6,18 @@ module.exports = function(grunt) {
     min: {
       pointerevents: {
         dest: 'build/pointerevents.js',
-        src: ['third_party/mutation_summary/mutation_summary.js', 'src/!(pointerevents).js']
-      }
-    },
-    test: {
-      mocha: {
-        command: './node_modules/mocha-phantomjs/bin/mocha-phantomjs ./tests/index.html',
-        stdout: true,
-        stderr: true
+        src: [
+          'third_party/mutation_summary/mutation_summary.js',
+          'src/PointerEvent.js',
+          'src/sidetable.js',
+          'src/initialize.js',
+          'src/pointermap.js',
+          'src/dispatcher.js',
+          'src/installer.js',
+          'src/findTarget.js',
+          'src/platform-events.js',
+          'src/capture.js',
+        ]
       }
     }
   });
