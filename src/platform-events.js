@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
@@ -92,7 +92,39 @@
         return ret;
       }
     },
+    findTouch: function(inTL, inId) {
+      for (var i = 0, l = inTL.length, t; i < l && (t = inTL[i]); i++) {
+        if (t.identifier === inId) {
+          return true;
+        }
+      }
+    },
+    // In some instances, a touchstart can happen without a touchend. This
+    // leaves the pointermap in a broken state.
+    // Therefore, on every touchstart, we remove the touches that did not fire a
+    // touchend event.
+    // To keep state globally consistent, we fire a
+    // pointercancel for this "abandoned" touch
+    vacuumTouches: function(inEvent) {
+      var tl = inEvent.touches;
+      // pointermap.size should be < tl.length here, as the touchstart has not
+      // been processed yet.
+      if (pointermap.size >= tl.length) {
+        var d = [];
+        pointermap.ids.forEach(function(i) {
+          // Never remove pointerId == 1, which is mouse.
+          // Touch identifiers are 2 smaller than their pointerId, which is the
+          // index in pointermap.
+          if (i !== 1 && !this.findTouch(tl, i - 2)) {
+            var p = pointermap.get(i).out;
+            d.push(this.touchToPointer(p));
+          }
+        }, this);
+        d.forEach(this.cancelOut, this);
+      }
+    },
     touchstart: function(inEvent) {
+      this.vacuumTouches(inEvent);
       this.setPrimaryTouch(inEvent.changedTouches[0]);
       if (!this.scrolling) {
         this.processTouches(inEvent, this.overDown);
