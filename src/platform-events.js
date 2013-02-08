@@ -197,6 +197,9 @@
       'mouseout'
     ],
     lastTouches: [],
+    // duplicate, so a user can do dispatcher.registerTarget(document), and not
+    // collide with the global mouse listener
+    mouseHandler: dispatcher.eventHandler.bind(dispatcher),
     isEventSimulatedFromTouch: function(inEvent) {
       var lts = this.lastTouches;
       var x = inEvent.clientX, y = inEvent.clientY;
@@ -228,7 +231,7 @@
           var e = this.prepareEvent(inEvent);
           pointermap.set(this.POINTER_ID, inEvent);
           dispatcher.down(e);
-          dispatcher.listen(this.global, document);
+          dispatcher.listen(this.global, document, this.mouseHandler);
         }
       }
     },
@@ -267,7 +270,7 @@
     },
     cleanupMouse: function() {
       pointermap.delete(this.POINTER_ID);
-      dispatcher.unlisten(this.global, document);
+      dispatcher.unlisten(this.global, document, this.mouseHandler);
     }
   };
 
