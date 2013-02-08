@@ -10,6 +10,6 @@
   -ms-touch-action: pan-y;
 }
 
-[touch-action="scroll"] {
+[touch-action="scroll"], [touch-action="pan-x pan-y"], [touch-action="pan-y pan-x"] {
   -ms-touch-action: pan-x pan-y;
 }
