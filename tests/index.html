@@ -21,9 +21,7 @@ license that can be found in the LICENSE file.
 </div>
 <script>
   mocha.setup({ui: 'tdd'});
-  document.addEventListener('DOMContentLoaded', function() {
-    mocha.run();
-  });
+  mocha.reporter('html');
 </script>
 <!-- Tests -->
 <script>
@@ -84,3 +82,12 @@ license that can be found in the LICENSE file.
 <script src="dispatcher.js"></script>
 <script src="pointermap.js"></script>
 <script src="capture.js"></script>
+<body>
+  <script>
+    if (window.navigator.userAgent.indexOf('PhantomJS') < 0) {
+      mocha.run();
+    } else {
+      mochaPhantomJS.run();
+    }
+  </script>
+</body>

@@ -117,12 +117,14 @@ PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
     b = props.which ? props.button : -1;
   }
 
+  var pressure = props.pressure || (b ? 0.5 : 0);
+
   // define the properties of the PointerEvent interface
   Object.defineProperties(this, {
     pointerId: { value: props.pointerId, enumerable: true },
     width: { value: props.width, enumerable: true },
     height: { value: props.height, enumerable: true },
-    pressure: { value: props.pressure, enumerable: true },
+    pressure: { value: pressure, enumerable: true },
     tiltX: { value: props.tiltX, enumerable: true },
     tiltY: { value: props.tiltY, enumerable: true },
     pointerType: { value: props.pointerType, enumerable: true },
