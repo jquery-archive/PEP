@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
@@ -117,7 +117,7 @@ PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
     b = props.which ? props.button : -1;
   }
 
-  var pressure = props.pressure || (b ? 0.5 : 0);
+  var pressure = props.pressure || (b > -1 ? 0.5 : 0);
 
   // define the properties of the PointerEvent interface
   Object.defineProperties(this, {
