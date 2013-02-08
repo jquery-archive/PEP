@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2012 The Toolkitchen Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style
  * license that can be found in the LICENSE file.
@@ -18,10 +18,10 @@
   *   - pointercancel: a pointer will no longer generate events
   */
   var dispatcher = {
-    targets: new SideTable('target'),
-    handledEvents: new SideTable('pointer'),
-    scrollType: new SideTable('scrollType'),
-    pointermap: new PointerMap,
+    targets: new scope.SideTable('target'),
+    handledEvents: new scope.SideTable('pointer'),
+    scrollType: new scope.SideTable('scrollType'),
+    pointermap: new scope.PointerMap,
     events: [],
     eventMap: {},
     // Scope objects for native events.
