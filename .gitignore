@@ -1,1 +1,2 @@
-build/pointerevents.js
+build/
+node_modules

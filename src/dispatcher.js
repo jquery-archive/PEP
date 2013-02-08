@@ -51,12 +51,12 @@
     // add event listeners for inTarget
     registerTarget: function(inTarget, inAxis) {
       this.scrollType.set(inTarget, inAxis || 'none');
-      this.listen(this.events, inTarget);
+      this.listen(this.events, inTarget, this.boundHandler);
     },
     // remove event listeners for inTarget
     unregisterTarget: function(inTarget) {
       this.scrollType.set(inTarget, null);
-      this.unlisten(this.events, inTarget);
+      this.unlisten(this.events, inTarget, this.boundHandler);
     },
     // EVENTS
     down: function(inEvent) {
@@ -98,22 +98,16 @@
       }
       this.handledEvents.set(inEvent, true);
     },
-    scrollerHandler: function(inEvent) {
-      // let scrolling occur by marking the event as handled
-      if (this.pointermap.size == 0) {
-        this.handledEvents.set(inEvent, true);
-      }
-    },
     // set up event listeners
-    listen: function(inEvents, inTarget) {
+    listen: function(inEvents, inTarget, inListener) {
       inEvents.forEach(function(e) {
-        this.addEvent(e, this.boundHandler, false, inTarget);
+        this.addEvent(e, inListener, false, inTarget);
       }, this);
     },
     // remove event listeners
-    unlisten: function(inEvents, inTarget) {
+    unlisten: function(inEvents, inTarget, inListener) {
       inEvents.forEach(function(e) {
-        this.removeEvent(e, this.boundHandler, false, inTarget);
+        this.removeEvent(e, inListener, false, inTarget);
       }, this);
     },
     addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
@@ -173,6 +167,7 @@
       var e = new PointerEvent('gotpointercapture', { bubbles: true });
       this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
       document.addEventListener('pointerup', this.implicitRelease);
+      document.addEventListener('pointercancel', this.implicitRelease);
       this.targets.set(e, inTarget);
       this.asyncDispatchEvent(e);
     },
@@ -182,6 +177,7 @@
         var t = this.captureInfo.target;
         this.captureInfo = null;
         document.removeEventListener('pointerup', this.implicitRelease);
+        document.removeEventListener('pointercancel', this.implicitRelease);
         this.targets.set(e, t);
         this.asyncDispatchEvent(e);
       }
@@ -203,6 +199,7 @@
     }
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
-  dispatcher.boundScrollerHandler = dispatcher.scrollerHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
+  scope.register = dispatcher.registerTarget.bind(dispatcher);
+  scope.unregister = dispatcher.unregisterTarget.bind(dispatcher);
 })(window.__PointerEventShim__);

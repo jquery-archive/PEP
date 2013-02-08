@@ -73,7 +73,6 @@ suite('Pointer Capture', function() {
       var wait = function() {
         issued++;
         return function(e) {
-          console.log(arguments.callee.args);
           issued--;
           if (e) {
             throw e;
