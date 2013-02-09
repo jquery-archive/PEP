@@ -106,11 +106,8 @@ Pointer Events. Gestures are provided in the *upcoming* PointerGestures library.
 
 ## Getting Started
 
-1. In order to use the PointerEvents polyfill, you must check out the
-MutationSummary submodule `git submodule update --init -- third_party/mutation_summary`
+1. Place the following script in your page `<script src="PointerEvents/src/pointerevents.js"></script>`
 
-2. Next, place the following script in your page `<script src="PointerEvents/src/pointerevents.js"></script>`
+1. Set up some elements to receive events `<div class="event-maker" touch-action="none"></div>`
 
-3. Set up some elements to receive events `<div class="event-maker" touch-action="none"></div>`
-
-4. You're done!
+1. You're done!

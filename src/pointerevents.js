@@ -19,7 +19,6 @@
   document.write('<link rel="stylesheet" href="' + libLocation + 'touch-action.css">');
 
   [
-    '../third_party/mutation_summary/mutation_summary.js',
     'PointerEvent.js',
     'initialize.js',
     'sidetable.js',
