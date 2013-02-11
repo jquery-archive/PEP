@@ -49,6 +49,7 @@
     },
     elementRemoved: function(inEl) {
       dispatcher.unregisterTarget(inEl);
+      this.findElements(inEl, true);
     },
     elementAdded: function(inEl) {
       var a = inEl.getAttribute && inEl.getAttribute(this.ATTRIB);
@@ -61,6 +62,7 @@
       } else if (this.SCROLLER.exec(a)) {
         dispatcher.registerTarget(inEl, 'XY');
       }
+      this.findElements(inEl);
     },
     elementChanged: function(inEl) {
       this.elementRemoved(inEl);
