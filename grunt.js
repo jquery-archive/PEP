@@ -8,8 +8,8 @@ module.exports = function(grunt) {
         dest: 'build/pointerevents.js',
         src: [
           'src/PointerEvent.js',
-          'src/sidetable.js',
           'src/initialize.js',
+          'src/sidetable.js',
           'src/pointermap.js',
           'src/dispatcher.js',
           'src/installer.js',
