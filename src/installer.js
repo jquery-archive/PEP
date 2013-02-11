@@ -21,8 +21,14 @@
     XSCROLLER: 'pan-x',
     YSCROLLER: 'pan-y',
     SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|scroll$/,
+    OBSERVER_INIT: {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['touch-action']
+    },
     watchSubtree: function(inScope) {
-      observer.observe(inScope, observerInit);
+      observer.observe(inScope, this.OBSERVER_INIT);
     },
     enableOnSubtree: function(inScope) {
       var scope = inScope || document;
@@ -86,11 +92,5 @@
     };
   } else {
     var observer = new MO(boundWatcher);
-    var observerInit = {
-        subtree: true,
-        childList: true,
-        attributes: true,
-        attributeFilter: ['touch-action']
-    };
   }
 })(window.__PointerEventShim__);
