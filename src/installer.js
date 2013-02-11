@@ -21,15 +21,16 @@
     XSCROLLER: 'pan-x',
     YSCROLLER: 'pan-y',
     SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|scroll$/,
+    OBSERVER_INIT: {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['touch-action']
+    },
     watchSubtree: function(inScope) {
-      new MutationSummary({
-        callback: boundWatcher,
-        rootNode: inScope,
-        queries: [{attribute: this.ATTRIB}]
-      });
+      observer.observe(inScope, this.OBSERVER_INIT);
     },
     enableOnSubtree: function(inScope) {
-      // TODO(dfreedman): need to handle no MO and touch events (old webkit)
       var scope = inScope || document;
       this.watchSubtree(inScope);
       if (scope === document && document.readyState !== 'complete') {
@@ -50,7 +51,7 @@
       dispatcher.unregisterTarget(inEl);
     },
     elementAdded: function(inEl) {
-      var a = inEl.getAttribute(this.ATTRIB);
+      var a = inEl.getAttribute && inEl.getAttribute(this.ATTRIB);
       if (a === this.EMITTER) {
         dispatcher.registerTarget(inEl);
       } else if (a === this.XSCROLLER) {
@@ -73,19 +74,23 @@
       inSummaries.forEach(this.summaryHandler, this);
     },
     summaryHandler: function(inSummary) {
-      this.summary = inSummary;
-      inSummary.added.forEach(this.elementAdded, this);
-      inSummary.removed.forEach(this.elementRemoved, this);
-      inSummary.valueChanged.forEach(this.elementChanged, this);
-      this.summary = null;
+      if (inSummary.type === 'childList') {
+        forEach(inSummary.addedNodes, this.elementAdded, this);
+        forEach(inSummary.removedNodes, this.elementRemoved, this);
+      } else if (inSummary.type === 'attributes') {
+        this.elementChanged(inSummary.target);
+      }
     },
   };
   var boundWatcher = installer.summaryWatcher.bind(installer);
   scope.installer = installer;
   scope.enablePointerEvents = installer.enableOnSubtree.bind(installer);
-  if (!window.MutationSummary) {
+  var MO = window.WebKitMutationObserver || window.MutationObserver;
+  if (!MO) {
     installer.watchSubtree = function(){
-      console.warn('MutationSummary not found, touch-action will not be dynamically detected');
+      console.warn('MutationObservers not found, touch-action will not be dynamically detected');
     };
+  } else {
+    var observer = new MO(boundWatcher);
   }
 })(window.__PointerEventShim__);

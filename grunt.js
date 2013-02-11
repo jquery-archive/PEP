@@ -3,14 +3,16 @@ module.exports = function(grunt) {
     concat: {
       'build/pointerevents.css': 'src/*.css',
     },
+    meta: {
+      banner: 'window.__PointerEventShim__ = {};'
+    },
     min: {
       pointerevents: {
         dest: 'build/pointerevents.js',
         src: [
-          'third_party/mutation_summary/mutation_summary.js',
           'src/PointerEvent.js',
+          '<banner>',
           'src/sidetable.js',
-          'src/initialize.js',
           'src/pointermap.js',
           'src/dispatcher.js',
           'src/installer.js',
