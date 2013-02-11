@@ -18,10 +18,10 @@
 
   document.write('<link rel="stylesheet" href="' + libLocation + 'touch-action.css">');
 
+  window.__PointerEventShim__ = {};
+
   [
-    '../third_party/mutation_summary/mutation_summary.js',
     'PointerEvent.js',
-    'initialize.js',
     'sidetable.js',
     'pointermap.js',
     'dispatcher.js',
