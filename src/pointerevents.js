@@ -18,12 +18,10 @@
 
   document.write('<link rel="stylesheet" href="' + libLocation + 'touch-action.css">');
 
-  window.__PointerEventShim__ = {};
-
   [
     'PointerEvent.js',
-    'sidetable.js',
     'pointermap.js',
+    'sidetable.js',
     'dispatcher.js',
     'installer.js',
     'findTarget.js',
