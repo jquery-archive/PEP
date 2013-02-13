@@ -14,6 +14,7 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
+  var map = Array.prototype.map.call.bind(Array.prototype.map);
   var installer = {
     ATTRIB: 'touch-action',
     SELECTOR: '[touch-action]',
@@ -36,22 +37,23 @@
       if (scope === document && document.readyState !== 'complete') {
         this.installOnLoad();
       } else {
-        this.findElements(scope);
+        this.installNewSubtree(scope);
       }
     },
-    findElements: function(inScope, inRemove) {
+    installNewSubtree: function(inScope) {
+      forEach(this.findElements(inScope), this.addElement, this);
+    },
+    findElements: function(inScope) {
       var scope = inScope || document;
-      var fn = inRemove ? this.elementRemoved : this.elementAdded;
       if (scope.querySelectorAll) {
-        var nl = scope.querySelectorAll(this.SELECTOR);
-        forEach(nl, fn, this);
+        return scope.querySelectorAll(this.SELECTOR);
       }
+      return [];
     },
-    elementRemoved: function(inEl) {
+    removeElement: function(inEl) {
       dispatcher.unregisterTarget(inEl);
-      this.findElements(inEl, true);
     },
-    elementAdded: function(inEl) {
+    addElement: function(inEl) {
       var a = inEl.getAttribute && inEl.getAttribute(this.ATTRIB);
       if (a === this.EMITTER) {
         dispatcher.registerTarget(inEl);
@@ -62,29 +64,45 @@
       } else if (this.SCROLLER.exec(a)) {
         dispatcher.registerTarget(inEl, 'XY');
       }
-      this.findElements(inEl);
     },
     elementChanged: function(inEl) {
-      this.elementRemoved(inEl);
-      this.elementAdded(inEl);
+      this.removeElement(inEl);
+      this.addElement(inEl);
+    },
+    concatLists: function(inAccum, inList) {
+      for (var i = 0, l = inList.length, o; i < l && (o = inList[i]); i++) {
+        inAccum.push(o);
+      }
+      return inAccum;
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      document.addEventListener('DOMContentLoaded', this.findElements.bind(this, document, false));
+      document.addEventListener('DOMContentLoaded', this.installNewSubtree.bind(this, document));
     },
-    summaryWatcher: function(inSummaries) {
-      inSummaries.forEach(this.summaryHandler, this);
+    flattenMutationTree: function(inNodes) {
+      // find children with touch-action
+      var tree = map(inNodes, this.findElements, this);
+      // make sure the added nodes are accounted for
+      tree.push(inNodes);
+      // flatten the list
+      return tree.reduce(this.concatLists, []);
     },
-    summaryHandler: function(inSummary) {
-      if (inSummary.type === 'childList') {
-        forEach(inSummary.addedNodes, this.elementAdded, this);
-        forEach(inSummary.removedNodes, this.elementRemoved, this);
-      } else if (inSummary.type === 'attributes') {
-        this.elementChanged(inSummary.target);
+    mutationWatcher: function(inMutations) {
+      inMutations.forEach(this.mutationHandler, this);
+    },
+    mutationHandler: function(inMutation) {
+      var m = inMutation;
+      if (m.type === 'childList') {
+        var added = this.flattenMutationTree(m.addedNodes);
+        added.forEach(this.addElement, this);
+        var removed = this.flattenMutationTree(m.removedNodes);
+        removed.forEach(this.removeElement, this);
+      } else if (m.type === 'attributes') {
+        this.elementChanged(m.target);
       }
     },
   };
-  var boundWatcher = installer.summaryWatcher.bind(installer);
+  var boundWatcher = installer.mutationWatcher.bind(installer);
   scope.installer = installer;
   scope.enablePointerEvents = installer.enableOnSubtree.bind(installer);
   var MO = window.WebKitMutationObserver || window.MutationObserver;
