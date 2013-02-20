@@ -72,10 +72,10 @@
     },
     addElement: function(inEl) {
       var a = inEl.getAttribute && inEl.getAttribute(this.ATTRIB);
-      // set touch-action on shadow as well
       var st = this.touchActionToScrollType(a);
       if (st) {
         dispatcher.registerTarget(inEl, st);
+        // set touch-action on shadow as well
         var s = scope.targetFinding.shadow(inEl);
         if (s) {
           dispatcher.registerTarget(s, st);
@@ -122,16 +122,15 @@
   var boundWatcher = installer.mutationWatcher.bind(installer);
   scope.installer = installer;
   scope.register = installer.enableOnSubtree.bind(installer);
-  // allow document or shadowroot to have touch-action set
-  scope.setTouchActionOnRoot = function(inRoot, inTouchAction) {
+  // imperatively set the touch action of an element, document, or shadow root
+  // use 'auto' to unset the touch-action
+  scope.setTouchAction = function(inEl, inTouchAction) {
     var st = this.touchActionToScrollType(inTouchAction);
     if (st) {
-      dispatcher.registerTarget(inRoot, st);
+      dispatcher.registerTarget(inEl, st);
+    } else {
+      dispatcher.unregisterTarget(inEl);
     }
-  }.bind(installer);
-  // remove touch-action from shadow root or document
-  scope.removeTouchActionOnRoot = function(inRoot) {
-    dispatcher.unregisterTarget(inRoot);
   }.bind(installer);
   var MO = window.WebKitMutationObserver || window.MutationObserver;
   if (!MO) {
