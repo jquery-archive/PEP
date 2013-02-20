@@ -57,5 +57,5 @@
     }
   };
   scope.PointerMap = PointerMap;
-  window.__PointerEventShim__ = scope;
-})(window.__PointerEventShim__);
+  window.PointerEventsPolyfill = scope;
+})(window.PointerEventsPolyfill);

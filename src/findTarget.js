@@ -45,4 +45,4 @@
   };
   scope.targetFinding = target;
   scope.findTarget = target.findTarget.bind(target);
-})(window.__PointerEventShim__);
+})(window.PointerEventsPolyfill);
