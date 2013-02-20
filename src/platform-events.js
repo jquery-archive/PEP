@@ -75,7 +75,7 @@
           // this element is a touch-action: none, should never scroll
           ret = false;
         } else if (scrollAxis === 'XY') {
-          // this element should alwasy scroll
+          // this element should always scroll
           ret = true;
         } else {
           var t = inEvent.changedTouches[0];
