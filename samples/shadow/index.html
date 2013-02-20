@@ -19,8 +19,8 @@
   d.innerHTML = '<div>Hello World</div>';
   s.appendChild(pd);
   // Register shadow dom touch-action
-  __PointerEventShim__.register(s);
-  __PointerEventShim__.setTouchAction(s, host.getAttribute('touch-action'));
+  PointerEventsPolyfill.register(s);
+  PointerEventsPolyfill.setTouchAction(s, host.getAttribute('touch-action'));
   // event listeners
   host.addEventListener('pointerdown', function(e){ console.log(e.target) });
   d.addEventListener('pointerdown', function(e){ console.log(e.target) });
