@@ -8,19 +8,20 @@
   }
 </style>
 
-<div id="host"></div>
+<div id="host" touch-action="none"></div>
 
 <script>
-  var n = document.getElementById('host');
-  var s = n.webkitCreateShadowRoot();
+  var s = host.webkitCreateShadowRoot();
   var d = document.createElement('div');
   var pd = document.createElement('div');
   pd.appendChild(d);
-  pd.setAttribute('touch-action', 'none');
   d.style.cssText = 'height: 200px; width: 200px; background: blue;';
   d.innerHTML = '<div>Hello World</div>';
   s.appendChild(pd);
-  d.addEventListener('pointermove', function(e){ console.log(e.target) });
-  // Secret Sauce
-  __PointerEventShim__.enablePointerEvents(s);
+  // Register shadow dom touch-action
+  __PointerEventShim__.register(s);
+  __PointerEventShim__.setTouchActionOnRoot(s, host.getAttribute('touch-action'));
+  // event listeners
+  host.addEventListener('pointerdown', function(e){ console.log(e.target) });
+  d.addEventListener('pointerdown', function(e){ console.log(e.target) });
 </script>
