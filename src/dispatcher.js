@@ -200,4 +200,4 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
-})(window.__PointerEventShim__);
+})(window.PointerEventsPolyfill);

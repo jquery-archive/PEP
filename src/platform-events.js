@@ -376,4 +376,4 @@
 
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
   }
-})(window.__PointerEventShim__);
+})(window.PointerEventsPolyfill);

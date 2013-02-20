@@ -39,4 +39,4 @@
       }
     });
   }
-})(window.__PointerEventShim__);
+})(window.PointerEventsPolyfill);

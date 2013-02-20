@@ -140,4 +140,4 @@
   } else {
     var observer = new MO(boundWatcher);
   }
-})(window.__PointerEventShim__);
+})(window.PointerEventsPolyfill);
