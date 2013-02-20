@@ -200,6 +200,4 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
-  scope.register = dispatcher.registerTarget.bind(dispatcher);
-  scope.unregister = dispatcher.unregisterTarget.bind(dispatcher);
 })(window.__PointerEventShim__);
