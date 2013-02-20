@@ -50,19 +50,36 @@
       }
       return [];
     },
+    touchActionToScrollType: function(inTouchAction) {
+      var t = inTouchAction;
+      if (t === this.EMITTER) {
+        return 'none';
+      } else if (t === this.XSCROLLER) {
+        return 'X';
+      } else if (t === this.YSCROLLER) {
+        return 'Y';
+      } else if (this.SCROLLER.exec(t)) {
+        return 'XY';
+      }
+    },
     removeElement: function(inEl) {
       dispatcher.unregisterTarget(inEl);
+      // remove touch-action from shadow
+      var s = scope.targetFinding.shadow(inEl);
+      if (s) {
+        dispatcher.unregisterTarget(s);
+      }
     },
     addElement: function(inEl) {
       var a = inEl.getAttribute && inEl.getAttribute(this.ATTRIB);
-      if (a === this.EMITTER) {
-        dispatcher.registerTarget(inEl);
-      } else if (a === this.XSCROLLER) {
-        dispatcher.registerTarget(inEl, 'X');
-      } else if (a === this.YSCROLLER) {
-        dispatcher.registerTarget(inEl, 'Y');
-      } else if (this.SCROLLER.exec(a)) {
-        dispatcher.registerTarget(inEl, 'XY');
+      // set touch-action on shadow as well
+      var st = this.touchActionToScrollType(a);
+      if (st) {
+        dispatcher.registerTarget(inEl, st);
+        var s = scope.targetFinding.shadow(inEl);
+        if (s) {
+          dispatcher.registerTarget(s, st);
+        }
       }
     },
     elementChanged: function(inEl) {
@@ -104,7 +121,18 @@
   };
   var boundWatcher = installer.mutationWatcher.bind(installer);
   scope.installer = installer;
-  scope.enablePointerEvents = installer.enableOnSubtree.bind(installer);
+  scope.register = installer.enableOnSubtree.bind(installer);
+  // allow document or shadowroot to have touch-action set
+  scope.setTouchActionOnRoot = function(inRoot, inTouchAction) {
+    var st = this.touchActionToScrollType(inTouchAction);
+    if (st) {
+      dispatcher.registerTarget(inRoot, st);
+    }
+  }.bind(installer);
+  // remove touch-action from shadow root or document
+  scope.removeTouchActionOnRoot = function(inRoot) {
+    dispatcher.unregisterTarget(inRoot);
+  }.bind(installer);
   var MO = window.WebKitMutationObserver || window.MutationObserver;
   if (!MO) {
     installer.watchSubtree = function(){
