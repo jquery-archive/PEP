@@ -8,18 +8,18 @@ suite('Event Generation and Dispatching', function() {
 
   // down -> mousedown && pointerdown
   test('MouseEvents are a source', function() {
-    expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('mouse');
+    expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('mouse');
   });
 
   test('TouchEvents are a source in touch environments', function() {
     if ('ontouchstart' in window) {
-      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('touch');
+      expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('touch');
     }
   });
 
   test('MSPointerEvents are a source in MSPointerEvent environments', function() {
     if (window.navigator.msPointerEnabled) {
-      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('ms');
+      expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('ms');
     }
   });
 

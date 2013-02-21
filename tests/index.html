@@ -59,7 +59,7 @@ license that can be found in the LICENSE file.
       if (c.error) {
         throw c.error;
       }
-      if (!__PointerEventShim__.dispatcher.handledEvents.get(e) && !noFire) {
+      if (!PointerEventsPolyfill.dispatcher.handledEvents.get(e) && !noFire) {
         throw new Error(mouse + ' was not handled');
       }
       if (!c.called && !noFire) {
@@ -78,16 +78,15 @@ license that can be found in the LICENSE file.
     }
   };
 </script>
+<script src="loader.js"></script>
 <script src="constructor.js"></script>
 <script src="dispatcher.js"></script>
 <script src="pointermap.js"></script>
 <script src="capture.js"></script>
 <body>
   <script>
-    if (window.navigator.userAgent.indexOf('PhantomJS') < 0) {
+    if (navigator.userAgent.indexOf('PhantomJS') < 0) {
       mocha.run();
-    } else {
-      mochaPhantomJS.run();
     }
   </script>
 </body>
