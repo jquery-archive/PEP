@@ -7,6 +7,11 @@ module.exports = function(grunt) {
     },
     uglify: {
       pointerevents: {
+        options: {
+          sourceMap: 'build/pointerevents.js.map',
+          sourceMappingURL: 'pointerevents.js.map',
+          sourceMapRoot: '..'
+        },
         dest: 'build/pointerevents.js',
         src: [
           'src/PointerEvent.js',
