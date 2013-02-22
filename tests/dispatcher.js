@@ -35,15 +35,6 @@ suite('Event Generation and Dispatching', function() {
     });
   });
 
-  test('Multiple downs from same pointerId should be ignored', function() {
-    // called
-    em.fire('down');
-    // ignored
-    em.fire('down', null, null, true);
-    // reset
-    em.fire('up');
-  });
-
   test('Event targets correctly with touch-action: none', function() {
     var handler = function(e) {
       em.correctTarget(e.target, inner);
