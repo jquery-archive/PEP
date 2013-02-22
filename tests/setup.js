@@ -4,6 +4,13 @@
  * license that can be found in the LICENSE file.
  */
 
+container = document.createElement('div');
+container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
+host = container.firstChild;
+inner = host.firstChild;
+
+document.body.appendChild(container);
+
 var em = {
   makeMouseEvent: function (inType) {
     var e = document.createEvent('MouseEvent');
@@ -56,3 +63,5 @@ var em = {
     }
   }
 };
+
+mocha.setup('tdd');
