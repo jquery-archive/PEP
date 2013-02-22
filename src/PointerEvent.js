@@ -14,45 +14,11 @@
  * identify as MouseEvents.
  *
  * @constructor
- * @param {string} inType The type of the event to create.
- * @param {Object?} inDict An optional dictionary of initial event properties.
- * @return {Event} A new PointerEvent of type `inType` and with properties from `inDict`.
+ * @param {String} inType The type of the event to create.
+ * @param {Object} [inDict] An optional dictionary of initial event properties.
+ * @return {Event} A new PointerEvent of type `inType` and initialized with properties from `inDict`.
  */
 function PointerEvent(inType, inDict) {
-  // We dance a merry jig, and insert a new MouseEvent into the prototype chain.
-  //
-  // This keeps the PointerEvent prototype around, and lets the event maintain
-  // the necessary MouseEvent instance wrapper, and prototype.
-  //
-  // Step 1, this a PointerEvent instance
-  // {this}->{PointerEvent}->{MouseEvent}->{UIEvent}..
-  //
-  // Step 2, we make a MouseEvent instance e
-  // {e}->{MouseEvent}->{UIEvent}...
-  //
-  // Step 3, chain the MouseEvent instance to the PointerEvent prototype;
-  //
-  // {e}->{PointerEvent}->{MouseEvent}->{UIEvent}...
-  var e = document.createEvent('MouseEvent');
-  if (Object.__proto__) {
-    e.__proto__ = PointerEvent.prototype;
-    e.initPointerEvent(inType, inDict);
-  } else {
-    PointerEvent.prototype.initPointerEvent.call(e, inType, inDict);
-  }
-  return e;
-};
-
-// chain to the MouseEvent prototype
-PointerEvent.prototype.__proto__ = MouseEvent.prototype;
-
-/**
- * Initialize a PointerEvent
- * @param {string} inType The type of the event to create.
- * @param {Object?} inDict An optional dictionary of initial event properties.
- */
-PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
-  // defaults for all the necessary properties
   var props = {
     bubbles: false,
     cancelable: false,
@@ -66,17 +32,16 @@ PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
     altKey: false,
     shiftKey: false,
     metaKey: false,
-    button: -1,
-    buttons: null,
+    buttons: undefined,
     which: 0,
     relatedTarget: null,
-    pointerId: -1,
+    pointerId: 0,
     width: 0,
     height: 0,
     pressure: 0,
     tiltX: 0,
     tiltY: 0,
-    pointerType: 'unavailable',
+    pointerType: '',
     hwTimestamp: 0,
     isPrimary: false
   };
@@ -108,19 +73,34 @@ PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
   // MouseEvent.button to a new MouseEvent.button == 0 and MouseEvent.which == 0
   // is to call initMouseEvent with a buttonArg value of -1.
   //
-  // For user agents implementing DOM Level 3 events, Event.buttons has to be
-  // used instead, which is a bitmap of depressed buttons.
-  var b;
-  if (props.buttons !== null) {
-    b = props.buttons ? props.button : -1;
+  // This is fixed with DOM Level 4's use of buttons
+  var b = props.which ? props.button : -1;
+
+  // Spec requires that pointers without pressure specified use 0.5 for down
+  // state and 0 for up state.
+  var pressure;
+  if (props.pressure) {
+    pressure = props.pressure;
+  } else if (props.buttons !== undefined) {
+    pressure = props.buttons ? 0.5 : 0;
   } else {
-    b = props.which ? props.button : -1;
+    pressure = b > -1 ? 0.5 : 0;
   }
 
-  var pressure = props.pressure || (b > -1 ? 0.5 : 0);
-
+  var e;
+  if (document.implementation.hasFeature('MouseEvent', '4.0')) {
+    e = new MouseEvent(inType, inDict);
+  } else {
+    e = document.createEvent('MouseEvent');
+    // define the properties inherited from MouseEvent
+    e.initMouseEvent(
+      inType, props.bubbles, props.cancelable, props.view, props.detail,
+      props.screenX, props.screenY, props.clientX, props.clientY, props.ctrlKey,
+      props.altKey, props.shiftKey, props.metaKey, b, props.relatedTarget
+    );
+  }
   // define the properties of the PointerEvent interface
-  Object.defineProperties(this, {
+  Object.defineProperties(e, {
     pointerId: { value: props.pointerId, enumerable: true },
     width: { value: props.width, enumerable: true },
     height: { value: props.height, enumerable: true },
@@ -131,10 +111,5 @@ PointerEvent.prototype.initPointerEvent = function(inType, inDict) {
     hwTimestamp: { value: props.hwTimestamp, enumerable: true },
     isPrimary: { value: props.isPrimary, enumerable: true },
   });
-
-  // define the properties inherited from MouseEvent
-  this.initMouseEvent(inType, props.bubbles, props.cancelable, props.view,
-                      props.detail, props.screenX, props.screenY, props.clientX,
-                      props.clientY, props.ctrlKey, props.altKey,
-                      props.shiftKey, props.metaKey, b, props.relatedTarget);
+  return e;
 };
