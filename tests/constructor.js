@@ -5,11 +5,6 @@
  */
 
 suite('Constructor', function() {
-  test('new PointerEvent makes a PointerEvent', function() {
-    var p = new PointerEvent;
-    expect(p).to.be.a(PointerEvent);
-  });
-
   test('PointerEvent extends MouseEvent', function() {
     var p = new PointerEvent;
     expect(p).to.be.a(MouseEvent);
@@ -43,7 +38,9 @@ suite('Constructor', function() {
       'isPrimary'
     ];
     var p = new PointerEvent();
-    expect(p).to.have.keys(props);
+    props.forEach(function(k) {
+      expect(p).to.have.property(k);
+    });
   });
 
   test('PointerEvent can be initialized from an object', function() {
