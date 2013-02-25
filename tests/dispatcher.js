@@ -8,18 +8,18 @@ suite('Event Generation and Dispatching', function() {
 
   // down -> mousedown && pointerdown
   test('MouseEvents are a source', function() {
-    expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('mouse');
+    expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('mouse');
   });
 
   test('TouchEvents are a source in touch environments', function() {
     if ('ontouchstart' in window) {
-      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('touch');
+      expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('touch');
     }
   });
 
   test('MSPointerEvents are a source in MSPointerEvent environments', function() {
     if (window.navigator.msPointerEnabled) {
-      expect(__PointerEventShim__.dispatcher.eventSources).to.have.property('ms');
+      expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('ms');
     }
   });
 
@@ -33,15 +33,6 @@ suite('Event Generation and Dispatching', function() {
     em.fire('move', function(e) {
       expect(e.pointerId).to.be(1);
     });
-  });
-
-  test('Multiple downs from same pointerId should be ignored', function() {
-    // called
-    em.fire('down');
-    // ignored
-    em.fire('down', null, null, true);
-    // reset
-    em.fire('up');
   });
 
   test('Event targets correctly with touch-action: none', function() {
