@@ -10,7 +10,7 @@ basePath = '';
 files = [
   MOCHA,
   MOCHA_ADAPTER,
-  'third_party/expect.js/expect.js',
+  'node_modules/expect.js/expect.js',
   'src/PointerEvent.js',
   'src/pointermap.js',
   'src/sidetable.js',

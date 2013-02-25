@@ -11,7 +11,9 @@
     "grunt": "~0.4.0",
     "grunt-contrib-uglify": "~0.1.1",
     "grunt-contrib-concat": "~0.1.2",
-    "gruntacular": "~0.2.1"
+    "gruntacular": "~0.2.1",
+    "expect.js": "~0.2.0",
+    "mocha": "~1.8.1"
   },
   "scripts": {
     "test": "grunt test"
