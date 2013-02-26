@@ -25,13 +25,13 @@ suite('Event Generation and Dispatching', function() {
 
   test('MouseEvent makes a PointerEvent', function() {
     em.fire('move', function(e){
-      expect(e.type).to.be('pointermove');
+      expect(e.type).to.be.equal('pointermove');
     });
   });
 
   test('Mouse generated PointerEvents have pointerId 1', function() {
     em.fire('move', function(e) {
-      expect(e.pointerId).to.be(1);
+      expect(e.pointerId).to.be.equal(1);
     });
   });
 

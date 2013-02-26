@@ -10,7 +10,7 @@ basePath = '';
 files = [
   MOCHA,
   MOCHA_ADAPTER,
-  'node_modules/expect.js/expect.js',
+  'node_modules/chai/chai.js',
   'src/PointerEvent.js',
   'src/pointermap.js',
   'src/sidetable.js',
@@ -64,7 +64,7 @@ autoWatch = false;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome', 'ChromeCanary', 'Firefox', 'Safari'];
+browsers = ['Chrome', 'ChromeCanary', 'Firefox', 'Safari', 'Opera'];
 
 
 // If browser does not capture in given timeout [ms], kill it

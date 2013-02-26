@@ -7,7 +7,7 @@
 suite('Constructor', function() {
   test('PointerEvent extends MouseEvent', function() {
     var p = new PointerEvent;
-    expect(p).to.be.a(MouseEvent);
+    expect(p).to.be.an.instanceof(MouseEvent);
   });
 
   test('PointerEvents have the required properties', function() {
@@ -45,8 +45,10 @@ suite('Constructor', function() {
 
   test('PointerEvent can be initialized from an object', function() {
     var p = new PointerEvent('foo', {pointerType: 'pen', button: 0, which: 1});
-    expect(p.pointerType).to.be('pen');
-    expect(p.button).to.be(0);
+    expect(p.pointerType).to.be.equal('pen');
+    expect(p.button).to.be.equal(0);
+    p = new PointerEvent('bar', {button: 2, which: 3});
+    expect(p.button).to.be.equal(2);
   });
 
   test('Readonly properties must be readonly', function() {
@@ -66,7 +68,7 @@ suite('Constructor', function() {
     props.forEach(function(k) {
       v = p[k];
       p[k] = NaN;
-      expect(p[k]).to.be(v);
+      expect(p[k]).to.be.equal(v);
     });
   });
 });

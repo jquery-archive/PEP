@@ -4,12 +4,14 @@
  * license that can be found in the LICENSE file.
  */
 
+// install sample DOM for event dispatching
 container = document.createElement('div');
 container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
 host = container.firstChild;
 inner = host.firstChild;
-
 document.body.appendChild(container);
+
+expect = chai.expect;
 
 var em = {
   makeMouseEvent: function (inType) {

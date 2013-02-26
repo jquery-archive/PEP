@@ -8,20 +8,13 @@ license that can be found in the LICENSE file.
 <meta charset="UTF8">
 <!-- Mocha -->
 <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
-<script src="../node_modules/expect.js/expect.js"></script>
 <script src="../node_modules/mocha/mocha.js"></script>
+<!-- Chai -->
+<script src="../node_modules/chai/chai.js"></script>
 <!-- PointerEvents -->
 <script src="../src/pointerevents.js"></script>
 <!-- Test Setup -->
 <div id="mocha"></div>
-<div id="container">
-  <div id="host" touch-action="none">
-    <div id="inner"></div>
-  </div>
-</div>
-<script>
-  mocha.reporter('html');
-</script>
 <!-- Tests -->
 <script src="setup.js"></script>
 <script src="loader.js"></script>
@@ -29,6 +22,8 @@ license that can be found in the LICENSE file.
 <script src="dispatcher.js"></script>
 <script src="pointermap.js"></script>
 <script src="capture.js"></script>
+<!-- Run Mocha -->
 <script>
+  mocha.reporter('html');
   mocha.run();
 </script>
