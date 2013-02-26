@@ -32,6 +32,7 @@ function PointerEvent(inType, inDict) {
     altKey: false,
     shiftKey: false,
     metaKey: false,
+    button: 0,
     buttons: undefined,
     which: 0,
     relatedTarget: null,
@@ -109,7 +110,7 @@ function PointerEvent(inType, inDict) {
     tiltY: { value: props.tiltY, enumerable: true },
     pointerType: { value: props.pointerType, enumerable: true },
     hwTimestamp: { value: props.hwTimestamp, enumerable: true },
-    isPrimary: { value: props.isPrimary, enumerable: true },
+    isPrimary: { value: props.isPrimary, enumerable: true }
   });
   return e;
 };

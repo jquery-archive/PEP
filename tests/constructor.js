@@ -44,7 +44,7 @@ suite('Constructor', function() {
   });
 
   test('PointerEvent can be initialized from an object', function() {
-    var p = new PointerEvent('foo', {pointerType: 'pen', button: 0});
+    var p = new PointerEvent('foo', {pointerType: 'pen', button: 0, which: 1});
     expect(p.pointerType).to.be('pen');
     expect(p.button).to.be(0);
   });
