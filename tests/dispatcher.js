@@ -6,57 +6,75 @@
 
 suite('Event Generation and Dispatching', function() {
 
+  var pepde = PointerEventsPolyfill.dispatcher.eventSources;
   // down -> mousedown && pointerdown
   test('MouseEvents are a source', function() {
-    expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('mouse');
+    expect(pepde).to.have.property('mouse');
   });
 
   test('TouchEvents are a source in touch environments', function() {
     if ('ontouchstart' in window) {
-      expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('touch');
+      expect(pepde).to.have.property('touch');
     }
   });
 
   test('MSPointerEvents are a source in MSPointerEvent environments', function() {
     if (window.navigator.msPointerEnabled) {
-      expect(PointerEventsPolyfill.dispatcher.eventSources).to.have.property('ms');
+      expect(pepde).to.have.property('ms');
     }
   });
 
   test('MouseEvent makes a PointerEvent', function() {
-    em.fire('move', function(e){
-      expect(e.type).to.be.equal('pointermove');
-    });
+    var cb = function(e){
+      expect(e.type).to.equal('pointermove')
+    };
+    eventSetup('move', container, cb);
+    fire('move', container);
+    eventRemove('move', container, cb);
   });
 
   test('Mouse generated PointerEvents have pointerId 1', function() {
-    em.fire('move', function(e) {
-      expect(e.pointerId).to.be.equal(1);
-    });
+    var handler = function (e) {
+      expect(e.pointerId).to.equal(1);
+    };
+    eventSetup('move', host, handler);
+    fire('move', host);
+    eventRemove('move', host, handler);
   });
 
   test('Event targets correctly with touch-action: none', function() {
     var handler = function(e) {
-      em.correctTarget(e.target, inner);
-      em.correctTarget(e.currentTarget, host);
+      correctTarget(e.target, inner);
+      correctTarget(e.currentTarget, host);
     };
-    host.addEventListener('pointermove', handler);
-    em.fire('move', null, inner);
-    host.removeEventListener('pointermove', handler);
+    eventSetup('move', host, handler);
+    fire('move', inner);
+    eventRemove('move', host, handler);
   });
 
   test('PointerEvents only fire on touch-action: none areas', function() {
     // move always fires
-    em.fire('down', null, container, true);
-    em.fire('up', null, container, true);
-    em.fire('over', null, container, true);
-    em.fire('out', null, container, true);
+    var cb = chai.spy();
+    eventSetup(['down', 'up', 'over', 'out'], container, cb);
+    fire('down', container);
+    fire('up', container);
+    fire('over', container);
+    fire('out', container);
+    eventRemove(['down', 'up', 'over', 'out'], container, cb);
+    expect(cb).not.to.be.called();
   });
 
   test('PointerEvents will fire anywhere after a down in a touch-action: none area', function() {
-    em.fire('down');
-    em.fire('over', null, container);
-    em.fire('up');
-    em.fire('over', null, container, true);
+    fire('down', host);
+    var cb = chai.spy();
+    eventSetup('over', container, cb);
+    // should be called here
+    fire('over', container);
+    expect(cb).to.have.been.called();
+    fire('up', host);
+    // shouldn't be called here
+    fire('over', container);
+    eventRemove('over', container, cb);
+    expect(cb).to.have.been.called.exactly(1);
   });
 });

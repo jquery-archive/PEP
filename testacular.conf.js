@@ -11,6 +11,7 @@ files = [
   MOCHA,
   MOCHA_ADAPTER,
   'node_modules/chai/chai.js',
+  'node_modules/chai-spies/chai-spies.js',
   'src/PointerEvent.js',
   'src/pointermap.js',
   'src/sidetable.js',

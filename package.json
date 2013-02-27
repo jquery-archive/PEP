@@ -13,7 +13,8 @@
     "grunt-contrib-concat": "~0.1.2",
     "gruntacular": "~0.2.1",
     "mocha": "~1.8.1",
-    "chai": "~1.5.0"
+    "chai": "~1.5.0",
+    "chai-spies": "~0.5.1"
   },
   "scripts": {
     "test": "grunt test"

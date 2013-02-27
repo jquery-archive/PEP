@@ -5,27 +5,11 @@
  */
 
 suite('Pointer Capture', function() {
-  var falseneg = function() {
-    throw new Error('did not check pointerId validity correctly');
+  var set = function() {
+    host.setPointerCapture(1);
   };
-
-  var falsepos = function() {
-    throw new Error('threw InvalidPointerId incorrectly');
-  };
-
-  var prepare = function(name, callback, el) {
-    if (!el) {
-      el = host;
-    }
-    if (!callback) {
-      throw new Error('callback not given');
-    }
-    var f = function(){
-      host.removeEventListener(name, f);
-      callback.args = Array.prototype.slice.call(arguments);
-      callback();
-    };
-    host.addEventListener(name, f);
+  var release = function() {
+    host.releasePointerCapture(1);
   };
 
   test('Element has setPointerCapture and releasePointerCapture', function() {
@@ -34,38 +18,32 @@ suite('Pointer Capture', function() {
   });
 
   test('{set,release}PointerCapture throw exceptions when the pointerId is not on screen', function() {
-    try {
-      host.setPointerCapture(1);
-      falseneg();
-    } catch(e) {}
-
-    try {
-      host.releasePointerCapture(1);
-      falseneg();
-    } catch(e) {}
+    expect(set).to.throw(/InvalidPointerId/);
+    expect(release).to.throw(/InvalidPointerId/);
   });
 
   suite('pointercapture events', function() {
     test('Element.setPointerCapture fires a gotpointercapture event', function(done) {
-      prepare('gotpointercapture', done);
-      em.fire('down');
+      prep('gotpointercapture', host, done);
+      fire('down', host);
       host.setPointerCapture(1);
-      em.fire('up');
+      fire('up', host);
     });
 
     test('Element.releasePointerCapture fires a lostpointercapture event', function(done) {
-      prepare('lostpointercapture', done);
-      em.fire('down');
+      prep('lostpointercapture', host, done);
+      fire('down', host);
       host.setPointerCapture(1);
       host.releasePointerCapture(1);
-      em.fire('up');
+      fire('up', host);
     });
 
     test('pointerup fires a lostpointercapture event for the element capturing that pointerId', function(done) {
-      prepare('lostpointercapture', done);
-      em.fire('down');
+      prep('lostpointercapture', host, done);
+      host.addEventListener('lostpointercapture', done);
+      fire('down', host);
       host.setPointerCapture(1);
-      em.fire('up');
+      fire('up', host);
     });
 
     test('setPointerCapture will release an already captured pointer, firing events', function(done) {
@@ -82,12 +60,12 @@ suite('Pointer Capture', function() {
           }
         }
       };
-      prepare('lostpointercapture', wait());
-      prepare('gotpointercapture', wait(), inner);
-      em.fire('down');
+      prep('gotpointercapture', inner, wait());
+      prep('lostpointercapture', host, wait());
+      fire('down', host);
       host.setPointerCapture(1);
       inner.setPointerCapture(1);
-      em.fire('up');
+      fire('up', host);
     });
   });
 });
