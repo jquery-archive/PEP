@@ -65,7 +65,7 @@ found in MSPointerEvents is maintained.
 
 PointerEvents should work on all "Evergreen" (self-updating) browsers.
 
-It has been tested on Chrome, Firefox, Opera, and IE 10.
+It has been tested on Chrome, Safari, Firefox, Opera, and IE 10.
 
 ## How does PointerEvents work?
 

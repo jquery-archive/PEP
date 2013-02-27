@@ -132,7 +132,7 @@
       dispatcher.unregisterTarget(inEl);
     }
   }.bind(installer);
-  var MO = window.WebKitMutationObserver || window.MutationObserver;
+  var MO = window.MutationObserver || window.WebKitMutationObserver;
   if (!MO) {
     installer.watchSubtree = function(){
       console.warn('MutationObservers not found, touch-action will not be dynamically detected');
