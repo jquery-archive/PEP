@@ -1,7 +1,7 @@
 # Pointer Events
 > A unified event system for the web platform
 
-A polyfill implementation of the [Pointer Events Specification](http://www.w3.org/Submission/2012/SUBM-pointer-events-20120907/).
+A polyfill implementation of the [Pointer Events Specification](https://dvcs.w3.org/hg/pointerevents/raw-file/tip/pointerEvents.html).
 
 ## Why Pointer Events?
 
