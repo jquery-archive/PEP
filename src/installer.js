@@ -135,7 +135,7 @@
   var MO = window.MutationObserver || window.WebKitMutationObserver;
   if (!MO) {
     installer.watchSubtree = function(){
-      console.warn('MutationObservers not found, touch-action will not be dynamically detected');
+      console.warn('PointerEventsPolyfill: MutationObservers not found, touch-action will not be dynamically detected');
     };
   } else {
     var observer = new MO(boundWatcher);
