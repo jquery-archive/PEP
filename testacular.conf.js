@@ -10,7 +10,8 @@ basePath = '';
 files = [
   MOCHA,
   MOCHA_ADAPTER,
-  'third_party/expect.js/expect.js',
+  'node_modules/chai/chai.js',
+  'node_modules/chai-spies/chai-spies.js',
   'src/PointerEvent.js',
   'src/pointermap.js',
   'src/sidetable.js',
@@ -64,11 +65,11 @@ autoWatch = false;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome', 'ChromeCanary', 'Firefox', 'Safari'];
+browsers = ['Chrome', 'ChromeCanary', 'Firefox', 'Safari', 'Opera'];
 
 
 // If browser does not capture in given timeout [ms], kill it
-captureTimeout = 5000;
+captureTimeout = 60000;
 
 
 // Continuous Integration mode
