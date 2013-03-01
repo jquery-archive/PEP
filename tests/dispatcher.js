@@ -8,8 +8,10 @@ suite('Event Generation and Dispatching', function() {
 
   var pepde = PointerEventsPolyfill.dispatcher.eventSources;
   // down -> mousedown && pointerdown
-  test('MouseEvents are a source', function() {
-    expect(pepde).to.have.property('mouse');
+  test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
+    if (!navigator.msPointerEnabled) {
+      expect(pepde).to.have.property('mouse');
+    }
   });
 
   test('TouchEvents are a source in touch environments', function() {

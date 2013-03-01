@@ -26,12 +26,24 @@ function fire(shortType, target, callback) {
     if (callback) {
       prep('pointer' + shortType, target, callback);
     }
-    var type = 'mouse' + shortType;
-    var e = document.createEvent('MouseEvent');
-    e.initMouseEvent(
-      type, true, true, null, null, 0, 0, 0, 0, false, false,
-      false, false, 0, null
-    );
+    var e, type;
+    if (navigator.msPointerEnabled) {
+      var cap = shortType.slice(0, 1).toUpperCase() + shortType.slice(1);
+      type = 'MSPointer' + cap;
+      console.log(type);
+      e = document.createEvent('MSPointerEvent');
+      e.initPointerEvent(
+        type, true, true, null, null, 0, 0, 0, 0, false, false, false, false, 0,
+        null, 0, 0, 0, 0, 0, 0, 0, 0, 1, e.MSPOINTER_TYPE_MOUSE, 0, true
+      );
+    } else {
+      type = 'mouse' + shortType;
+      var e = document.createEvent('MouseEvent');
+      e.initMouseEvent(
+        type, true, true, null, null, 0, 0, 0, 0, false, false,
+        false, false, 0, null
+      );
+    }
     target.dispatchEvent(e);
   }
 }
