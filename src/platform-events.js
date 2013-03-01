@@ -313,10 +313,12 @@
       'MSPointerUp',
       'MSPointerOut',
       'MSPointerOver',
-      'MSPointerCancel'
+      'MSPointerCancel',
+      'MSGotPointerCapture',
+      'MSLostPointerCapture'
     ],
     POINTER_TYPES: [
-      'NOT USED',
+      '',
       'unavailable',
       'touch',
       'pen',
@@ -350,6 +352,14 @@
     MSPointerCancel: function(inEvent) {
       var e = this.prepareEvent(inEvent);
       dispatcher.cancel(e);
+    },
+    MSLostPointerCapture: function(inEvent) {
+      var e = dispatcher.makeEvent('lostpointercapture', inEvent);
+      dispatcher.dispatchEvent(e);
+    },
+    MSGotPointerCapture: function(inEvent) {
+      var e = dispatcher.makeEvent('gotpointercapture', inEvent);
+      dispatcher.dispatchEvent(e);
     }
   };
 
