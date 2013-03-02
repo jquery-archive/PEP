@@ -1,8 +1,4 @@
 suite('PointerMap', function() {
-  test('PointerMap is a constructor', function() {
-    var p = new PointerEventsPolyfill.PointerMap;
-    expect(p).to.be.a(PointerEventsPolyfill.PointerMap);
-  });
   test('PointerMap has Map API', function() {
     var keys = [
       'set',
@@ -11,17 +7,17 @@ suite('PointerMap', function() {
       'delete',
       'size'
     ];
-    expect(PointerEventsPolyfill.PointerMap.prototype).to.have.keys(keys);
+    expect(PointerEventsPolyfill.PointerMap.prototype).to.contain.keys(keys);
   });
   test('PointerMap has .item', function() {
-    expect(PointerEventsPolyfill.PointerMap.prototype).to.have.key('item');
+    expect(PointerEventsPolyfill.PointerMap.prototype).to.contain.key('item');
   });
   test('PointerMap .set', function() {
     var p = new PointerEventsPolyfill.PointerMap;
     p.set(1, true);
     expect(p.ids).to.have.length(1);
     expect(p.pointers).to.have.length(1);
-    expect(p.size).to.be(1);
+    expect(p.size).to.equal(1);
   });
   test('PointerMap .get', function() {
     var p = new PointerEventsPolyfill.PointerMap;
@@ -29,31 +25,31 @@ suite('PointerMap', function() {
   test('PointerMap .size', function() {
     var p = new PointerEventsPolyfill.PointerMap;
     expect(p.size).not.to.be.a('function');
-    expect(p.size).to.be(0);
+    expect(p.size).to.equal(0);
     p.set(1, true);
-    expect(p.size).to.be(1);
+    expect(p.size).to.equal(1);
     p.set(1, false);
-    expect(p.size).to.be(1);
+    expect(p.size).to.equal(1);
   });
   test('PointerMap .has', function() {
     var p = new PointerEventsPolyfill.PointerMap;
     p.set(1, true);
-    expect(p.has(1)).to.be(true);
-    expect(p.has(0)).to.be(false);
+    expect(p.has(1)).to.equal(true);
+    expect(p.has(0)).to.equal(false);
   });
   test('PointerMap .delete', function() {
     var p = new PointerEventsPolyfill.PointerMap;
     p.set(1, true);
     p.set(2, false);
-    expect(p.size).to.be(2);
+    expect(p.size).to.equal(2);
     p.delete(1);
-    expect(p.size).to.be(1);
-    expect(p.get(2)).to.be(false);
+    expect(p.size).to.equal(1);
+    expect(p.get(2)).to.equal(false);
   });
   test('PointerMap .item', function() {
     var p = new PointerEventsPolyfill.PointerMap;
     p.set(2, false);
     p.set(1, true);
-    expect(p.item(0)).to.be(p.get(2));
+    expect(p.item(0)).to.equal(p.get(2));
   });
 });
