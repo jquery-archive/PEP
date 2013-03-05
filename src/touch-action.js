@@ -27,6 +27,6 @@
     }
   });
   var el = document.createElement('style');
-  el.appendChild(document.createTextNode(styles));
+  el.textContent = styles;
   document.head.appendChild(el);
 })();
