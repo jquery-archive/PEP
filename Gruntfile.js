@@ -1,11 +1,8 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('gruntacular');
+
   grunt.initConfig({
-    concat: {
-      'build/pointerevents.css': 'src/*.css',
-    },
     uglify: {
       pointerevents: {
         options: {
@@ -15,6 +12,7 @@ module.exports = function(grunt) {
         },
         dest: 'build/pointerevents.js',
         src: [
+          'src/touch-action.js',
           'src/PointerEvent.js',
           'src/pointermap.js',
           'src/sidetable.js',
@@ -33,6 +31,6 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['concat', 'uglify']);
-  grunt.registerTask('test', ['testacular']);
+  grunt.registerTask('default', 'uglify');
+  grunt.registerTask('test', 'testacular');
 };

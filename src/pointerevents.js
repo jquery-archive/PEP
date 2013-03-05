@@ -16,9 +16,8 @@
     libLocation = s.src.slice(0, -thisFile.length);
   }
 
-  document.write('<link rel="stylesheet" href="' + libLocation + 'touch-action.css">');
-
   [
+    'touch-action.js',
     'PointerEvent.js',
     'pointermap.js',
     'sidetable.js',
