@@ -381,7 +381,7 @@
       }
       installer.enableOnSubtree(document);
       // mouse move events must be on at all times
-      dispatcher.listen(['mousemove'], document);
+      dispatcher.listen(['mousemove'], document, dispatcher.boundHandler);
     }
 
     Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
