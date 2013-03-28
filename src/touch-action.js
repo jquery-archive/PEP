@@ -28,5 +28,5 @@
   });
   var el = document.createElement('style');
   el.textContent = styles;
-  document.head.appendChild(el);
+  wrap(document).head.appendChild(el);
 })();

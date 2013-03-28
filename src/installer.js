@@ -45,6 +45,7 @@
     },
     findElements: function(inScope) {
       var scope = inScope || document;
+      scope = wrap(scope);
       if (scope.querySelectorAll) {
         return scope.querySelectorAll(this.SELECTOR);
       }
