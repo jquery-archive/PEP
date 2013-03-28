@@ -1,4 +1,14 @@
 (function() {
+
+  // TODO(dfreedman): remove when ShadowDOM polyfill is transparent
+  var wrap = function(a){ return a };
+  if (window.ShadowDOMPolyfill) {
+    wrap = ShadowDOMPolyfill.wrap;
+  }
+  window.PointerEventsPolyfill = {
+    wrap: wrap
+  };
+
   function selector(v) {
     return '[touch-action="' + v + '"]';
   }
@@ -28,5 +38,7 @@
   });
   var el = document.createElement('style');
   el.textContent = styles;
+  // TODO(dfreedman): Workaround for
+  // https://github.com/toolkitchen/ShadowDOM/issues/55
   wrap(document).head.appendChild(el);
 })();
