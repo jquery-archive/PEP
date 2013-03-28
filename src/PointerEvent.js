@@ -19,41 +19,7 @@
  * @return {Event} A new PointerEvent of type `inType` and initialized with properties from `inDict`.
  */
 function PointerEvent(inType, inDict) {
-  var props = {
-    bubbles: false,
-    cancelable: false,
-    view: null,
-    detail: null,
-    screenX: 0,
-    screenY: 0,
-    clientX: 0,
-    clientY: 0,
-    ctrlKey: false,
-    altKey: false,
-    shiftKey: false,
-    metaKey: false,
-    button: 0,
-    buttons: undefined,
-    which: 0,
-    relatedTarget: null,
-    pointerId: 0,
-    width: 0,
-    height: 0,
-    pressure: 0,
-    tiltX: 0,
-    tiltY: 0,
-    pointerType: '',
-    hwTimestamp: 0,
-    isPrimary: false
-  };
-
-  // import values from the given dictionary
-  for (var p in inDict) {
-    if (p in props) {
-      props[p] = inDict[p];
-    }
-  }
-
+  var inDict = inDict || {};
   // According to the w3c spec,
   // http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-button
   // MouseEvent.button == 0 can mean either no mouse button depressed, or the
@@ -75,24 +41,38 @@ function PointerEvent(inType, inDict) {
   // is to call initMouseEvent with a buttonArg value of -1.
   //
   // This is fixed with DOM Level 4's use of buttons
-  var b = props.which ? props.button : -1;
-
-  // Spec requires that pointers without pressure specified use 0.5 for down
-  // state and 0 for up state.
-  var pressure;
-  if (props.pressure) {
-    pressure = props.pressure;
-  } else if (props.buttons !== undefined) {
-    pressure = props.buttons ? 0.5 : 0;
-  } else {
-    pressure = b > -1 ? 0.5 : 0;
-  }
+  var b = inDict.which ? inDict.button : -1;
 
   var e;
   if (document.implementation.hasFeature('MouseEvent', '4.0')) {
     e = new MouseEvent(inType, inDict);
   } else {
     e = document.createEvent('MouseEvent');
+    // import values from the given dictionary
+    var props = {
+      bubbles: false,
+      cancelable: false,
+      view: null,
+      detail: null,
+      screenX: 0,
+      screenY: 0,
+      clientX: 0,
+      clientY: 0,
+      ctrlKey: false,
+      altKey: false,
+      shiftKey: false,
+      metaKey: false,
+      button: 0,
+      buttons: undefined,
+      relatedTarget: null
+    };
+
+    Object.keys(props).forEach(function(k) {
+      if (k in inDict) {
+        props[k] = inDict[k];
+      }
+    });
+
     // define the properties inherited from MouseEvent
     e.initMouseEvent(
       inType, props.bubbles, props.cancelable, props.view, props.detail,
@@ -100,17 +80,29 @@ function PointerEvent(inType, inDict) {
       props.altKey, props.shiftKey, props.metaKey, b, props.relatedTarget
     );
   }
+
+  // Spec requires that pointers without pressure specified use 0.5 for down
+  // state and 0 for up state.
+  var pressure = 0;
+  if (inDict.pressure) {
+    pressure = inDict.pressure;
+  } else if (inDict.buttons !== undefined) {
+    pressure = inDict.buttons ? 0.5 : 0;
+  } else {
+    pressure = b > -1 ? 0.5 : 0;
+  }
+
   // define the properties of the PointerEvent interface
   Object.defineProperties(e, {
-    pointerId: { value: props.pointerId, enumerable: true },
-    width: { value: props.width, enumerable: true },
-    height: { value: props.height, enumerable: true },
+    pointerId: { value: inDict.pointerId || 0, enumerable: true },
+    width: { value: inDict.width || 0, enumerable: true },
+    height: { value: inDict.height || 0, enumerable: true },
     pressure: { value: pressure, enumerable: true },
-    tiltX: { value: props.tiltX, enumerable: true },
-    tiltY: { value: props.tiltY, enumerable: true },
-    pointerType: { value: props.pointerType, enumerable: true },
-    hwTimestamp: { value: props.hwTimestamp, enumerable: true },
-    isPrimary: { value: props.isPrimary, enumerable: true }
+    tiltX: { value: inDict.tiltX || 0, enumerable: true },
+    tiltY: { value: inDict.tiltY || 0, enumerable: true },
+    pointerType: { value: inDict.pointerType || '', enumerable: true },
+    hwTimestamp: { value: inDict.hwTimestamp || 0, enumerable: true },
+    isPrimary: { value: inDict.isPrimary || false, enumerable: true }
   });
   return e;
 };
