@@ -44,9 +44,12 @@
       forEach(this.findElements(inScope), this.addElement, this);
     },
     findElements: function(inScope) {
-      var scope = inScope || document;
-      if (scope.querySelectorAll) {
-        return scope.querySelectorAll(this.SELECTOR);
+      var s = inScope || document;
+      // TODO(dfreedman): Work around for
+      // https://github.com/toolkitchen/ShadowDOM/issues/54
+      s = scope.wrap(s);
+      if (s.querySelectorAll) {
+        return s.querySelectorAll(this.SELECTOR);
       }
       return [];
     },

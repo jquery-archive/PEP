@@ -9,7 +9,7 @@ container = document.createElement('div');
 container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
 host = container.firstChild;
 inner = host.firstChild;
-document.body.appendChild(container);
+wrap(document).body.appendChild(container);
 
 chai.Assertion.includeStack = true;
 expect = chai.expect;
