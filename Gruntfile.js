@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('gruntacular');
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.initConfig({
     uglify: {
@@ -24,13 +24,13 @@ module.exports = function(grunt) {
         ]
       }
     },
-    testacular: {
+    karma: {
       test: {
-        configFile: 'testacular.conf.js'
+        configFile: 'karma.conf.js'
       }
     }
   });
 
   grunt.registerTask('default', 'uglify');
-  grunt.registerTask('test', 'testacular');
+  grunt.registerTask('test', 'karma');
 };
