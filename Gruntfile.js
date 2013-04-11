@@ -3,6 +3,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-karma');
 
+  var os = require('os').type();
+  var browsers = ['Chrome', 'Firefox'];
+  if (os == 'Darwin') {
+    browsers.push('Safari');
+  }
+  if (os == 'Windows_NT') {
+    browsers.push('IE');
+  }
+
   grunt.initConfig({
     uglify: {
       pointerevents: {
@@ -27,7 +36,8 @@ module.exports = function(grunt) {
     },
     karma: {
       test: {
-        configFile: 'karma.conf.js'
+        configFile: 'karma.conf.js',
+        browsers: browsers
       }
     },
     clean: {
