@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-karma');
 
@@ -28,6 +29,9 @@ module.exports = function(grunt) {
       test: {
         configFile: 'karma.conf.js'
       }
+    },
+    clean: {
+      build: 'build'
     }
   });
 
