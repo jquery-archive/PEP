@@ -30,7 +30,6 @@ function fire(shortType, target, callback) {
     if (navigator.msPointerEnabled) {
       var cap = shortType.slice(0, 1).toUpperCase() + shortType.slice(1);
       type = 'MSPointer' + cap;
-      console.log(type);
       e = document.createEvent('MSPointerEvent');
       e.initPointerEvent(
         type, true, true, null, null, 0, 0, 0, 0, false, false, false, false, 0,
