@@ -9,11 +9,12 @@
   },
   "devDependencies": {
     "grunt": "*",
+    "grunt-contrib-clean": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-karma": "*"
+    "grunt-karma": "*",
     "mocha": "*",
     "chai": "*",
-    "chai-spies": "*",
+    "chai-spies": "*"
   },
   "scripts": {
     "test": "grunt test"
