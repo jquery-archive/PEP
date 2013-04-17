@@ -8,10 +8,13 @@
   var target = {
     shadow: function(inEl) {
       if (inEl) {
-        var s = inEl.webkitShadowRoot || inEl.shadowRoot;
-        if (s && s.elementFromPoint) {
-          return s;
-        }
+        return inEl.shadowRoot || inEl.webkitShadowRoot;
+      }
+    },
+    targetingShadow: function(inEl) {
+      var s = this.shadow(inEl);
+      if (s && s.elementFromPoint) {
+        return s;
       }
     },
     searchRoot: function(inRoot, x, y) {
@@ -19,7 +22,7 @@
         var t = inRoot.elementFromPoint(x, y);
         var st, sr, os;
         // is element a shadow host?
-        sr = this.shadow(t);
+        sr = this.targetingShadow(t);
         while (sr) {
           // find the the element inside the shadow root
           st = sr.elementFromPoint(x, y);
@@ -30,7 +33,7 @@
             sr = os && os.olderShadowRoot;
           } else {
             // shadowed element may contain a shadow root
-            var ssr = this.shadow(st);
+            var ssr = this.targetingShadow(st);
             return this.searchRoot(ssr, x, y) || st;
           }
         }
