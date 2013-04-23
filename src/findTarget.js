@@ -11,9 +11,12 @@
         return inEl.shadowRoot || inEl.webkitShadowRoot;
       }
     },
+    canTarget: function(scope) {
+      return scope && Boolean(scope.elementFromPoint);
+    },
     targetingShadow: function(inEl) {
       var s = this.shadow(inEl);
-      if (s && s.elementFromPoint) {
+      if (this.canTarget(s)) {
         return s;
       }
     },
