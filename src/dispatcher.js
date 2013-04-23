@@ -18,9 +18,9 @@
   *   - pointercancel: a pointer will no longer generate events
   */
   var dispatcher = {
-    targets: new scope.SideTable('target'),
-    handledEvents: new scope.SideTable('pointer'),
-    scrollType: new scope.SideTable('scrollType'),
+    targets: new scope.SideTable,
+    handledEvents: new scope.SideTable,
+    scrollType: new scope.SideTable,
     pointermap: new scope.PointerMap,
     events: [],
     eventMap: {},
