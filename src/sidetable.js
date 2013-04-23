@@ -30,6 +30,7 @@
       delete: function(key) {
         this.set(key, undefined);
       }
-    }
+    };
+  }
   scope.SideTable = SideTable;
 })(window.PointerEventsPolyfill);
