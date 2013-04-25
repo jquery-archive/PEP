@@ -126,6 +126,7 @@
     touchstart: function(inEvent) {
       this.vacuumTouches(inEvent);
       this.setPrimaryTouch(inEvent.changedTouches[0]);
+      this.dedupSynthMouse(inEvent);
       if (!this.scrolling) {
         this.processTouches(inEvent, this.overDown);
       }
