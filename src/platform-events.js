@@ -202,7 +202,7 @@
         var fn = (function(lts, lt){
           var i = lts.indexOf(lt);
           if (i > -1) {
-            lts.splice(i, 1)
+            lts.splice(i, 1);
           }
         }).bind(null, lts, lt);
         setTimeout(fn, DEDUP_TIMEOUT);
@@ -324,18 +324,33 @@
       'pen',
       'mouse'
     ],
+    // single tap causes MSPointerDown and MSPointerMove with the same position
+    // prevent the caused pointermove event with this information
+    skipMovePosition: {x: null, y: null},
+    shouldSkipMoveEvent: function(inEvent) {
+      var skipPosition = this.skipMovePosition;
+      return (skipPosition.x === inEvent.clientX &&
+              skipPosition.y === inEvent.clientY);
+    },
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
       e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
       return e;
     },
     MSPointerDown: function(inEvent) {
+      this.skipMovePosition.x = inEvent.clientX;
+      this.skipMovePosition.y = inEvent.clientY;
       var e = this.prepareEvent(inEvent);
       dispatcher.down(e);
     },
     MSPointerMove: function(inEvent) {
-      var e = this.prepareEvent(inEvent);
-      dispatcher.move(e);
+      if (!this.shouldSkipMoveEvent(inEvent)) {
+        // Skip only the first move event from the whole swipe.
+        this.skipMovePosition.x = null;
+        this.skipMovePosition.y = null;
+        var e = this.prepareEvent(inEvent);
+        dispatcher.move(e);
+      }
     },
     MSPointerUp: function(inEvent) {
       var e = this.prepareEvent(inEvent);
