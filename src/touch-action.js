@@ -6,7 +6,13 @@
     return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; }';
   }
   var attrib2css = [
-    'none',
+    {
+      rule: 'none',
+      selectors: [
+        'none',
+        'user'
+      ]
+    },
     'pan-x',
     'pan-y',
     {
@@ -28,5 +34,10 @@
   });
   var el = document.createElement('style');
   el.textContent = styles;
-  document.head.appendChild(el);
+  // Use querySelector instead of document.head to ensure that in
+  // ShadowDOM Polyfill that we have a wrapped head to append to.
+  var h = document.querySelector('head');
+  // document.write + document.head.appendChild = crazytown
+  // use insertBefore instead for correctness in ShadowDOM Polyfill
+  h.insertBefore(el, h.firstChild);
 })();
