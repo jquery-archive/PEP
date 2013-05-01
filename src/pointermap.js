@@ -57,9 +57,5 @@
     }
   };
 
-  if (window.Map) {
-    PointerMap = window.Map;
-  }
-
   scope.PointerMap = PointerMap;
 })(window.PointerEventsPolyfill);
