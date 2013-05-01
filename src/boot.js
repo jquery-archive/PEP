@@ -57,7 +57,7 @@
     ANCESTOR: Node.DOCUMENT_POSITION_CONTAINS,
     DESCENDANT: Node.DOCUMENT_POSITION_CONTAINED_BY,
     compare: function(a, b) {
-      if (!a) {
+      if (!a || !b) {
         return 0;
       }
       return a.compareDocumentPosition(b);
