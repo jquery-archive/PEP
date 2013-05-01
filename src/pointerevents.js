@@ -17,13 +17,13 @@
   }
 
   [
+    'boot.js',
     'touch-action.js',
     'PointerEvent.js',
     'pointermap.js',
     'sidetable.js',
     'dispatcher.js',
     'installer.js',
-    'findTarget.js',
     'platform-events.js',
     'capture.js'
   ].forEach(require);

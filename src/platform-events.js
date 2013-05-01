@@ -19,6 +19,7 @@
   var DEDUP_TIMEOUT = 2500;
   // radius around touchend that swallows mouse events
   var DEDUP_DIST = 25;
+
   // handler block for native touch events
   var touchEvents = {
     events: [
@@ -162,8 +163,8 @@
         event.relatedTarget = outTarget;
         // recover from retargeting by shadow
         outEvent.target = outTarget;
-        dispatcher.out(outEvent);
-        dispatcher.over(event);
+        dispatcher.leaveOut(outEvent);
+        dispatcher.enterOver(event);
       }
       pointer.out = event;
       pointer.outTarget = event.target;
@@ -287,13 +288,13 @@
     mouseover: function(inEvent) {
       if (!this.isEventSimulatedFromTouch(inEvent)) {
         var e = this.prepareEvent(inEvent);
-        dispatcher.over(e);
+        dispatcher.enterOver(e);
       }
     },
     mouseout: function(inEvent) {
       if (!this.isEventSimulatedFromTouch(inEvent)) {
         var e = this.prepareEvent(inEvent);
-        dispatcher.out(e);
+        dispatcher.leaveOut(e);
       }
     },
     cancel: function(inEvent) {
@@ -330,7 +331,11 @@
       e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
       return e;
     },
+    cleanup: function(id) {
+      pointermap.delete(id);
+    },
     MSPointerDown: function(inEvent) {
+      pointermap.set(inEvent.pointerId, inEvent);
       var e = this.prepareEvent(inEvent);
       dispatcher.down(e);
     },
@@ -341,18 +346,20 @@
     MSPointerUp: function(inEvent) {
       var e = this.prepareEvent(inEvent);
       dispatcher.up(e);
+      this.cleanup(inEvent.pointerId);
     },
     MSPointerOut: function(inEvent) {
       var e = this.prepareEvent(inEvent);
-      dispatcher.out(e);
+      dispatcher.leaveOut(e);
     },
     MSPointerOver: function(inEvent) {
       var e = this.prepareEvent(inEvent);
-      dispatcher.over(e);
+      dispatcher.enterOver(e);
     },
     MSPointerCancel: function(inEvent) {
       var e = this.prepareEvent(inEvent);
       dispatcher.cancel(e);
+      this.cleanup(inEvent.pointerId);
     },
     MSLostPointerCapture: function(inEvent) {
       var e = dispatcher.makeEvent('lostpointercapture', inEvent);
