@@ -56,7 +56,9 @@
         'pointerup',
         'pointermove',
         'pointerover',
-        'pointerout'
+        'pointerout',
+        'pointerenter',
+        'pointerleave'
       ];
       function find(/*...inEls*/) {
         [].forEach.call(arguments, function(e) {
@@ -73,10 +75,10 @@
           appendOutput(inEvent.type + ' [' + inEvent.pointerId + ']');
         });
       });
-      enterleave.addEventListener('pointerover', function(e) {
+      enterleave.addEventListener('pointerenter', function(e) {
         appendOutput('enterleave entered');
       });
-      enterleave.addEventListener('pointerout', function(e) {
+      enterleave.addEventListener('pointerleave', function(e) {
         appendOutput('enterleave left');
       });
     </script>

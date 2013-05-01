@@ -19,7 +19,6 @@
  * preserved until the pointer is removed from the pointermap.
  */
 (function(scope) {
-  scope = scope || {};
   function PointerMap() {
     this.ids = [];
     this.pointers = [];
@@ -58,10 +57,5 @@
     }
   };
 
-  if (window.Map) {
-    PointerMap = window.Map;
-  }
-
   scope.PointerMap = PointerMap;
-  window.PointerEventsPolyfill = scope;
 })(window.PointerEventsPolyfill);
