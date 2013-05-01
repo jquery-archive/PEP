@@ -20,10 +20,12 @@
  */
 (function(scope) {
   // test for DOM Level 4 Events
-  var NEW_MOUSEEVENT = false;
+  var NEW_MOUSE_EVENT = false;
+  var HAS_BUTTONS = false;
   try {
-    new MouseEvent('click');
-    NEW_MOUSEEVENT = true;
+    var ev = new MouseEvent('click', {buttons: 1});
+    NEW_MOUSE_EVENT = true;
+    HAS_BUTTONS = ev.buttons !== undefined;
   } catch(e) {
   }
 
@@ -50,10 +52,18 @@
     // is to call initMouseEvent with a buttonArg value of -1.
     //
     // This is fixed with DOM Level 4's use of buttons
-    var b = inDict.which ? inDict.button : -1;
+    var buttons = inDict.buttons;
+    if (!HAS_BUTTONS) {
+      switch(inDict.which) {
+        case 1: buttons = 1; break;
+        case 2: buttons = 4; break;
+        case 3: buttons = 2; break;
+        default: buttons = 0;
+      }
+    }
 
     var e;
-    if (NEW_MOUSEEVENT) {
+    if (NEW_MOUSE_EVENT) {
       e = new MouseEvent(inType, inDict);
     } else {
       e = document.createEvent('MouseEvent');
@@ -72,7 +82,6 @@
         shiftKey: false,
         metaKey: false,
         button: 0,
-        buttons: undefined,
         relatedTarget: null
       };
 
@@ -86,8 +95,13 @@
       e.initMouseEvent(
         inType, props.bubbles, props.cancelable, props.view, props.detail,
         props.screenX, props.screenY, props.clientX, props.clientY, props.ctrlKey,
-        props.altKey, props.shiftKey, props.metaKey, b, props.relatedTarget
+        props.altKey, props.shiftKey, props.metaKey, props.button, props.relatedTarget
       );
+    }
+
+    // define the buttons property according to DOM Level 3 spec
+    if (!HAS_BUTTONS) {
+      Object.defineProperty(e, 'buttons', {value: buttons, enumerable: true});
     }
 
     // Spec requires that pointers without pressure specified use 0.5 for down
@@ -95,10 +109,8 @@
     var pressure = 0;
     if (inDict.pressure) {
       pressure = inDict.pressure;
-    } else if (inDict.buttons !== undefined) {
-      pressure = inDict.buttons ? 0.5 : 0;
     } else {
-      pressure = b > -1 ? 0.5 : 0;
+      pressure = buttons ? 0.5 : 0;
     }
 
     // define the properties of the PointerEvent interface
