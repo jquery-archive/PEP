@@ -331,7 +331,11 @@
       e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
       return e;
     },
+    cleanup: function(id) {
+      pointermap.delete(id);
+    },
     MSPointerDown: function(inEvent) {
+      pointermap.set(inEvent.pointerId, inEvent);
       var e = this.prepareEvent(inEvent);
       dispatcher.down(e);
     },
@@ -342,6 +346,7 @@
     MSPointerUp: function(inEvent) {
       var e = this.prepareEvent(inEvent);
       dispatcher.up(e);
+      this.cleanup(inEvent.pointerId);
     },
     MSPointerOut: function(inEvent) {
       var e = this.prepareEvent(inEvent);
@@ -354,6 +359,7 @@
     MSPointerCancel: function(inEvent) {
       var e = this.prepareEvent(inEvent);
       dispatcher.cancel(e);
+      this.cleanup(inEvent.pointerId);
     },
     MSLostPointerCapture: function(inEvent) {
       var e = dispatcher.makeEvent('lostpointercapture', inEvent);

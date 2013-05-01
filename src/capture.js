@@ -8,25 +8,28 @@
   var dispatcher = scope.dispatcher;
   var n = window.navigator;
   var s, r;
-  var isDown = function(inId) {
-    if (!dispatcher.pointermap.has(inId)) {
+  function assertDown(id) {
+    if (!dispatcher.pointermap.has(id)) {
       throw new Error('InvalidPointerId');
     }
-    return true;
-  };
+  }
   if (n.msPointerEnabled) {
-    s = Element.prototype.msSetPointerCapture;
-    r = Element.prototype.msReleasePointerCapture;
-  } else {
-    s = function setPointerCapture(inPointerId) {
-      if (isDown(inPointerId)) {
-        dispatcher.setCapture(inPointerId, this);
-      }
+    s = function(pointerId) {
+      assertDown(pointerId);
+      this.msSetPointerCapture(pointerId);
     };
-    r = function releasePointerCapture(inPointerId) {
-      if (isDown(inPointerId)) {
-        dispatcher.releaseCapture(inPointerId, this);
-      }
+    r = function(pointerId) {
+      assertDown(pointerId);
+      this.msReleasePointerCapture(pointerId);
+    };
+  } else {
+    s = function setPointerCapture(pointerId) {
+      assertDown(pointerId);
+      dispatcher.setCapture(pointerId, this);
+    };
+    r = function releasePointerCapture(pointerId) {
+      assertDown(pointerId);
+      dispatcher.releaseCapture(pointerId, this);
     };
   }
   if (!Element.prototype.setPointerCapture) {
