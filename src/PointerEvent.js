@@ -54,7 +54,7 @@
     // This is fixed with DOM Level 4's use of buttons
     var buttons = inDict.buttons;
     if (buttons === undefined) {
-      switch(inDict.which) {
+      switch (inDict.which) {
         case 1: buttons = 1; break;
         case 2: buttons = 4; break;
         case 3: buttons = 2; break;

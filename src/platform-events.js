@@ -14,6 +14,8 @@
   var installer = scope.installer;
   var findTarget = scope.findTarget;
   var pointermap = dispatcher.pointermap;
+  var scrollType = dispatcher.scrollType;
+
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
   var DEDUP_TIMEOUT = 2500;
@@ -57,6 +59,9 @@
       e.cancelable = true;
       e.button = 0;
       e.buttons = 1;
+      e.width = inTouch.webkitRadiusX;
+      e.height = inTouch.webkitRadiusY;
+      e.pressure = inTouch.webkitForce;
       e.isPrimary = this.isPrimaryTouch(inTouch);
       e.pointerType = this.POINTER_TYPE;
       return e;
@@ -71,7 +76,7 @@
     shouldScroll: function(inEvent) {
       if (this.firstXY) {
         var ret;
-        var scrollAxis = dispatcher.scrollType.get(inEvent.currentTarget);
+        var scrollAxis = scrollType.get(inEvent.currentTarget);
         if (scrollAxis === 'none') {
           // this element is a touch-action: none, should never scroll
           ret = false;
