@@ -53,30 +53,5 @@
   scope.targetFinding = target;
   scope.findTarget = target.findTarget.bind(target);
 
-  var bounds = {
-    ANCESTOR: Node.DOCUMENT_POSITION_CONTAINS,
-    DESCENDANT: Node.DOCUMENT_POSITION_CONTAINED_BY,
-    compare: function(a, b) {
-      if (!a || !b) {
-        return 0;
-      }
-      // TODO(dfreedman): workaround for ShadowDOMPolyfill
-      // https://github.com/toolkitchen/ShadowDOM/issues/134
-      if (b.impl && window.ShadowDOMPolyfill) {
-        b = ShadowDOMPolyfill.unwrap(b);
-      }
-      return a.compareDocumentPosition(b);
-    },
-    // order is reversed because the comparison is relatedTarget to target
-    isAncestor: function(target, relatedTarget) {
-      return Boolean(this.compare(target, relatedTarget) & this.DESCENDANT);
-    },
-    isDescendant: function(target, relatedTarget) {
-      return Boolean(this.compare(target, relatedTarget) & this.ANCESTOR);
-    }
-  };
-  scope.bounds = bounds;
-  scope.isAncestor = bounds.isAncestor.bind(bounds);
-
   window.PointerEventsPolyfill = scope;
 })(window.PointerEventsPolyfill);

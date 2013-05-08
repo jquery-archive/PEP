@@ -18,7 +18,6 @@
    *   - pointerout: a pointer leaves an element
    *   - pointercancel: a pointer will no longer generate events
    */
-  var isAncestor = scope.isAncestor;
   var dispatcher = {
     targets: new scope.SideTable,
     handledEvents: new scope.SideTable,
@@ -90,13 +89,13 @@
       this.fireEvent('pointercancel', inEvent);
     },
     leaveOut: function(event) {
-      if (!isAncestor(event.target, event.relatedTarget)) {
+      if (!event.target.contains(event.relatedTarget)) {
         this.leave(event);
       }
       this.out(event);
     },
     enterOver: function(event) {
-      if (!isAncestor(event.target, event.relatedTarget)) {
+      if (!event.target.contains(event.relatedTarget)) {
         this.enter(event);
       }
       this.over(event);
