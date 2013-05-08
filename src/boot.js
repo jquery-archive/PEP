@@ -60,6 +60,11 @@
       if (!a || !b) {
         return 0;
       }
+      // TODO(dfreedman): workaround for ShadowDOMPolyfill
+      // https://github.com/toolkitchen/ShadowDOM/issues/134
+      if (b.impl && window.ShadowDOMPolyfill) {
+        b = ShadowDOMPolyfill.unwrap(b);
+      }
       return a.compareDocumentPosition(b);
     },
     // order is reversed because the comparison is relatedTarget to target
