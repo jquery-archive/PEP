@@ -55,8 +55,10 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
   - `pointermove`: a pointer moves, similar to touchmove or mousemove.
   - `pointerdown`: a pointer is activated, or a device button held.
   - `pointerup`: a pointer is deactivated, or a device button released.
-  - `pointerover`: a pointer crosses into an element.
-  - `pointerout`: a pointer leaves an element.
+  - `pointerover`: a pointer has moved onto an element.
+  - `pointerout`: a pointer is no longer on an element it once was.
+  - `pointerenter`: a pointer enters the bounding box of an element.
+  - `pointerleave`: a pointer leaves the bounding box of an element.
   - `pointercancel`: a pointer will no longer generate events.
 
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of PointerEvents.
@@ -87,6 +89,9 @@ of `none` will receive events.
 Due to the difficult nature of polyfilling new CSS properties, this library will
 use a touch-action *attribute* instead. In addition, run time changes involving
 the `touch-action` attribute will be monitored for maximum flexibility.
+
+Touches will not generate events unless inside of an area that has a valid `touch-action` defined that is not `auto`.
+This is to maintain compositiong scrolling optimizations where possible.
 
 ### Browser Compatibility
 #### Full Support
