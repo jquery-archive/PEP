@@ -18,7 +18,7 @@
   var installer = {
     ATTRIB: 'touch-action',
     SELECTOR: '[touch-action]',
-    EMITTER: /^none|user$/,
+    EMITTER: 'none',
     XSCROLLER: 'pan-x',
     YSCROLLER: 'pan-y',
     SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|scroll$/,
@@ -61,7 +61,7 @@
     },
     touchActionToScrollType: function(inTouchAction) {
       var t = inTouchAction;
-      if (this.EMITTER.exec(t)) {
+      if (t === this.EMITTER) {
         return 'none';
       } else if (t === this.XSCROLLER) {
         return 'X';
