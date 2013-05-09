@@ -15,15 +15,12 @@
       }
       body {
         overflow: auto;
-        -ms-touch-action: none;
-        touch-action: none;
       }
       #capture {
         background-color: orange;
         height: 300px;
         width: 300px;
         text-align: center;
-        -webkit-user-select: none;
       }
       #enterleave {
         background-color: blue;
@@ -59,7 +56,9 @@
         'pointerup',
         'pointermove',
         'pointerover',
-        'pointerout'
+        'pointerout',
+        'pointerenter',
+        'pointerleave'
       ];
       function find(/*...inEls*/) {
         [].forEach.call(arguments, function(e) {
@@ -76,10 +75,10 @@
           appendOutput(inEvent.type + ' [' + inEvent.pointerId + ']');
         });
       });
-      enterleave.addEventListener('pointerover', function(e) {
+      enterleave.addEventListener('pointerenter', function(e) {
         appendOutput('enterleave entered');
       });
-      enterleave.addEventListener('pointerout', function(e) {
+      enterleave.addEventListener('pointerleave', function(e) {
         appendOutput('enterleave left');
       });
     </script>

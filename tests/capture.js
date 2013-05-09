@@ -5,11 +5,11 @@
  */
 
 suite('Pointer Capture', function() {
-  var set = function() {
-    host.setPointerCapture(1);
+  var set = function(el) {
+    el.setPointerCapture(1);
   };
-  var release = function() {
-    host.releasePointerCapture(1);
+  var release = function(el) {
+    el.releasePointerCapture(1);
   };
 
   test('Element has setPointerCapture and releasePointerCapture', function() {
@@ -17,24 +17,27 @@ suite('Pointer Capture', function() {
     expect(host).to.have.property('releasePointerCapture');
   });
 
-  test('{set,release}PointerCapture throw exceptions when the pointerId is not on screen', function() {
-    expect(set).to.throw(/InvalidPointerId/);
-    expect(release).to.throw(/InvalidPointerId/);
+  test('setPointerCapture throw exceptions when the pointerId is not on screen', function() {
+    expect(function(){ set(host) }).to.throw(/InvalidPointerId/);
+  });
+
+  test('releasePointerCapture throws exception when the pointerId is not on screen', function() {
+    expect(function(){ release(host) }).to.throw(/InvalidPointerId/);
   });
 
   suite('pointercapture events', function() {
     test('Element.setPointerCapture fires a gotpointercapture event', function(done) {
       prep('gotpointercapture', host, done);
       fire('down', host);
-      host.setPointerCapture(1);
+      set(host);
       fire('up', host);
     });
 
     test('Element.releasePointerCapture fires a lostpointercapture event', function(done) {
       prep('lostpointercapture', host, done);
       fire('down', host);
-      host.setPointerCapture(1);
-      host.releasePointerCapture(1);
+      set(host);
+      release(host);
       fire('up', host);
     });
 
@@ -42,7 +45,7 @@ suite('Pointer Capture', function() {
       prep('lostpointercapture', host, done);
       host.addEventListener('lostpointercapture', done);
       fire('down', host);
-      host.setPointerCapture(1);
+      set(host);
       fire('up', host);
     });
 
@@ -63,8 +66,8 @@ suite('Pointer Capture', function() {
       prep('gotpointercapture', inner, wait());
       prep('lostpointercapture', host, wait());
       fire('down', host);
-      host.setPointerCapture(1);
-      inner.setPointerCapture(1);
+      set(host);
+      set(inner);
       fire('up', host);
     });
   });

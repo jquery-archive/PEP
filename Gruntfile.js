@@ -22,13 +22,13 @@ module.exports = function(grunt) {
         },
         dest: 'build/pointerevents.js',
         src: [
+          'src/boot.js',
           'src/touch-action.js',
           'src/PointerEvent.js',
           'src/pointermap.js',
           'src/sidetable.js',
           'src/dispatcher.js',
           'src/installer.js',
-          'src/findTarget.js',
           'src/platform-events.js',
           'src/capture.js',
         ]

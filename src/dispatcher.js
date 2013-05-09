@@ -5,22 +5,23 @@
  */
 
 (function(scope) {
- /**
-  * This module is for normalizing events. Mouse and Touch events will be
-  * collected here, and fire PointerEvents that have the same semantics, no
-  * matter the source.
-  * Events fired:
-  *   - pointerdown: a pointing is added
-  *   - pointerup: a pointer is removed
-  *   - pointermove: a pointer is moved
-  *   - pointerover: a pointer crosses into an element
-  *   - pointerout: a pointer leaves an element
-  *   - pointercancel: a pointer will no longer generate events
-  */
+
+  /**
+   * This module is for normalizing events. Mouse and Touch events will be
+   * collected here, and fire PointerEvents that have the same semantics, no
+   * matter the source.
+   * Events fired:
+   *   - pointerdown: a pointing is added
+   *   - pointerup: a pointer is removed
+   *   - pointermove: a pointer is moved
+   *   - pointerover: a pointer crosses into an element
+   *   - pointerout: a pointer leaves an element
+   *   - pointercancel: a pointer will no longer generate events
+   */
   var dispatcher = {
-    targets: new scope.SideTable('target'),
-    handledEvents: new scope.SideTable('pointer'),
-    scrollType: new scope.SideTable('scrollType'),
+    targets: new scope.SideTable,
+    handledEvents: new scope.SideTable,
+    scrollType: new scope.SideTable,
     pointermap: new scope.PointerMap,
     events: [],
     eventMap: {},
@@ -69,19 +70,35 @@
       this.fireEvent('pointerup', inEvent);
     },
     enter: function(inEvent) {
+      inEvent.bubbles = false;
       this.fireEvent('pointerenter', inEvent)
     },
     leave: function(inEvent) {
+      inEvent.bubbles = false;
       this.fireEvent('pointerleave', inEvent);
     },
     over: function(inEvent) {
+      inEvent.bubbles = true;
       this.fireEvent('pointerover', inEvent)
     },
     out: function(inEvent) {
+      inEvent.bubbles = true;
       this.fireEvent('pointerout', inEvent);
     },
     cancel: function(inEvent) {
       this.fireEvent('pointercancel', inEvent);
+    },
+    leaveOut: function(event) {
+      if (!event.target.contains(event.relatedTarget)) {
+        this.leave(event);
+      }
+      this.out(event);
+    },
+    enterOver: function(event) {
+      if (!event.target.contains(event.relatedTarget)) {
+        this.enter(event);
+      }
+      this.over(event);
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {

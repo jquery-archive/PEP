@@ -29,7 +29,16 @@
       attributeFilter: ['touch-action']
     },
     watchSubtree: function(inScope) {
-      observer.observe(inScope, this.OBSERVER_INIT);
+      // Only watch scopes that can target find, as these are top-level.
+      // Otherwise we can see duplicate additions and removals that add noise.
+      //
+      // TODO(dfreedman): For some instances with ShadowDOMPolyfill, we can see
+      // a removal without an insertion when a node is redistributed among
+      // shadows. Since it all ends up correct in the document, watching only
+      // the document will yield the correct mutations to watch.
+      if (scope.targetFinding.canTarget(inScope)) {
+        observer.observe(inScope, this.OBSERVER_INIT);
+      }
     },
     enableOnSubtree: function(inScope) {
       var scope = inScope || document;

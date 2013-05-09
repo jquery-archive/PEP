@@ -5,15 +5,19 @@
  */
 
 (function(scope) {
+  scope = scope || {};
   var target = {
     shadow: function(inEl) {
       if (inEl) {
         return inEl.shadowRoot || inEl.webkitShadowRoot;
       }
     },
+    canTarget: function(scope) {
+      return scope && Boolean(scope.elementFromPoint);
+    },
     targetingShadow: function(inEl) {
       var s = this.shadow(inEl);
-      if (s && s.elementFromPoint) {
+      if (this.canTarget(s)) {
         return s;
       }
     },
@@ -48,4 +52,6 @@
   };
   scope.targetFinding = target;
   scope.findTarget = target.findTarget.bind(target);
+
+  window.PointerEventsPolyfill = scope;
 })(window.PointerEventsPolyfill);

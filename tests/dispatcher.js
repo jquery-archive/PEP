@@ -7,7 +7,6 @@
 suite('Event Generation and Dispatching', function() {
 
   var pepde = PointerEventsPolyfill.dispatcher.eventSources;
-  // down -> mousedown && pointerdown
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
     if (!navigator.msPointerEnabled) {
       expect(pepde).to.have.property('mouse');
@@ -57,26 +56,28 @@ suite('Event Generation and Dispatching', function() {
   test('PointerEvents only fire on touch-action: none areas', function() {
     // move always fires
     var cb = chai.spy();
-    eventSetup(['down', 'up', 'over', 'out'], container, cb);
+    var events = ['down', 'up', 'over', 'out', 'enter', 'leave'];
+    eventSetup(events, container, cb);
     fire('down', container);
     fire('up', container);
     fire('over', container);
     fire('out', container);
-    eventRemove(['down', 'up', 'over', 'out'], container, cb);
+    eventRemove(events, container, cb);
     expect(cb).not.to.be.called();
   });
 
   test('PointerEvents will fire anywhere after a down in a touch-action: none area', function() {
     fire('down', host);
     var cb = chai.spy();
-    eventSetup('over', container, cb);
+    eventSetup(['over', 'enter'], container, cb);
     // should be called here
     fire('over', container);
     expect(cb).to.have.been.called();
     fire('up', host);
     // shouldn't be called here
     fire('over', container);
-    eventRemove('over', container, cb);
-    expect(cb).to.have.been.called.exactly(1);
+    eventRemove(['over', 'enter'], container, cb);
+    // this will fire twice in mouse environment, and four times in MSPointerEvents
+    expect(cb).to.have.been.called.exactly(navigator.msPointerEnabled ? 4 : 2);
   });
 });
