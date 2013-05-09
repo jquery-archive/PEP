@@ -6,13 +6,7 @@
     return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; }';
   }
   var attrib2css = [
-    {
-      rule: 'none',
-      selectors: [
-        'none',
-        'user'
-      ]
-    },
+    'none',
     'pan-x',
     'pan-y',
     {
