@@ -59,9 +59,9 @@
       e.cancelable = true;
       e.button = 0;
       e.buttons = 1;
-      e.width = inTouch.webkitRadiusX;
-      e.height = inTouch.webkitRadiusY;
-      e.pressure = inTouch.webkitForce;
+      e.width = inTouch.webkitRadiusX || inTouch.radiusX;
+      e.height = inTouch.webkitRadiusY || inTouch.radiusY;
+      e.pressure = inTouch.webkitForce || inTouch.force;
       e.isPrimary = this.isPrimaryTouch(inTouch);
       e.pointerType = this.POINTER_TYPE;
       return e;
