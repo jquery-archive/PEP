@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/toolkitchen/PointerEvents.git"
+    "url": "git://github.com/polymer-project/PointerEvents.git"
   },
   "author": "Toolkit Authors",
   "license": "BSD",
