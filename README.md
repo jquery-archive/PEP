@@ -1,4 +1,5 @@
 ## Learn the tech
+
 ### Why Pointer Events?
 
 Mouse events and Touch events are fundamentally different beasts in browsers
@@ -64,6 +65,7 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of PointerEvents.
 
 ## Polyfill Details
+
 ### Getting Started
 
 1. Place the loader script in the document head
@@ -78,6 +80,7 @@ PointerEvents should work on all "Evergreen" (self-updating) browsers.
 It has been tested on Chrome, Safari, Firefox, Opera, and IE 10.
 
 ## Polyfill Limitations
+
 ### touch-action
 
 According to the spec, the
@@ -94,7 +97,11 @@ Touches will not generate events unless inside of an area that has a valid `touc
 This is to maintain compositiong scrolling optimizations where possible.
 
 ### Browser Compatibility
+
 #### Full Support
+
 Chrome 18+, Safari 6+, IE 10, Firefox 14+
+
 #### Partial Support
+
 Opera 12+, does not support changes to `touch-action` attribute, nor added or removed elements
