@@ -25,7 +25,7 @@
   try {
     var ev = new MouseEvent('click', {buttons: 1});
     NEW_MOUSE_EVENT = true;
-    HAS_BUTTONS = ev.buttons !== undefined;
+    HAS_BUTTONS = ev.buttons === 1;
   } catch(e) {
   }
 
