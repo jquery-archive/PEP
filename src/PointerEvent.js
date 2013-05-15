@@ -101,7 +101,9 @@
 
     // define the buttons property according to DOM Level 3 spec
     if (!HAS_BUTTONS) {
-      Object.defineProperty(e, 'buttons', {value: buttons, enumerable: true});
+      // IE 10 has buttons on MouseEvent.prototype as a getter w/o any setting
+      // mechanism
+      Object.defineProperty(e, 'buttons', {get: function(){ return buttons }});
     }
 
     // Spec requires that pointers without pressure specified use 0.5 for down
