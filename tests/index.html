@@ -17,6 +17,12 @@ license that can be found in the LICENSE file.
 <script src="../src/pointerevents.js"></script>
 <!-- Test Setup -->
 <div id="mocha"></div>
+<script>
+  mocha.setup({
+    ui: 'tdd',
+    slow: 1000
+  });
+</script>
 <!-- Tests -->
 <script src="setup.js"></script>
 <script src="loader.js"></script>
@@ -26,6 +32,5 @@ license that can be found in the LICENSE file.
 <script src="capture.js"></script>
 <!-- Run Mocha -->
 <script>
-  mocha.reporter('html');
   mocha.run();
 </script>
