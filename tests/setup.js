@@ -77,5 +77,3 @@ function prep(event, target, callback) {
   };
   target.addEventListener(event, fn);
 }
-
-mocha.setup('tdd');
