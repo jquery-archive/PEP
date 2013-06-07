@@ -17,14 +17,14 @@
   }
 
   [
-    'boot.js',
-    'touch-action.js',
-    'PointerEvent.js',
-    'pointermap.js',
-    'sidetable.js',
-    'dispatcher.js',
-    'installer.js',
-    'platform-events.js',
-    'capture.js'
+    'src/boot.js',
+    'src/touch-action.js',
+    'src/PointerEvent.js',
+    'src/pointermap.js',
+    'src/sidetable.js',
+    'src/dispatcher.js',
+    'src/installer.js',
+    'src/platform-events.js',
+    'src/capture.js'
   ].forEach(require);
 })();

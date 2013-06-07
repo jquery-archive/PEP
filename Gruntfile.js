@@ -1,5 +1,4 @@
 module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-yuidoc');
   grunt.loadNpmTasks('grunt-karma-0.9.1');
@@ -17,11 +16,10 @@ module.exports = function(grunt) {
     uglify: {
       pointerevents: {
         options: {
-          sourceMap: 'build/pointerevents.js.map',
-          sourceMappingURL: 'pointerevents.js.map',
-          sourceMapRoot: '..'
+          sourceMap: 'pointerevents.min.js.map',
+          banner: '/* Copyright 2013 The Polymer Authors. All rights reserved. Use of this source code is governed by a BSD-style license that can be found in the LICENSE file. */\n'
         },
-        dest: 'build/pointerevents.js',
+        dest: 'pointerevents.min.js',
         src: [
           'src/boot.js',
           'src/touch-action.js',
@@ -49,9 +47,6 @@ module.exports = function(grunt) {
       browserstack: {
         browsers: "BrowserStack:IE:Win"
       }
-    },
-    clean: {
-      build: 'build'
     }
   });
 
