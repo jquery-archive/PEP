@@ -24,6 +24,9 @@
     'src/sidetable.js',
     'src/dispatcher.js',
     'src/installer.js',
+    'src/mouse.js',
+    'src/touch.js',
+    'src/ms.js',
     'src/platform-events.js',
     'src/capture.js'
   ].forEach(require);

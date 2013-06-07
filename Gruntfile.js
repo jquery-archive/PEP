@@ -17,7 +17,7 @@ module.exports = function(grunt) {
       pointerevents: {
         options: {
           sourceMap: 'pointerevents.min.js.map',
-          banner: '/* Copyright 2013 The Polymer Authors. All rights reserved. Use of this source code is governed by a BSD-style license that can be found in the LICENSE file. */\n'
+          banner: grunt.file.read('LICENSE')
         },
         dest: 'pointerevents.min.js',
         src: [
@@ -28,6 +28,9 @@ module.exports = function(grunt) {
           'src/sidetable.js',
           'src/dispatcher.js',
           'src/installer.js',
+          'src/mouse.js',
+          'src/touch.js',
+          'src/ms.js',
           'src/platform-events.js',
           'src/capture.js',
         ]
