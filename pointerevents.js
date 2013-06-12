@@ -5,18 +5,8 @@
  */
 (function() {
   var thisFile = 'pointerevents.js';
-  var libLocation = '';
-
-  var require = function(inSrc) {
-    document.write('<script src="' + libLocation + inSrc + '"></script>');
-  };
-
-  var s = document.querySelector('script[src $= "' + thisFile + '"]');
-  if (s) {
-    libLocation = s.src.slice(0, -thisFile.length);
-  }
-
-  [
+  var scopeName = 'PointerEventsPolyfill';
+  var modules = [
     'src/boot.js',
     'src/touch-action.js',
     'src/PointerEvent.js',
@@ -29,5 +19,22 @@
     'src/ms.js',
     'src/platform-events.js',
     'src/capture.js'
-  ].forEach(require);
+  ];
+
+  window[scopeName] = {
+    entryPointName: thisFile,
+    modules: modules
+  };
+
+  var script = document.querySelector('script[src $= "' + thisFile + '"]');
+  var src = script.attributes.src.value;
+  var basePath = src.slice(0, src.indexOf(thisFile));
+
+  if (!window.Loader) {
+    var path = basePath + 'tools/loader/loader.js';
+    document.write('<script src="' + path + '"></script>');
+  }
+
+  document.write('<script>Loader.load("' + scopeName + '")</script>');
+
 })();
