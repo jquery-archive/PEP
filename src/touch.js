@@ -151,6 +151,10 @@
     moveOverOut: function(inPointer) {
       var event = inPointer;
       var pointer = pointermap.get(event.pointerId);
+      // a finger drifted off the screen, ignore it
+      if (!pointer) {
+        return;
+      }
       var outEvent = pointer.out;
       var outTarget = pointer.outTarget;
       dispatcher.move(event);
@@ -159,8 +163,15 @@
         event.relatedTarget = outTarget;
         // recover from retargeting by shadow
         outEvent.target = outTarget;
-        dispatcher.leaveOut(outEvent);
-        dispatcher.enterOver(event);
+        if (event.target) {
+          dispatcher.leaveOut(outEvent);
+          dispatcher.enterOver(event);
+        } else {
+          // clean up case when finger leaves the screen
+          event.target = outTarget;
+          event.relatedTarget = null;
+          this.cancelOut(event);
+        }
       }
       pointer.out = event;
       pointer.outTarget = event.target;
