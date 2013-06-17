@@ -1,2 +1,4 @@
 build/
 node_modules
+pointerevents.min.js
+pointerevents.min.js.map

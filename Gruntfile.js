@@ -1,5 +1,4 @@
 module.exports = function(grunt) {
-  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-yuidoc');
   grunt.loadNpmTasks('grunt-karma-0.9.1');
@@ -17,11 +16,10 @@ module.exports = function(grunt) {
     uglify: {
       pointerevents: {
         options: {
-          sourceMap: 'build/pointerevents.js.map',
-          sourceMappingURL: 'pointerevents.js.map',
-          sourceMapRoot: '..'
+          sourceMap: 'pointerevents.min.js.map',
+          banner: grunt.file.read('LICENSE')
         },
-        dest: 'build/pointerevents.js',
+        dest: 'pointerevents.min.js',
         src: [
           'src/boot.js',
           'src/touch-action.js',
@@ -30,6 +28,9 @@ module.exports = function(grunt) {
           'src/sidetable.js',
           'src/dispatcher.js',
           'src/installer.js',
+          'src/mouse.js',
+          'src/touch.js',
+          'src/ms.js',
           'src/platform-events.js',
           'src/capture.js',
         ]
@@ -49,9 +50,6 @@ module.exports = function(grunt) {
       browserstack: {
         browsers: "BrowserStack:IE:Win"
       }
-    },
-    clean: {
-      build: 'build'
     }
   });
 

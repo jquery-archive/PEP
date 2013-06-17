@@ -12,7 +12,6 @@
     "chai": "*",
     "chai-spies": "*",
     "grunt": "*",
-    "grunt-contrib-clean": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-yuidoc": "*",
     "karma-mocha": "*",
