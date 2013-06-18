@@ -15,6 +15,7 @@
   var dispatcher = scope.dispatcher;
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
   var map = Array.prototype.map.call.bind(Array.prototype.map);
+  var toArray = Array.prototype.slice.call.bind(Array.prototype.slice);
   var installer = {
     ATTRIB: 'touch-action',
     SELECTOR: '[touch-action]',
@@ -95,11 +96,8 @@
       this.removeElement(inEl);
       this.addElement(inEl);
     },
-    concatLists: function(inAccum, inList) {
-      for (var i = 0, l = inList.length, o; i < l && (o = inList[i]); i++) {
-        inAccum.push(o);
-      }
-      return inAccum;
+    concatLists: function(accum, list) {
+      return accum.concat(toArray(list));
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
@@ -130,7 +128,6 @@
   };
   var boundWatcher = installer.mutationWatcher.bind(installer);
   scope.installer = installer;
-  scope.register = installer.enableOnSubtree.bind(installer);
   // imperatively set the touch action of an element, document, or shadow root
   // use 'auto' to unset the touch-action
   scope.setTouchAction = function(inEl, inTouchAction) {

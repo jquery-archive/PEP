@@ -7,6 +7,7 @@
   }
   var attrib2css = [
     'none',
+    'auto',
     'pan-x',
     'pan-y',
     {
