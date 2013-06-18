@@ -27,6 +27,7 @@
     // Scope objects for native events.
     // This exists for ease of testing.
     eventSources: {},
+    eventSourceList: [],
     /**
      * Add a new event source that will generate pointer events.
      *
@@ -131,10 +132,10 @@
       }, this);
     },
     addEvent: function(target, eventName) {
-      target.addEventListener(eventName, this.boundListener);
+      target.addEventListener(eventName, this.boundHandler);
     },
     removeEvent: function(target, eventName) {
-      target.removeEventListener(eventName, this.boundListener);
+      target.removeEventListener(eventName, this.boundHandler);
     },
     // EVENT CREATION AND TRACKING
     /**
@@ -216,10 +217,36 @@
     },
     asyncDispatchEvent: function(inEvent) {
       setTimeout(this.dispatchEvent.bind(this, inEvent), 0);
+    },
+    scrollTypes: {
+      EMITTER: 'none',
+      XSCROLLER: 'pan-x',
+      YSCROLLER: 'pan-y',
+      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
+    },
+    touchActionToScrollType: function(inTouchAction) {
+      var t = inTouchAction;
+      if (t === 'none') {
+        return 'none';
+      } else if (t === this.XSCROLLER) {
+        return 'X';
+      } else if (t === this.YSCROLLER) {
+        return 'Y';
+      } else if (this.SCROLLER.exec(t)) {
+        return 'XY';
+      }
+    },
+    setTouchAction: function(target, touchAction) {
+      var st = this.touchActionToScrollType(touchAction);
+      if (target.setAttribute) {
+        target[(st ? 'set' : 'remove') + 'Attribute']('touch-action', st);
+      }
+      this.scrollType[st ? 'set' : 'delete'](target, st);
     }
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
   scope.register = dispatcher.register.bind(scope);
   scope.unregister = dispatcher.unregister.bind(scope);
+  scope.setTouchAction = dispatcher.setTouchAction.bind(dispatcher);
 })(window.PointerEventsPolyfill);

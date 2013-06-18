@@ -15,6 +15,7 @@
 
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {
+    Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
 
     if (window.navigator.msPointerEnabled) {
       var tp = window.navigator.msMaxTouchPoints;
@@ -23,15 +24,13 @@
         enumerable: true
       });
       dispatcher.registerSource('ms', scope.msEvents);
-      dispatcher.registerTarget(document);
     } else {
       dispatcher.registerSource('mouse', scope.mouseEvents);
       if (window.ontouchstart !== undefined) {
-        dispatcher.registerSource('touch', scope.touchEvents);
+        // dispatcher.registerSource('touch', scope.touchEvents);
       }
-      installer.enableOnSubtree(document);
     }
 
-    Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
+    dispatcher.register(document);
   }
 })(window.PointerEventsPolyfill);
