@@ -17,7 +17,7 @@
     "karma-mocha": "*",
     "karma-script-launcher": "*",
     "karma-crbot-reporter": "*",
-    "grunt-karma-0.9.1": "~0.4.3"
+    "grunt-karma": "~0.5.0"
   },
   "scripts": {
     "test": "grunt test"
