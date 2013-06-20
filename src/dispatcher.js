@@ -28,6 +28,12 @@
     // This exists for ease of testing.
     eventSources: {},
     eventSourceList: [],
+    scrollTypes: {
+      EMITTER: 'none',
+      XSCROLLER: 'pan-x',
+      YSCROLLER: 'pan-y',
+      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
+    },
     /**
      * Add a new event source that will generate pointer events.
      *
@@ -218,21 +224,16 @@
     asyncDispatchEvent: function(inEvent) {
       setTimeout(this.dispatchEvent.bind(this, inEvent), 0);
     },
-    scrollTypes: {
-      EMITTER: 'none',
-      XSCROLLER: 'pan-x',
-      YSCROLLER: 'pan-y',
-      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
-    },
     touchActionToScrollType: function(inTouchAction) {
       var t = inTouchAction;
+      var st = this.scrollTypes;
       if (t === 'none') {
         return 'none';
-      } else if (t === this.XSCROLLER) {
+      } else if (t === st.XSCROLLER) {
         return 'X';
-      } else if (t === this.YSCROLLER) {
+      } else if (t === st.YSCROLLER) {
         return 'Y';
-      } else if (this.SCROLLER.exec(t)) {
+      } else if (st.SCROLLER.exec(t)) {
         return 'XY';
       }
     },
@@ -246,7 +247,7 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
-  scope.register = dispatcher.register.bind(scope);
-  scope.unregister = dispatcher.unregister.bind(scope);
+  scope.register = dispatcher.register.bind(dispatcher);
+  scope.unregister = dispatcher.unregister.bind(dispatcher);
   scope.setTouchAction = dispatcher.setTouchAction.bind(dispatcher);
 })(window.PointerEventsPolyfill);
