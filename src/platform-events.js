@@ -27,7 +27,7 @@
     } else {
       dispatcher.registerSource('mouse', scope.mouseEvents);
       if (window.ontouchstart !== undefined) {
-        // dispatcher.registerSource('touch', scope.touchEvents);
+        dispatcher.registerSource('touch', scope.touchEvents);
       }
     }
 
