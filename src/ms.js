@@ -18,6 +18,12 @@
       'MSGotPointerCapture',
       'MSLostPointerCapture'
     ],
+    register: function(target) {
+      dispatcher.listen(target, this.events);
+    },
+    unregister: function(target) {
+      dispatcher.unlisten(target, this.events);
+    },
     POINTER_TYPES: [
       '',
       'unavailable',

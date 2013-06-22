@@ -45,9 +45,19 @@
         return t;
       }
     },
+    owner: function(element) {
+      var s = element;
+      // walk up until you hit the shadow root or document
+      while (s.parentNode) {
+        s = s.parentNode;
+      }
+      return s;
+    },
     findTarget: function(inEvent) {
       var x = inEvent.clientX, y = inEvent.clientY;
-      return this.searchRoot(document, x, y);
+      // if the listener is in the shadow root, it is much faster to start there
+      var s = this.owner(inEvent.target);
+      return this.searchRoot(s, x, y);
     }
   };
   scope.targetFinding = target;

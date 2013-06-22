@@ -7,11 +7,15 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var findTarget = scope.findTarget;
+  var shadow = scope.targetFinding.shadow;
   var pointermap = dispatcher.pointermap;
   var scrollType = dispatcher.scrollType;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
   var DEDUP_TIMEOUT = 2500;
+  var ATTRIB = 'touch-action';
+  var INSTALLER;
+  var HAS_TOUCH_ACTION = (typeof document.head.style.touchAction) === 'string';
 
   // handler block for native touch events
   var touchEvents = {
@@ -21,6 +25,42 @@
       'touchend',
       'touchcancel'
     ],
+    register: function(target) {
+      if (HAS_TOUCH_ACTION) {
+        dispatcher.listen(target, this.events);
+      } else {
+        INSTALLER.enableOnSubtree(target);
+      }
+    },
+    unregister: function(target) {
+      if (HAS_TOUCH_ACTION) {
+        dispatcher.unlisten(target, this.events);
+      } else {
+        // TODO(dfreedman): is it worth it to disconnect the MO?
+      }
+    },
+    elementAdded: function(el) {
+      var a = el.getAttribute && el.getAttribute(this.ATTRIB);
+      var st = dispatcher.touchActionToScrollType(a);
+      if (st) {
+        scrollType.set(el, st);
+        var s = shadow(el);
+        // set touch-action on shadow as well
+        if (s) {
+          scrollType.set(s, st);
+        }
+      }
+      dispatcher.listen(el, this.events);
+    },
+    elementRemoved: function(el) {
+      scrollType.delete(el);
+      // remove touch-action from shadow
+      var s = shadow(el);
+      if (s) {
+        scrollType.delete(s);
+      }
+      dispatcher.unlisten(el, this.events);
+    },
     POINTER_TYPE: 'touch',
     firstTouch: null,
     isPrimaryTouch: function(inTouch) {
@@ -50,9 +90,9 @@
       e.cancelable = true;
       e.button = 0;
       e.buttons = 1;
-      e.width = inTouch.webkitRadiusX || inTouch.radiusX;
-      e.height = inTouch.webkitRadiusY || inTouch.radiusY;
-      e.pressure = inTouch.webkitForce || inTouch.force;
+      e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
+      e.height = inTouch.webkitRadiusY || inTouch.radiusY || 0;
+      e.pressure = inTouch.webkitForce || inTouch.force || 0.5;
       e.isPrimary = this.isPrimaryTouch(inTouch);
       e.pointerType = this.POINTER_TYPE;
       return e;
@@ -218,6 +258,10 @@
       }
     }
   };
+
+  if (!HAS_TOUCH_ACTION) {
+    INSTALLER = new scope.Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents);
+  }
 
   scope.touchEvents = touchEvents;
 })(window.PointerEventsPolyfill);
