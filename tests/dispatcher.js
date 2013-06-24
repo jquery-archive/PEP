@@ -8,19 +8,19 @@ suite('Event Generation and Dispatching', function() {
 
   var pepde = PointerEventsPolyfill.dispatcher.eventSources;
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
-    if (!navigator.msPointerEnabled) {
+    if (!HAS_MS) {
       expect(pepde).to.have.property('mouse');
     }
   });
 
   test('TouchEvents are a source in touch environments', function() {
-    if ('ontouchstart' in window) {
+    if (HAS_TOUCH) {
       expect(pepde).to.have.property('touch');
     }
   });
 
   test('MSPointerEvents are a source in MSPointerEvent environments', function() {
-    if (window.navigator.msPointerEnabled) {
+    if (HAS_MS) {
       expect(pepde).to.have.property('ms');
     }
   });
@@ -53,20 +53,21 @@ suite('Event Generation and Dispatching', function() {
     eventRemove('move', host, handler);
   });
 
-  test('PointerEvents only fire on touch-action: none areas', function() {
+  test('PointerEvents from mouse fire anywhere by default', function() {
     // move always fires
     var cb = chai.spy();
     var events = ['down', 'up', 'over', 'out', 'enter', 'leave'];
     eventSetup(events, container, cb);
     fire('down', container);
-    fire('up', container);
     fire('over', container);
+    fire('up', container);
     fire('out', container);
     eventRemove(events, container, cb);
-    expect(cb).not.to.be.called();
+    expect(cb).to.be.called(events.length);
   });
 
-  test('PointerEvents will fire anywhere after a down in a touch-action: none area', function() {
+  // TODO(dfreedman) rework test with touch events
+  /* test('PointerEvents from touch will fire anywhere after a down in a touch-action: none area', function() {
     fire('down', host);
     var cb = chai.spy();
     eventSetup(['over', 'enter'], container, cb);
@@ -79,5 +80,5 @@ suite('Event Generation and Dispatching', function() {
     eventRemove(['over', 'enter'], container, cb);
     // this will fire twice in mouse environment, and four times in MSPointerEvents
     expect(cb).to.have.been.called.exactly(navigator.msPointerEnabled ? 4 : 2);
-  });
+  }); */
 });
