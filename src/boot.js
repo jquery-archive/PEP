@@ -12,14 +12,24 @@
         return inEl.shadowRoot || inEl.webkitShadowRoot;
       }
     },
-    canTarget: function(scope) {
-      return scope && Boolean(scope.elementFromPoint);
+    canTarget: function(shadow) {
+      return shadow && Boolean(shadow.elementFromPoint);
     },
     targetingShadow: function(inEl) {
       var s = this.shadow(inEl);
       if (this.canTarget(s)) {
         return s;
       }
+    },
+    olderShadow: function(shadow) {
+      var os = shadow.olderShadowRoot;
+      if (!os) {
+        var se = shadow.querySelector('shadow');
+        if (se) {
+          os = se.olderShadowRoot;
+        }
+      }
+      return os;
     },
     searchRoot: function(inRoot, x, y) {
       if (inRoot) {
@@ -32,9 +42,7 @@
           st = sr.elementFromPoint(x, y);
           if (!st) {
             // check for older shadows
-            os = sr.querySelector('shadow');
-            // check the older shadow if available
-            sr = os && os.olderShadowRoot;
+            sr = this.olderShadow(sr);
           } else {
             // shadowed element may contain a shadow root
             var ssr = this.targetingShadow(st);
