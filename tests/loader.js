@@ -23,7 +23,7 @@ suite('Loader', function() {
       expect(pep.dispatcher).to.be.ok;
     });
     test('Installer', function() {
-      expect(pep.installer).to.be.ok;
+      expect(pep.Installer).to.be.ok;
     });
     test('Target Finding', function() {
       expect(pep.targetFinding).to.be.ok;
