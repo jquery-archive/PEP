@@ -12,6 +12,7 @@
     "chai": "*",
     "chai-spies": "*",
     "grunt": "*",
+    "grunt-contrib-concat": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-yuidoc": "*",
     "karma-mocha": "*",
