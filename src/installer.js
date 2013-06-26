@@ -15,6 +15,7 @@
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
   var map = Array.prototype.map.call.bind(Array.prototype.map);
   var toArray = Array.prototype.slice.call.bind(Array.prototype.slice);
+  var filter = Array.prototype.filter.call.bind(Array.prototype.filter);
   var MO = window.MutationObserver || window.WebKitMutationObserver;
   var SELECTOR = '[touch-action]';
   var OBSERVER_INIT = {
@@ -28,7 +29,7 @@
     this.addCallback = add.bind(binder);
     this.removeCallback = remove.bind(binder);
     if (MO) {
-      this.observer = new MO(this.mutationHandler.bind(this));
+      this.observer = new MO(this.mutationWatcher.bind(this));
     }
   }
 
@@ -79,11 +80,14 @@
     installOnLoad: function() {
       document.addEventListener('DOMContentLoaded', this.installNewSubtree.bind(this, document));
     },
+    isElement: function(n) {
+      return n.nodeType === Node.ELEMENT_NODE;
+    },
     flattenMutationTree: function(inNodes) {
       // find children with touch-action
       var tree = map(inNodes, this.findElements, this);
       // make sure the added nodes are accounted for
-      tree.push(inNodes);
+      tree.push(filter(inNodes, this.isElement));
       // flatten the list
       return tree.reduce(this.concatLists, []);
     },
