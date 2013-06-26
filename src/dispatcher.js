@@ -240,7 +240,7 @@
     setTouchAction: function(target, touchAction) {
       var st = this.touchActionToScrollType(touchAction);
       if (target.setAttribute) {
-        target[(st ? 'set' : 'remove') + 'Attribute']('touch-action', st);
+        target[(st ? 'set' : 'remove') + 'Attribute']('touch-action', touchAction);
       }
       this.scrollType[st ? 'set' : 'delete'](target, st);
     }
