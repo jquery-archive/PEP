@@ -11,7 +11,6 @@
  */
 (function(scope) {
   var dispatcher = scope.dispatcher;
-  var installer = scope.installer;
 
   // only activate if this platform does not have pointer events
   if (window.navigator.pointerEnabled === undefined) {

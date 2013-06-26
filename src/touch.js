@@ -40,7 +40,7 @@
       }
     },
     elementAdded: function(el) {
-      var a = el.getAttribute && el.getAttribute(this.ATTRIB);
+      var a = el.getAttribute && el.getAttribute(ATTRIB);
       var st = dispatcher.touchActionToScrollType(a);
       if (st) {
         scrollType.set(el, st);
@@ -49,8 +49,9 @@
         if (s) {
           scrollType.set(s, st);
         }
+        // only listen if we have a defined touch-action
+        dispatcher.listen(el, this.events);
       }
-      dispatcher.listen(el, this.events);
     },
     elementRemoved: function(el) {
       scrollType.delete(el);
