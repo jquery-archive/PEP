@@ -31,6 +31,14 @@
       }
       return os;
     },
+    allShadows: function(element) {
+      var shadows = [], s = this.shadow(element);
+      while(s) {
+        shadows.push(s);
+        s = this.olderShadow(s);
+      }
+      return shadows;
+    },
     searchRoot: function(inRoot, x, y) {
       if (inRoot) {
         var t = inRoot.elementFromPoint(x, y);

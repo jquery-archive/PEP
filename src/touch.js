@@ -40,7 +40,7 @@
       }
     },
     elementAdded: function(el) {
-      var a = el.getAttribute && el.getAttribute(ATTRIB);
+      var a = el.getAttribute(ATTRIB);
       var st = dispatcher.touchActionToScrollType(a);
       if (st) {
         scrollType.set(el, st);
