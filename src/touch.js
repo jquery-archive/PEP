@@ -149,12 +149,12 @@
       // been processed yet.
       if (pointermap.size >= tl.length) {
         var d = [];
-        pointermap.ids.forEach(function(i) {
+        pointermap.forEach(function(key, value) {
           // Never remove pointerId == 1, which is mouse.
           // Touch identifiers are 2 smaller than their pointerId, which is the
           // index in pointermap.
-          if (i !== 1 && !this.findTouch(tl, i - 2)) {
-            var p = pointermap.get(i).out;
+          if (key !== 1 && !this.findTouch(tl, key - 2)) {
+            var p = value.out;
             d.push(this.touchToPointer(p));
           }
         }, this);

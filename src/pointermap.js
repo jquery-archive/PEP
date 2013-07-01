@@ -54,8 +54,17 @@
     clear: function() {
       this.ids.length = 0;
       this.pointers.length = 0;
+    },
+    forEach: function(callback, thisArg) {
+      this.ids.forEach(function(id, i) {
+        callback.call(thisArg, id, this.pointers[i], this);
+      }, this);
     }
   };
 
-  scope.PointerMap = PointerMap;
+  if (window.Map && Map.prototype.forEach) {
+    scope.PointerMap = Map;
+  } else {
+    scope.PointerMap = PointerMap;
+  }
 })(window.PointerEventsPolyfill);
