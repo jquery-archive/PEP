@@ -7,7 +7,7 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var pointermap = dispatcher.pointermap;
-  var HAS_BITMAP_TYPE = typeof MSPointerEvent.MSPOINTER_TYPE_MOUSE === 'number';
+  var HAS_BITMAP_TYPE = window.MSPointerEvent && typeof window.MSPointerEvent.MSPOINTER_TYPE_MOUSE === 'number';
   var msEvents = {
     events: [
       'MSPointerDown',
