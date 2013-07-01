@@ -7,7 +7,7 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var findTarget = scope.findTarget;
-  var allShadows = scope.targetFinding.allShadows;
+  var allShadows = scope.targetFinding.allShadows.bind(scope.targetFinding);
   var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
@@ -77,7 +77,7 @@
       } else if (st) {
         this.elementAdded(el);
       }
-    }
+    },
     scrollTypes: {
       EMITTER: 'none',
       XSCROLLER: 'pan-x',

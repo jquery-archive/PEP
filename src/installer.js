@@ -90,7 +90,7 @@
       // make sure the added nodes are accounted for
       tree.push(filter(inNodes, this.isElement));
       // flatten the list
-      return tree.reduce(this.concatLists);
+      return tree.reduce(this.concatLists, []);
     },
     mutationWatcher: function(mutations) {
       mutations.forEach(this.mutationHandler, this);
