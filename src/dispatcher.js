@@ -21,19 +21,12 @@
   var dispatcher = {
     targets: new scope.SideTable,
     handledEvents: new scope.SideTable,
-    scrollType: new scope.SideTable,
     pointermap: new scope.PointerMap,
     eventMap: {},
     // Scope objects for native events.
     // This exists for ease of testing.
     eventSources: {},
     eventSourceList: [],
-    scrollTypes: {
-      EMITTER: 'none',
-      XSCROLLER: 'pan-x',
-      YSCROLLER: 'pan-y',
-      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
-    },
     /**
      * Add a new event source that will generate pointer events.
      *
@@ -223,31 +216,10 @@
     },
     asyncDispatchEvent: function(inEvent) {
       setTimeout(this.dispatchEvent.bind(this, inEvent), 0);
-    },
-    touchActionToScrollType: function(inTouchAction) {
-      var t = inTouchAction;
-      var st = this.scrollTypes;
-      if (t === 'none') {
-        return 'none';
-      } else if (t === st.XSCROLLER) {
-        return 'X';
-      } else if (t === st.YSCROLLER) {
-        return 'Y';
-      } else if (st.SCROLLER.exec(t)) {
-        return 'XY';
-      }
-    },
-    setTouchAction: function(target, touchAction) {
-      var st = this.touchActionToScrollType(touchAction);
-      if (target.setAttribute) {
-        target[(st ? 'set' : 'remove') + 'Attribute']('touch-action', touchAction);
-      }
-      this.scrollType[st ? 'set' : 'delete'](target, st);
     }
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
   scope.register = dispatcher.register.bind(dispatcher);
   scope.unregister = dispatcher.unregister.bind(dispatcher);
-  scope.setTouchAction = dispatcher.setTouchAction.bind(dispatcher);
 })(window.PointerEventsPolyfill);

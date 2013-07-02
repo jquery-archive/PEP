@@ -7,9 +7,8 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var findTarget = scope.findTarget;
-  var shadow = scope.targetFinding.shadow;
+  var allShadows = scope.targetFinding.allShadows.bind(scope.targetFinding);
   var pointermap = dispatcher.pointermap;
-  var scrollType = dispatcher.scrollType;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
   var DEDUP_TIMEOUT = 2500;
@@ -19,6 +18,7 @@
 
   // handler block for native touch events
   var touchEvents = {
+    scrollType: new scope.SideTable,
     events: [
       'touchstart',
       'touchmove',
@@ -40,27 +40,61 @@
       }
     },
     elementAdded: function(el) {
-      var a = el.getAttribute && el.getAttribute(ATTRIB);
-      var st = dispatcher.touchActionToScrollType(a);
+      var a = el.getAttribute(ATTRIB);
+      var st = this.touchActionToScrollType(a);
       if (st) {
-        scrollType.set(el, st);
-        var s = shadow(el);
-        // set touch-action on shadow as well
-        if (s) {
-          scrollType.set(s, st);
-        }
-        // only listen if we have a defined touch-action
+        this.scrollType.set(el, st);
         dispatcher.listen(el, this.events);
+        // set touch-action on shadows as well
+        allShadows(el).forEach(function(s) {
+          this.scrollType.set(s, st);
+          dispatcher.listen(s, this.events);
+        }, this);
       }
     },
     elementRemoved: function(el) {
-      scrollType.delete(el);
-      // remove touch-action from shadow
-      var s = shadow(el);
-      if (s) {
-        scrollType.delete(s);
-      }
+      this.scrollType.delete(el);
       dispatcher.unlisten(el, this.events);
+      // remove touch-action from shadow
+      allShadows(el).forEach(function(s) {
+        this.scrollType.delete(s);
+        dispatcher.unlisten(s, this.events);
+      }, this);
+    },
+    elementChanged: function(el, oldValue) {
+      var a = el.getAttribute(ATTRIB);
+      var st = this.touchActiontoScrollType(a);
+      var oldSt = this.touchActionToScrollType(oldValue);
+      // simply update scrollType if listeners are already established
+      if (st && oldSt) {
+        this.scrollType.set(el, st);
+        allShadows(el).forEach(function(s) {
+          this.scrollType.set(s, st);
+        }, this);
+      } else if (oldSt) {
+        this.elementRemoved(el);
+      } else if (st) {
+        this.elementAdded(el);
+      }
+    },
+    scrollTypes: {
+      EMITTER: 'none',
+      XSCROLLER: 'pan-x',
+      YSCROLLER: 'pan-y',
+      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
+    },
+    touchActionToScrollType: function(touchAction) {
+      var t = touchAction;
+      var st = this.scrollTypes;
+      if (t === 'none') {
+        return 'none';
+      } else if (t === st.XSCROLLER) {
+        return 'X';
+      } else if (t === st.YSCROLLER) {
+        return 'Y';
+      } else if (st.SCROLLER.exec(t)) {
+        return 'XY';
+      }
     },
     POINTER_TYPE: 'touch',
     firstTouch: null,
@@ -108,7 +142,7 @@
     shouldScroll: function(inEvent) {
       if (this.firstXY) {
         var ret;
-        var scrollAxis = scrollType.get(inEvent.currentTarget);
+        var scrollAxis = this.scrollType.get(inEvent.currentTarget);
         if (scrollAxis === 'none') {
           // this element is a touch-action: none, should never scroll
           ret = false;
@@ -149,12 +183,12 @@
       // been processed yet.
       if (pointermap.size >= tl.length) {
         var d = [];
-        pointermap.ids.forEach(function(i) {
+        pointermap.forEach(function(key, value) {
           // Never remove pointerId == 1, which is mouse.
           // Touch identifiers are 2 smaller than their pointerId, which is the
           // index in pointermap.
-          if (i !== 1 && !this.findTouch(tl, i - 2)) {
-            var p = pointermap.get(i).out;
+          if (key !== 1 && !this.findTouch(tl, key - 2)) {
+            var p = value.out;
             d.push(this.touchToPointer(p));
           }
         }, this);
@@ -261,7 +295,7 @@
   };
 
   if (!HAS_TOUCH_ACTION) {
-    INSTALLER = new scope.Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents);
+    INSTALLER = new scope.Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents.elementChanged, touchEvents);
   }
 
   scope.touchEvents = touchEvents;

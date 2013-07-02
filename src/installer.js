@@ -22,12 +22,14 @@
     subtree: true,
     childList: true,
     attributes: true,
+    attributeOldValue: true,
     attributeFilter: ['touch-action']
   };
 
-  function Installer(add, remove, binder) {
+  function Installer(add, remove, changed, binder) {
     this.addCallback = add.bind(binder);
     this.removeCallback = remove.bind(binder);
+    this.changedCallback = changed.bind(binder);
     if (MO) {
       this.observer = new MO(this.mutationWatcher.bind(this));
     }
@@ -69,9 +71,8 @@
     addElement: function(el) {
       this.addCallback(el);
     },
-    elementChanged: function(el) {
-      this.removeElement(el);
-      this.addElement(el);
+    elementChanged: function(el, oldValue) {
+      this.changedCallback(el, oldValue);
     },
     concatLists: function(accum, list) {
       return accum.concat(toArray(list));
@@ -101,7 +102,7 @@
         var removed = this.flattenMutationTree(m.removedNodes);
         removed.forEach(this.removeElement, this);
       } else if (m.type === 'attributes') {
-        this.elementChanged(m.target);
+        this.elementChanged(m.target, m.oldValue);
       }
     },
   };
