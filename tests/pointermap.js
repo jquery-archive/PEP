@@ -7,7 +7,8 @@ suite('PointerMap', function() {
       'has',
       'delete',
       'size',
-      'clear'
+      'clear',
+      'forEach'
     ];
     var e = expect(PointerMap.prototype);
     keys.forEach(function(k) {
@@ -55,5 +56,16 @@ suite('PointerMap', function() {
     p.set(1, true);
     p.clear();
     expect(p.size).to.equal(0);
+  });
+  test('PointerMap .forEach', function() {
+    var p = new PointerMap;
+    p.set(1, true);
+    p.set(2, false);
+    p.set(3, {});
+    p.forEach(function(k, v, m) {
+      expect(k).to.be.ok;
+      expect(v).to.equal(p.get(k));
+      expect(m).to.equal(p);
+    });
   });
 });

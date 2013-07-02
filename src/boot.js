@@ -31,6 +31,14 @@
       }
       return os;
     },
+    allShadows: function(element) {
+      var shadows = [], s = this.shadow(element);
+      while(s) {
+        shadows.push(s);
+        s = this.olderShadow(s);
+      }
+      return shadows;
+    },
     searchRoot: function(inRoot, x, y) {
       if (inRoot) {
         var t = inRoot.elementFromPoint(x, y);
@@ -65,7 +73,11 @@
       var x = inEvent.clientX, y = inEvent.clientY;
       // if the listener is in the shadow root, it is much faster to start there
       var s = this.owner(inEvent.target);
-      return this.searchRoot(s, x, y);
+      // if x, y is not in this root, fall back to document search
+      if (!s.elementFromPoint(x, y)) {
+        s = document;
+      }
+      return this.searchRoot(document, x, y);
     }
   };
   scope.targetFinding = target;
