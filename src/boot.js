@@ -73,7 +73,11 @@
       var x = inEvent.clientX, y = inEvent.clientY;
       // if the listener is in the shadow root, it is much faster to start there
       var s = this.owner(inEvent.target);
-      return this.searchRoot(s, x, y);
+      // if x, y is not in this root, fall back to document search
+      if (!s.elementFromPoint(x, y)) {
+        s = document;
+      }
+      return this.searchRoot(document, x, y);
     }
   };
   scope.targetFinding = target;
