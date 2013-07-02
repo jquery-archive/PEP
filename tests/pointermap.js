@@ -62,9 +62,10 @@ suite('PointerMap', function() {
     p.set(1, true);
     p.set(2, false);
     p.set(3, {});
-    p.forEach(function(k, v) {
+    p.forEach(function(k, v, m) {
       expect(k).to.be.ok;
       expect(v).to.equal(p.get(k));
+      expect(m).to.equal(p);
     });
   });
 });
