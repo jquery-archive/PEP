@@ -56,7 +56,6 @@
       this.scrollType.delete(el);
       dispatcher.unlisten(el, this.events);
       // remove touch-action from shadow
-      var s = shadow(el);
       allShadows(el).forEach(function(s) {
         this.scrollType.delete(s);
         dispatcher.unlisten(s, this.events);
