@@ -6,20 +6,7 @@ module.exports = function(grunt) {
 
   var os = require('os').type();
   var browsers = ['Chrome', 'Firefox'];
-  var sourceFiles = [
-    'src/boot.js',
-    'src/touch-action.js',
-    'src/PointerEvent.js',
-    'src/pointermap.js',
-    'src/sidetable.js',
-    'src/dispatcher.js',
-    'src/installer.js',
-    'src/mouse.js',
-    'src/touch.js',
-    'src/ms.js',
-    'src/platform-events.js',
-    'src/capture.js'
-  ];
+  var sourceFiles = grunt.file.readJSON('build.json');
 
   if (os == 'Darwin') {
     browsers.push('ChromeCanary');
