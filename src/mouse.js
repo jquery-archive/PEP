@@ -12,7 +12,6 @@
 
   // handler block for native mouse events
   var mouseEvents = {
-    // Mouse is required to have a pointerId of 1
     POINTER_ID: 1,
     POINTER_TYPE: 'mouse',
     events: [
@@ -22,16 +21,14 @@
       'mouseover',
       'mouseout'
     ],
-    global: [
-      'mousedown',
-      'mouseup',
-      'mouseover',
-      'mouseout'
-    ],
+    register: function(target) {
+      dispatcher.listen(target, this.events);
+    },
+    unregister: function(target) {
+      dispatcher.unlisten(target, this.events);
+    },
     lastTouches: [],
-    // duplicate, so a user can do dispatcher.registerTarget(document), and not
     // collide with the global mouse listener
-    mouseHandler: dispatcher.eventHandler.bind(dispatcher),
     isEventSimulatedFromTouch: function(inEvent) {
       var lts = this.lastTouches;
       var x = inEvent.clientX, y = inEvent.clientY;
@@ -57,14 +54,10 @@
         // http://crbug/149091
         if (p) {
           this.cancel(inEvent);
-          p = false;
         }
-        if (!p) {
-          var e = this.prepareEvent(inEvent);
-          pointermap.set(this.POINTER_ID, inEvent);
-          dispatcher.down(e);
-          dispatcher.listen(this.global, document, this.mouseHandler);
-        }
+        var e = this.prepareEvent(inEvent);
+        pointermap.set(this.POINTER_ID, inEvent);
+        dispatcher.down(e);
       }
     },
     mousemove: function(inEvent) {
@@ -102,12 +95,8 @@
     },
     cleanupMouse: function() {
       pointermap.delete(this.POINTER_ID);
-      dispatcher.unlisten(this.global, document, this.mouseHandler);
     }
   };
-
-  // mouse move events must be on at all times
-  dispatcher.listen(['mousemove'], document, dispatcher.boundHandler);
 
   scope.mouseEvents = mouseEvents;
 })(window.PointerEventsPolyfill);

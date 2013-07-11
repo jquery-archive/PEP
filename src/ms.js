@@ -7,6 +7,7 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var pointermap = dispatcher.pointermap;
+  var HAS_BITMAP_TYPE = window.MSPointerEvent && typeof window.MSPointerEvent.MSPOINTER_TYPE_MOUSE === 'number';
   var msEvents = {
     events: [
       'MSPointerDown',
@@ -18,6 +19,12 @@
       'MSGotPointerCapture',
       'MSLostPointerCapture'
     ],
+    register: function(target) {
+      dispatcher.listen(target, this.events);
+    },
+    unregister: function(target) {
+      dispatcher.unlisten(target, this.events);
+    },
     POINTER_TYPES: [
       '',
       'unavailable',
@@ -26,8 +33,11 @@
       'mouse'
     ],
     prepareEvent: function(inEvent) {
-      var e = dispatcher.cloneEvent(inEvent);
-      e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
+      var e = inEvent;
+      if (HAS_BITMAP_TYPE) {
+        e = dispatcher.cloneEvent(inEvent);
+        e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
+      }
       return e;
     },
     cleanup: function(id) {

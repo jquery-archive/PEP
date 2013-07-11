@@ -21,43 +21,46 @@
   var dispatcher = {
     targets: new scope.SideTable,
     handledEvents: new scope.SideTable,
-    scrollType: new scope.SideTable,
     pointermap: new scope.PointerMap,
-    events: [],
     eventMap: {},
     // Scope objects for native events.
     // This exists for ease of testing.
     eventSources: {},
+    eventSourceList: [],
     /**
      * Add a new event source that will generate pointer events.
      *
      * `inSource` must contain an array of event names named `events`, and
      * functions with the names specified in the `events` array.
-     * @param {string} inName A name for the event source
-     * @param {Object} inSource A new source of platform events.
+     * @param {string} name A name for the event source
+     * @param {Object} source A new source of platform events.
      */
-    registerSource: function(inName, inSource) {
-      var s = inSource;
+    registerSource: function(name, source) {
+      var s = source;
       var newEvents = s.events;
       if (newEvents) {
-        this.events = this.events.concat(newEvents);
         newEvents.forEach(function(e) {
           if (s[e]) {
             this.eventMap[e] = s[e].bind(s);
           }
         }, this);
-        this.eventSources[inName] = s;
+        this.eventSources[name] = s;
+        this.eventSourceList.push(s);
       }
     },
-    // add event listeners for inTarget
-    registerTarget: function(inTarget, inAxis) {
-      this.scrollType.set(inTarget, inAxis || 'none');
-      this.listen(this.events, inTarget, this.boundHandler);
+    register: function(element) {
+      var l = this.eventSourceList.length;
+      for (var i = 0, es; (i < l) && (es = this.eventSourceList[i]); i++) {
+        // call eventsource register
+        es.register.call(es, element);
+      }
     },
-    // remove event listeners for inTarget
-    unregisterTarget: function(inTarget) {
-      this.scrollType.set(inTarget, null);
-      this.unlisten(this.events, inTarget, this.boundHandler);
+    unregister: function(element) {
+      var l = this.eventSourceList.length;
+      for (var i = 0, es; (i < l) && (es = this.eventSourceList[i]); i++) {
+        // call eventsource register
+        es.unregister.call(es, element);
+      }
     },
     // EVENTS
     down: function(inEvent) {
@@ -116,22 +119,22 @@
       this.handledEvents.set(inEvent, true);
     },
     // set up event listeners
-    listen: function(inEvents, inTarget, inListener) {
-      inEvents.forEach(function(e) {
-        this.addEvent(e, inListener, false, inTarget);
+    listen: function(target, events) {
+      events.forEach(function(e) {
+        this.addEvent(target, e);
       }, this);
     },
     // remove event listeners
-    unlisten: function(inEvents, inTarget, inListener) {
-      inEvents.forEach(function(e) {
-        this.removeEvent(e, inListener, false, inTarget);
+    unlisten: function(target, events) {
+      events.forEach(function(e) {
+        this.removeEvent(target, e);
       }, this);
     },
-    addEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
-      inTarget.addEventListener(inEventName, inEventHandler, inCapture);
+    addEvent: function(target, eventName) {
+      target.addEventListener(eventName, this.boundHandler);
     },
-    removeEvent: function(inEventName, inEventHandler, inCapture, inTarget) {
-      inTarget.removeEventListener(inEventName, inEventHandler, inCapture);
+    removeEvent: function(target, eventName) {
+      target.removeEventListener(eventName, this.boundHandler);
     },
     // EVENT CREATION AND TRACKING
     /**
@@ -217,4 +220,6 @@
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
   scope.dispatcher = dispatcher;
+  scope.register = dispatcher.register.bind(dispatcher);
+  scope.unregister = dispatcher.unregister.bind(dispatcher);
 })(window.PointerEventsPolyfill);
