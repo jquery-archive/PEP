@@ -131,5 +131,7 @@
   }
 
   // attach to window
-  scope.PointerEvent = PointerEvent;
+  if (!scope.PointerEvent) {
+    scope.PointerEvent = PointerEvent;
+  }
 })(window);

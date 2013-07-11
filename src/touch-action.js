@@ -7,12 +7,12 @@
   }
   var attrib2css = [
     'none',
+    'auto',
     'pan-x',
     'pan-y',
     {
       rule: 'pan-x pan-y',
       selectors: [
-        'scroll',
         'pan-x pan-y',
         'pan-y pan-x'
       ]

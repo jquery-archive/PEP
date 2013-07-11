@@ -12,14 +12,32 @@
         return inEl.shadowRoot || inEl.webkitShadowRoot;
       }
     },
-    canTarget: function(scope) {
-      return scope && Boolean(scope.elementFromPoint);
+    canTarget: function(shadow) {
+      return shadow && Boolean(shadow.elementFromPoint);
     },
     targetingShadow: function(inEl) {
       var s = this.shadow(inEl);
       if (this.canTarget(s)) {
         return s;
       }
+    },
+    olderShadow: function(shadow) {
+      var os = shadow.olderShadowRoot;
+      if (!os) {
+        var se = shadow.querySelector('shadow');
+        if (se) {
+          os = se.olderShadowRoot;
+        }
+      }
+      return os;
+    },
+    allShadows: function(element) {
+      var shadows = [], s = this.shadow(element);
+      while(s) {
+        shadows.push(s);
+        s = this.olderShadow(s);
+      }
+      return shadows;
     },
     searchRoot: function(inRoot, x, y) {
       if (inRoot) {
@@ -32,9 +50,7 @@
           st = sr.elementFromPoint(x, y);
           if (!st) {
             // check for older shadows
-            os = sr.querySelector('shadow');
-            // check the older shadow if available
-            sr = os && os.olderShadowRoot;
+            sr = this.olderShadow(sr);
           } else {
             // shadowed element may contain a shadow root
             var ssr = this.targetingShadow(st);
@@ -45,8 +61,22 @@
         return t;
       }
     },
+    owner: function(element) {
+      var s = element;
+      // walk up until you hit the shadow root or document
+      while (s.parentNode) {
+        s = s.parentNode;
+      }
+      return s;
+    },
     findTarget: function(inEvent) {
       var x = inEvent.clientX, y = inEvent.clientY;
+      // if the listener is in the shadow root, it is much faster to start there
+      var s = this.owner(inEvent.target);
+      // if x, y is not in this root, fall back to document search
+      if (!s.elementFromPoint(x, y)) {
+        s = document;
+      }
       return this.searchRoot(document, x, y);
     }
   };

@@ -7,20 +7,95 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var findTarget = scope.findTarget;
+  var allShadows = scope.targetFinding.allShadows.bind(scope.targetFinding);
   var pointermap = dispatcher.pointermap;
-  var scrollType = dispatcher.scrollType;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
   var DEDUP_TIMEOUT = 2500;
+  var ATTRIB = 'touch-action';
+  var INSTALLER;
+  var HAS_TOUCH_ACTION = (typeof document.head.style.touchAction) === 'string';
 
   // handler block for native touch events
   var touchEvents = {
+    scrollType: new scope.SideTable,
     events: [
       'touchstart',
       'touchmove',
       'touchend',
       'touchcancel'
     ],
+    register: function(target) {
+      if (HAS_TOUCH_ACTION) {
+        dispatcher.listen(target, this.events);
+      } else {
+        INSTALLER.enableOnSubtree(target);
+      }
+    },
+    unregister: function(target) {
+      if (HAS_TOUCH_ACTION) {
+        dispatcher.unlisten(target, this.events);
+      } else {
+        // TODO(dfreedman): is it worth it to disconnect the MO?
+      }
+    },
+    elementAdded: function(el) {
+      var a = el.getAttribute(ATTRIB);
+      var st = this.touchActionToScrollType(a);
+      if (st) {
+        this.scrollType.set(el, st);
+        dispatcher.listen(el, this.events);
+        // set touch-action on shadows as well
+        allShadows(el).forEach(function(s) {
+          this.scrollType.set(s, st);
+          dispatcher.listen(s, this.events);
+        }, this);
+      }
+    },
+    elementRemoved: function(el) {
+      this.scrollType.delete(el);
+      dispatcher.unlisten(el, this.events);
+      // remove touch-action from shadow
+      allShadows(el).forEach(function(s) {
+        this.scrollType.delete(s);
+        dispatcher.unlisten(s, this.events);
+      }, this);
+    },
+    elementChanged: function(el, oldValue) {
+      var a = el.getAttribute(ATTRIB);
+      var st = this.touchActiontoScrollType(a);
+      var oldSt = this.touchActionToScrollType(oldValue);
+      // simply update scrollType if listeners are already established
+      if (st && oldSt) {
+        this.scrollType.set(el, st);
+        allShadows(el).forEach(function(s) {
+          this.scrollType.set(s, st);
+        }, this);
+      } else if (oldSt) {
+        this.elementRemoved(el);
+      } else if (st) {
+        this.elementAdded(el);
+      }
+    },
+    scrollTypes: {
+      EMITTER: 'none',
+      XSCROLLER: 'pan-x',
+      YSCROLLER: 'pan-y',
+      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
+    },
+    touchActionToScrollType: function(touchAction) {
+      var t = touchAction;
+      var st = this.scrollTypes;
+      if (t === 'none') {
+        return 'none';
+      } else if (t === st.XSCROLLER) {
+        return 'X';
+      } else if (t === st.YSCROLLER) {
+        return 'Y';
+      } else if (st.SCROLLER.exec(t)) {
+        return 'XY';
+      }
+    },
     POINTER_TYPE: 'touch',
     firstTouch: null,
     isPrimaryTouch: function(inTouch) {
@@ -50,9 +125,9 @@
       e.cancelable = true;
       e.button = 0;
       e.buttons = 1;
-      e.width = inTouch.webkitRadiusX || inTouch.radiusX;
-      e.height = inTouch.webkitRadiusY || inTouch.radiusY;
-      e.pressure = inTouch.webkitForce || inTouch.force;
+      e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
+      e.height = inTouch.webkitRadiusY || inTouch.radiusY || 0;
+      e.pressure = inTouch.webkitForce || inTouch.force || 0.5;
       e.isPrimary = this.isPrimaryTouch(inTouch);
       e.pointerType = this.POINTER_TYPE;
       return e;
@@ -67,7 +142,7 @@
     shouldScroll: function(inEvent) {
       if (this.firstXY) {
         var ret;
-        var scrollAxis = scrollType.get(inEvent.currentTarget);
+        var scrollAxis = this.scrollType.get(inEvent.currentTarget);
         if (scrollAxis === 'none') {
           // this element is a touch-action: none, should never scroll
           ret = false;
@@ -108,12 +183,12 @@
       // been processed yet.
       if (pointermap.size >= tl.length) {
         var d = [];
-        pointermap.ids.forEach(function(i) {
+        pointermap.forEach(function(key, value) {
           // Never remove pointerId == 1, which is mouse.
           // Touch identifiers are 2 smaller than their pointerId, which is the
           // index in pointermap.
-          if (i !== 1 && !this.findTouch(tl, i - 2)) {
-            var p = pointermap.get(i).out;
+          if (key !== 1 && !this.findTouch(tl, key - 2)) {
+            var p = value.out;
             d.push(this.touchToPointer(p));
           }
         }, this);
@@ -218,6 +293,10 @@
       }
     }
   };
+
+  if (!HAS_TOUCH_ACTION) {
+    INSTALLER = new scope.Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents.elementChanged, touchEvents);
+  }
 
   scope.touchEvents = touchEvents;
 })(window.PointerEventsPolyfill);

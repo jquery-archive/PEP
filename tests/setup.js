@@ -14,6 +14,8 @@ document.body.appendChild(container);
 chai.Assertion.includeStack = true;
 expect = chai.expect;
 
+var HAS_TOUCH = 'ontouchstart' in window, HAS_MS = Boolean(navigator.msPointerEnabled);
+
 function correctTarget(expected, actual) {
   if (expected !== actual) {
     console.log(expected, actual);
@@ -27,7 +29,7 @@ function fire(shortType, target, callback) {
       prep('pointer' + shortType, target, callback);
     }
     var e, type;
-    if (navigator.msPointerEnabled) {
+    if (HAS_MS) {
       var cap = shortType.slice(0, 1).toUpperCase() + shortType.slice(1);
       type = 'MSPointer' + cap;
       e = document.createEvent('MSPointerEvent');

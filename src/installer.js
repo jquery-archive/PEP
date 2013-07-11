@@ -12,23 +12,31 @@
  * `touch-action` set to `none`.
  */
 (function(scope) {
-  var dispatcher = scope.dispatcher;
   var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
   var map = Array.prototype.map.call.bind(Array.prototype.map);
-  var installer = {
-    ATTRIB: 'touch-action',
-    SELECTOR: '[touch-action]',
-    EMITTER: 'none',
-    XSCROLLER: 'pan-x',
-    YSCROLLER: 'pan-y',
-    SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|scroll$/,
-    OBSERVER_INIT: {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ['touch-action']
-    },
-    watchSubtree: function(inScope) {
+  var toArray = Array.prototype.slice.call.bind(Array.prototype.slice);
+  var filter = Array.prototype.filter.call.bind(Array.prototype.filter);
+  var MO = window.MutationObserver || window.WebKitMutationObserver;
+  var SELECTOR = '[touch-action]';
+  var OBSERVER_INIT = {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeOldValue: true,
+    attributeFilter: ['touch-action']
+  };
+
+  function Installer(add, remove, changed, binder) {
+    this.addCallback = add.bind(binder);
+    this.removeCallback = remove.bind(binder);
+    this.changedCallback = changed.bind(binder);
+    if (MO) {
+      this.observer = new MO(this.mutationWatcher.bind(this));
+    }
+  }
+
+  Installer.prototype = {
+    watchSubtree: function(target) {
       // Only watch scopes that can target find, as these are top-level.
       // Otherwise we can see duplicate additions and removals that add noise.
       //
@@ -36,117 +44,74 @@
       // a removal without an insertion when a node is redistributed among
       // shadows. Since it all ends up correct in the document, watching only
       // the document will yield the correct mutations to watch.
-      if (scope.targetFinding.canTarget(inScope)) {
-        observer.observe(inScope, this.OBSERVER_INIT);
+      if (scope.targetFinding.canTarget(target)) {
+        this.observer.observe(target, OBSERVER_INIT);
       }
     },
-    enableOnSubtree: function(inScope) {
-      var scope = inScope || document;
-      this.watchSubtree(inScope);
-      if (scope === document && document.readyState !== 'complete') {
+    enableOnSubtree: function(target) {
+      this.watchSubtree(target);
+      if (target === document && document.readyState !== 'complete') {
         this.installOnLoad();
       } else {
-        this.installNewSubtree(scope);
+        this.installNewSubtree(target);
       }
     },
-    installNewSubtree: function(inScope) {
-      forEach(this.findElements(inScope), this.addElement, this);
+    installNewSubtree: function(target) {
+      forEach(this.findElements(target), this.addElement, this);
     },
-    findElements: function(inScope) {
-      var scope = inScope || document;
-      if (scope.querySelectorAll) {
-        return scope.querySelectorAll(this.SELECTOR);
+    findElements: function(target) {
+      if (target.querySelectorAll) {
+        return target.querySelectorAll(SELECTOR);
       }
       return [];
     },
-    touchActionToScrollType: function(inTouchAction) {
-      var t = inTouchAction;
-      if (t === this.EMITTER) {
-        return 'none';
-      } else if (t === this.XSCROLLER) {
-        return 'X';
-      } else if (t === this.YSCROLLER) {
-        return 'Y';
-      } else if (this.SCROLLER.exec(t)) {
-        return 'XY';
-      }
+    removeElement: function(el) {
+      this.removeCallback(el);
     },
-    removeElement: function(inEl) {
-      dispatcher.unregisterTarget(inEl);
-      // remove touch-action from shadow
-      var s = scope.targetFinding.shadow(inEl);
-      if (s) {
-        dispatcher.unregisterTarget(s);
-      }
+    addElement: function(el) {
+      this.addCallback(el);
     },
-    addElement: function(inEl) {
-      var a = inEl.getAttribute && inEl.getAttribute(this.ATTRIB);
-      var st = this.touchActionToScrollType(a);
-      if (st) {
-        dispatcher.registerTarget(inEl, st);
-        // set touch-action on shadow as well
-        var s = scope.targetFinding.shadow(inEl);
-        if (s) {
-          dispatcher.registerTarget(s, st);
-        }
-      }
+    elementChanged: function(el, oldValue) {
+      this.changedCallback(el, oldValue);
     },
-    elementChanged: function(inEl) {
-      this.removeElement(inEl);
-      this.addElement(inEl);
-    },
-    concatLists: function(inAccum, inList) {
-      for (var i = 0, l = inList.length, o; i < l && (o = inList[i]); i++) {
-        inAccum.push(o);
-      }
-      return inAccum;
+    concatLists: function(accum, list) {
+      return accum.concat(toArray(list));
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
       document.addEventListener('DOMContentLoaded', this.installNewSubtree.bind(this, document));
     },
+    isElement: function(n) {
+      return n.nodeType === Node.ELEMENT_NODE;
+    },
     flattenMutationTree: function(inNodes) {
       // find children with touch-action
       var tree = map(inNodes, this.findElements, this);
       // make sure the added nodes are accounted for
-      tree.push(inNodes);
+      tree.push(filter(inNodes, this.isElement));
       // flatten the list
       return tree.reduce(this.concatLists, []);
     },
-    mutationWatcher: function(inMutations) {
-      inMutations.forEach(this.mutationHandler, this);
+    mutationWatcher: function(mutations) {
+      mutations.forEach(this.mutationHandler, this);
     },
-    mutationHandler: function(inMutation) {
-      var m = inMutation;
+    mutationHandler: function(m) {
       if (m.type === 'childList') {
         var added = this.flattenMutationTree(m.addedNodes);
         added.forEach(this.addElement, this);
         var removed = this.flattenMutationTree(m.removedNodes);
         removed.forEach(this.removeElement, this);
       } else if (m.type === 'attributes') {
-        this.elementChanged(m.target);
+        this.elementChanged(m.target, m.oldValue);
       }
     },
   };
-  var boundWatcher = installer.mutationWatcher.bind(installer);
-  scope.installer = installer;
-  scope.register = installer.enableOnSubtree.bind(installer);
-  // imperatively set the touch action of an element, document, or shadow root
-  // use 'auto' to unset the touch-action
-  scope.setTouchAction = function(inEl, inTouchAction) {
-    var st = this.touchActionToScrollType(inTouchAction);
-    if (st) {
-      dispatcher.registerTarget(inEl, st);
-    } else {
-      dispatcher.unregisterTarget(inEl);
-    }
-  }.bind(installer);
-  var MO = window.MutationObserver || window.WebKitMutationObserver;
+
   if (!MO) {
-    installer.watchSubtree = function(){
+    Installer.prototype.watchSubtree = function(){
       console.warn('PointerEventsPolyfill: MutationObservers not found, touch-action will not be dynamically detected');
     };
-  } else {
-    var observer = new MO(boundWatcher);
   }
+
+  scope.Installer = Installer;
 })(window.PointerEventsPolyfill);
