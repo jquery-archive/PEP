@@ -23,8 +23,16 @@
       #big {
         height: 1000px;
         width: 1000px;
-        background: -webkit-linear-gradient(45deg, red, blue);
-        background: linear-gradient(45deg, red, blue);
+      }
+      .flex {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex: 1;
+        flex: 1;
+      }
+      .inner {
+        -wekbit-flex-direction: column;
+        flex-direction: column;
       }
       button {
         height: 100px;
@@ -43,6 +51,18 @@
     <button onclick="scroll()">Scroll</button>
     <button onclick="none()">None</button>
     <script>
+      var size = 25;
+      for (var i = 0; i < size; i++) {
+        var holder = document.createElement('div');
+        holder.classList.add('flex');
+        for (var j = 0; j < size; j++) {
+          var e = document.createElement('div');
+          e.textContent = i + ',' + j;
+          e.classList.add('flex', 'inner');
+          holder.appendChild(e);
+        }
+        big.appendChild(holder);
+      }
       function x() {
         scroller.setAttribute('touch-action', 'pan-x');
       }
