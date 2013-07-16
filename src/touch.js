@@ -63,7 +63,7 @@
     },
     elementChanged: function(el, oldValue) {
       var a = el.getAttribute(ATTRIB);
-      var st = this.touchActiontoScrollType(a);
+      var st = this.touchActionToScrollType(a);
       var oldSt = this.touchActionToScrollType(oldValue);
       // simply update scrollType if listeners are already established
       if (st && oldSt) {
