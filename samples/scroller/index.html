@@ -24,15 +24,13 @@
         height: 1000px;
         width: 1000px;
       }
-      .flex {
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex: 1;
-        flex: 1;
+      .holder {
+        width: 100%;
+        height: 20px;
       }
       .inner {
-        -wekbit-flex-direction: column;
-        flex-direction: column;
+        padding: 0 5px;
+        text-align: center;
       }
       button {
         height: 100px;
@@ -51,14 +49,14 @@
     <button onclick="scroll()">Scroll</button>
     <button onclick="none()">None</button>
     <script>
-      var size = 25;
+      var size = 50;
       for (var i = 0; i < size; i++) {
         var holder = document.createElement('div');
-        holder.classList.add('flex');
+        holder.classList.add('holder');
         for (var j = 0; j < size; j++) {
-          var e = document.createElement('div');
+          var e = document.createElement('span');
           e.textContent = i + ',' + j;
-          e.classList.add('flex', 'inner');
+          e.classList.add('inner');
           holder.appendChild(e);
         }
         big.appendChild(holder);
