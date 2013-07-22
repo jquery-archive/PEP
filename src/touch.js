@@ -12,6 +12,7 @@
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
   // This should be long enough to ignore compat mouse events made by touch
   var DEDUP_TIMEOUT = 2500;
+  var CLICK_COUNT_TIMEOUT = 200;
   var ATTRIB = 'touch-action';
   var INSTALLER;
   var HAS_TOUCH_ACTION = (typeof document.head.style.touchAction) === 'string';
@@ -106,12 +107,28 @@
         this.firstTouch = inTouch.identifier;
         this.firstXY = {X: inTouch.clientX, Y: inTouch.clientY};
         this.scrolling = false;
+        this.cancelResetClickCount();
       }
     },
     removePrimaryTouch: function(inTouch) {
       if (this.isPrimaryTouch(inTouch)) {
         this.firstTouch = null;
         this.firstXY = null;
+        this.resetClickCount();
+      }
+    },
+    clickCount: 0,
+    resetId: null,
+    resetClickCount: function() {
+      var fn = function() {
+        this.clickCount = 0;
+        this.resetId = null;
+      }.bind(this);
+      this.resetId = setTimeout(fn, CLICK_COUNT_TIMEOUT);
+    },
+    cancelResetClickCount: function() {
+      if (this.resetId) {
+        clearTimeout(this.resetId);
       }
     },
     touchToPointer: function(inTouch) {
@@ -123,6 +140,7 @@
       e.target = findTarget(e);
       e.bubbles = true;
       e.cancelable = true;
+      e.detail = this.clickCount;
       e.button = 0;
       e.buttons = 1;
       e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
@@ -200,6 +218,7 @@
       this.setPrimaryTouch(inEvent.changedTouches[0]);
       this.dedupSynthMouse(inEvent);
       if (!this.scrolling) {
+        this.clickCount++;
         this.processTouches(inEvent, this.overDown);
       }
     },
