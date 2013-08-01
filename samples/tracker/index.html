@@ -60,6 +60,7 @@ var pointers;
 canvas.addEventListener( 'pointerdown', onPointerDown, false );
 canvas.addEventListener( 'pointermove', onPointerMove, false );
 canvas.addEventListener( 'pointerup', onPointerUp, false );
+canvas.addEventListener( 'pointercancel', onPointerUp, false );
 window.onorientationchange = resetCanvas;
 window.onresize = resetCanvas;
 
