@@ -18,7 +18,7 @@ var Paint = function(options) {
 
   // Set the default line style.
   var ctx = canvas.getContext("2d");
-  ctx.lineWidth = options.size || Math.ceil(Math.random() * 35);
+  // ctx.lineWidth = options.size || Math.ceil(Math.random() * 35);
   ctx.lineCap = options.lineCap || "round";
 
 
@@ -41,10 +41,12 @@ Paint.prototype.initEvents = function() {
   canvas.addEventListener('pointerdown', this.onPointerDown.bind(this));
   canvas.addEventListener('pointermove', this.onPointerMove.bind(this));
   canvas.addEventListener('pointerup', this.onPointerUp.bind(this));
+  canvas.addEventListener('pointercancel', this.onPointerUp.bind(this));
 };
 
 Paint.prototype.onPointerDown = function(event) {
-  this.pointers[event.pointerId] = new Pointer({x: event.clientX, y: event.clientY});
+  var width = event.pointerType === 'touch' ? (event.width || 10) : 4;
+  this.pointers[event.pointerId] = new Pointer({x: event.clientX, y: event.clientY, width: width});
 };
 
 Paint.prototype.onPointerMove = function(event) {
@@ -67,6 +69,7 @@ Paint.prototype.renderLoop = function(lastRender) {
     if (pointer.isDelta()) {
       //console.log('rendering', pointer.targetX);
       var ctx = this.ctx;
+      ctx.lineWidth = pointer.width;
       ctx.strokeStyle = pointer.color;
       ctx.beginPath();
       ctx.moveTo(pointer.x, pointer.y);
@@ -84,6 +87,7 @@ Paint.prototype.renderLoop = function(lastRender) {
 function Pointer(options) {
   this.x = options.x;
   this.y = options.y;
+  this.width = options.width;
 
   // Pick a random color.
   this.color = Pointer.COLORS[Math.floor(Math.random() * Pointer.COLORS.length)];
