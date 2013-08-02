@@ -41,7 +41,7 @@
       return e;
     },
     cleanup: function(id) {
-      pointermap.delete(id);
+      pointermap['delete'](id);
     },
     MSPointerDown: function(inEvent) {
       pointermap.set(inEvent.pointerId, inEvent);

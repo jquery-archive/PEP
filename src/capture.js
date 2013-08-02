@@ -32,7 +32,7 @@
       dispatcher.releaseCapture(pointerId, this);
     };
   }
-  if (!Element.prototype.setPointerCapture) {
+  if (window.Element && !Element.prototype.setPointerCapture) {
     Object.defineProperties(Element.prototype, {
       'setPointerCapture': {
         value: s

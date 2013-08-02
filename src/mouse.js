@@ -94,7 +94,7 @@
       this.cleanupMouse();
     },
     cleanupMouse: function() {
-      pointermap.delete(this.POINTER_ID);
+      pointermap['delete'](this.POINTER_ID);
     }
   };
 
