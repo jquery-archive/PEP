@@ -50,7 +50,7 @@
     },
     enableOnSubtree: function(target) {
       this.watchSubtree(target);
-      if (target === document && document.readyState !== 'complete') {
+      if (target === document && document.readyState !== 'complete' && document.readyState !== 'interactive') {
         this.installOnLoad();
       } else {
         this.installNewSubtree(target);
