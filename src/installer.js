@@ -104,7 +104,7 @@
       } else if (m.type === 'attributes') {
         this.elementChanged(m.target, m.oldValue);
       }
-    },
+    }
   };
 
   if (!MO) {
