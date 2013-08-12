@@ -35,10 +35,10 @@
   if (!Element.prototype.setPointerCapture) {
     Object.defineProperties(Element.prototype, {
       'setPointerCapture': {
-        value: s,
+        value: s
       },
       'releasePointerCapture': {
-        value: r,
+        value: r
       }
     });
   }

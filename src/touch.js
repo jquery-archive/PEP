@@ -82,7 +82,7 @@
       EMITTER: 'none',
       XSCROLLER: 'pan-x',
       YSCROLLER: 'pan-y',
-      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/,
+      SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/
     },
     touchActionToScrollType: function(touchAction) {
       var t = touchAction;
@@ -305,7 +305,7 @@
         var fn = (function(lts, lt){
           var i = lts.indexOf(lt);
           if (i > -1) {
-            lts.splice(i, 1)
+            lts.splice(i, 1);
           }
         }).bind(null, lts, lt);
         setTimeout(fn, DEDUP_TIMEOUT);

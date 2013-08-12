@@ -64,7 +64,7 @@
     },
     // EVENTS
     down: function(inEvent) {
-      this.fireEvent('pointerdown', inEvent)
+      this.fireEvent('pointerdown', inEvent);
     },
     move: function(inEvent) {
       this.fireEvent('pointermove', inEvent);
@@ -74,7 +74,7 @@
     },
     enter: function(inEvent) {
       inEvent.bubbles = false;
-      this.fireEvent('pointerenter', inEvent)
+      this.fireEvent('pointerenter', inEvent);
     },
     leave: function(inEvent) {
       inEvent.bubbles = false;
@@ -82,7 +82,7 @@
     },
     over: function(inEvent) {
       inEvent.bubbles = true;
-      this.fireEvent('pointerover', inEvent)
+      this.fireEvent('pointerover', inEvent);
     },
     out: function(inEvent) {
       inEvent.bubbles = true;
