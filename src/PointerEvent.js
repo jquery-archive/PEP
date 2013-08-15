@@ -30,7 +30,7 @@
   }
 
   function PointerEvent(inType, inDict) {
-    var inDict = inDict || {};
+    inDict = inDict || {};
     // According to the w3c spec,
     // http://www.w3.org/TR/DOM-Level-3-Events/#events-MouseEvent-button
     // MouseEvent.button == 0 can mean either no mouse button depressed, or the
@@ -103,7 +103,7 @@
     if (!HAS_BUTTONS) {
       // IE 10 has buttons on MouseEvent.prototype as a getter w/o any setting
       // mechanism
-      Object.defineProperty(e, 'buttons', {get: function(){ return buttons }, enumerable: true});
+      Object.defineProperty(e, 'buttons', {get: function(){ return buttons; }, enumerable: true});
     }
 
     // Spec requires that pointers without pressure specified use 0.5 for down
