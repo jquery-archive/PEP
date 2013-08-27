@@ -17,7 +17,7 @@ suite('Loader', function() {
       expect(pep.PointerMap).to.be.ok;
     });
     test('SideTable', function() {
-      expect(pep.SideTable).to.be.ok;
+      expect(SideTable).to.be.ok;
     });
     test('Dispatcher', function() {
       expect(pep.dispatcher).to.be.ok;

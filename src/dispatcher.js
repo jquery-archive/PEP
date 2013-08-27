@@ -19,8 +19,8 @@
    *   - pointercancel: a pointer will no longer generate events
    */
   var dispatcher = {
-    targets: new scope.SideTable,
-    handledEvents: new scope.SideTable,
+    targets: new SideTable,
+    handledEvents: new SideTable,
     pointermap: new scope.PointerMap,
     eventMap: {},
     // Scope objects for native events.

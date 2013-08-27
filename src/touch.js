@@ -19,7 +19,7 @@
 
   // handler block for native touch events
   var touchEvents = {
-    scrollType: new scope.SideTable,
+    scrollType: new SideTable,
     events: [
       'touchstart',
       'touchmove',
