@@ -1,5 +1,5 @@
 module.exports = function(karma) {
-  var common = require('../tools/test/karma-common.conf.js');
+  var common = require('tools/test/karma-common.conf.js');
   karma.set(common.mixin_common_opts(karma, {
     // base path, that will be used to resolve files and exclude
     basePath: '',
