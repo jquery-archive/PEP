@@ -91,15 +91,13 @@ It has been tested on Chrome, Safari, Firefox, Opera, and IE 10.
 
 According to the spec, the
 [touch-action](https://dvcs.w3.org/hg/pointerevents/raw-file/tip/pointerEvents.html#the-touch-action-css-property)
-css property determines if an element will receive PointerEvents.
-Specifically, only elements with the styling that have the `touch-action` value
-of `none` will receive events.
+css property controls whether an element will perform a "default action" such as scrolling, or receive a continuous stream of PointerEvents.
 
 Due to the difficult nature of polyfilling new CSS properties, this library will
 use a touch-action *attribute* instead. In addition, run time changes involving
 the `touch-action` attribute will be monitored for maximum flexibility.
 
-Touches will not generate events unless inside of an area that has a valid `touch-action` defined that is not `auto`.
+Touches will not generate events unless inside of an area that has a valid `touch-action` attribute defined.
 This is to maintain compositiong scrolling optimizations where possible.
 
 ### Browser Compatibility
@@ -110,4 +108,4 @@ Chrome 18+, Safari 6+, IE 10, Firefox 14+
 
 #### Partial Support
 
-Opera 12+, does not support changes to `touch-action` attribute, nor added or removed elements
+Opera 12-14, does not support changes to `touch-action` attribute, nor added or removed elements
