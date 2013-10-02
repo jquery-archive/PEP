@@ -2,8 +2,6 @@
 
 [![PointerEvents build status](http://www.polymer-project.org/build/PointerEvents/status.png "PointerEvents build status")](http://build.chromium.org/p/client.polymer/waterfall)
 
-Build Status: [http://build.chromium.org/p/client.polymer/waterfall]([http://build.chromium.org/p/client.polymer/waterfall)
-
 ## Learn the tech
 
 ### Why Pointer Events?
@@ -69,6 +67,13 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
   - `pointercancel`: a pointer will no longer generate events.
 
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of PointerEvents.
+
+### Examples
+
+- [Simple Event Example](http://polymer-project.org/polymer-all/PointerEvents/samples/simple/index.html)
+- [Pointer Painting](http://polymer-project.org/polymer-all/PointerEvents/samples/paint/index.html)
+- [Multi Pointer Trac](http://polymer-project.org/polymer-all/PointerEvents/samples/tracker/index.html)
+- [Empty Space Game!](http://polymer-project.org/polymer-all/PointerEvents/samples/spaceship/index.html)
 
 ## Polyfill Details
 
