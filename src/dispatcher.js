@@ -5,6 +5,73 @@
  */
 
 (function(scope) {
+  var CLONE_PROPS = [
+    // MouseEvent
+    'bubbles',
+    'cancelable',
+    'view',
+    'detail',
+    'screenX',
+    'screenY',
+    'clientX',
+    'clientY',
+    'ctrlKey',
+    'altKey',
+    'shiftKey',
+    'metaKey',
+    'button',
+    'relatedTarget',
+    // DOM Level 3
+    'buttons',
+    // PointerEvent
+    'pointerId',
+    'width',
+    'height',
+    'pressure',
+    'tiltX',
+    'tiltY',
+    'pointerType',
+    'hwTimestamp',
+    'isPrimary',
+    // event instance
+    'type',
+    'target',
+    'currentTarget'
+  ];
+
+  var CLONE_DEFAULTS = [
+    // MouseEvent
+    false,
+    false,
+    null,
+    null,
+    0,
+    0,
+    0,
+    0,
+    false,
+    false,
+    false,
+    false,
+    0,
+    null,
+    // DOM Level 3
+    0,
+    // PointerEvent
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    '',
+    0,
+    false,
+    // event instance
+    '',
+    null,
+    null
+  ];
 
   /**
    * This module is for normalizing events. Mouse and Touch events will be
@@ -19,9 +86,9 @@
    *   - pointercancel: a pointer will no longer generate events
    */
   var dispatcher = {
-    targets: new SideTable,
-    handledEvents: new SideTable,
-    pointermap: new scope.PointerMap,
+    targets: new SideTable(),
+    handledEvents: new SideTable(),
+    pointermap: new scope.PointerMap(),
     eventMap: {},
     // Scope objects for native events.
     // This exists for ease of testing.
@@ -163,9 +230,10 @@
      *    properties.
      */
     cloneEvent: function(inEvent) {
-      var eventCopy = {};
-      for (var n in inEvent) {
-        eventCopy[n] = inEvent[n];
+      var eventCopy = {}, p;
+      for (var i = 0; i < CLONE_PROPS.length; i++) {
+        p = CLONE_PROPS[i];
+        eventCopy[p] = inEvent[p] || CLONE_DEFAULTS[i];
       }
       return eventCopy;
     },

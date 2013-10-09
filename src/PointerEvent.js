@@ -29,6 +29,40 @@
   } catch(e) {
   }
 
+  var MOUSE_PROPS = [
+    'bubbles',
+    'cancelable',
+    'view',
+    'detail',
+    'screenX',
+    'screenY',
+    'clientX',
+    'clientY',
+    'ctrlKey',
+    'altKey',
+    'shiftKey',
+    'metaKey',
+    'button',
+    'relatedTarget',
+  ];
+
+  var MOUSE_DEFAULTS = [
+    false,
+    false,
+    null,
+    null,
+    0,
+    0,
+    0,
+    0,
+    false,
+    false,
+    false,
+    false,
+    0,
+    null
+  ];
+
   function PointerEvent(inType, inDict) {
     inDict = inDict || {};
     // According to the w3c spec,
@@ -67,29 +101,13 @@
       e = new MouseEvent(inType, inDict);
     } else {
       e = document.createEvent('MouseEvent');
-      // import values from the given dictionary
-      var props = {
-        bubbles: false,
-        cancelable: false,
-        view: null,
-        detail: null,
-        screenX: 0,
-        screenY: 0,
-        clientX: 0,
-        clientY: 0,
-        ctrlKey: false,
-        altKey: false,
-        shiftKey: false,
-        metaKey: false,
-        button: 0,
-        relatedTarget: null
-      };
 
-      Object.keys(props).forEach(function(k) {
-        if (k in inDict) {
-          props[k] = inDict[k];
-        }
-      });
+      // import values from the given dictionary
+      var props = {}, p;
+      for(var i = 0; i < MOUSE_PROPS.length; i++) {
+        p = MOUSE_PROPS[i];
+        props[p] = inDict[p] || MOUSE_DEFAULTS[i];
+      }
 
       // define the properties inherited from MouseEvent
       e.initMouseEvent(
