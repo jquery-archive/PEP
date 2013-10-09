@@ -11,7 +11,7 @@
     'src/boot.js',
     'src/touch-action.js',
     'src/PointerEvent.js',
-    'src/sidetable.js',
+    'src/pointermap.js',
     'src/dispatcher.js',
     'src/installer.js',
     'src/mouse.js',
