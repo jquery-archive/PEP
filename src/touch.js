@@ -19,7 +19,7 @@
 
   // handler block for native touch events
   var touchEvents = {
-    scrollType: new SideTable,
+    scrollType: new WeakMap(),
     events: [
       'touchstart',
       'touchmove',

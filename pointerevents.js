@@ -7,11 +7,11 @@
   var thisFile = 'pointerevents.js';
   var scopeName = 'PointerEventsPolyfill';
   var modules = [
+    '../WeakMap/weakmap.js',
     'src/boot.js',
     'src/touch-action.js',
     'src/PointerEvent.js',
     'src/pointermap.js',
-    'src/sidetable.js',
     'src/dispatcher.js',
     'src/installer.js',
     'src/mouse.js',
