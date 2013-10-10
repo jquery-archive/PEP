@@ -36,7 +36,8 @@
     // event instance
     'type',
     'target',
-    'currentTarget'
+    'currentTarget',
+    'which'
   ];
 
   var CLONE_DEFAULTS = [
@@ -56,7 +57,7 @@
     0,
     null,
     // DOM Level 3
-    0,
+    undefined,
     // PointerEvent
     0,
     0,
@@ -70,7 +71,8 @@
     // event instance
     '',
     null,
-    null
+    null,
+    0
   ];
 
   /**
