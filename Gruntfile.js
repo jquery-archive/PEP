@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     uglify: {
       pointerevents: {
         options: {
-          sourceMap: 'pointerevents.min.js.map',
+          // sourceMap: 'pointerevents.min.js.map',
           banner: grunt.file.read('LICENSE')
         },
         dest: 'pointerevents.min.js',
