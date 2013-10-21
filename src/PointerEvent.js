@@ -117,6 +117,9 @@
       );
     }
 
+    // make the event pass instanceof checks
+    e.__proto__ = PointerEvent.prototype;
+
     // define the buttons property according to DOM Level 3 spec
     if (!HAS_BUTTONS) {
       // IE 10 has buttons on MouseEvent.prototype as a getter w/o any setting
@@ -147,6 +150,9 @@
     });
     return e;
   }
+
+  // PointerEvent extends MouseEvent
+  PointerEvent.prototype = Object.create(MouseEvent.prototype);
 
   // attach to window
   if (!scope.PointerEvent) {

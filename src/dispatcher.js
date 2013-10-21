@@ -215,6 +215,10 @@
      * @return {Event} A PointerEvent of type `inType`
      */
     makeEvent: function(inType, inEvent) {
+      // relatedTarget must be null if pointer is captured
+      if (this.captureInfo) {
+        inEvent.relatedTarget = null;
+      }
       var e = new PointerEvent(inType, inEvent);
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
       return e;
