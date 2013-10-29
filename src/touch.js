@@ -104,7 +104,7 @@
     },
     setPrimaryTouch: function(inTouch) {
       // set primary touch if there no pointers, or the only pointer is the mouse
-      if (pointermap.size == 0 || (pointermap.size == 1 && pointermap.has(1))) {
+      if (pointermap.pointers() === 0 || (pointermap.pointers() === 1 && pointermap.has(1))) {
         this.firstTouch = inTouch.identifier;
         this.firstXY = {X: inTouch.clientX, Y: inTouch.clientY};
         this.scrolling = false;
@@ -198,9 +198,9 @@
     // pointercancel for this "abandoned" touch
     vacuumTouches: function(inEvent) {
       var tl = inEvent.touches;
-      // pointermap.size should be < tl.length here, as the touchstart has not
+      // pointermap.pointers() should be < tl.length here, as the touchstart has not
       // been processed yet.
-      if (pointermap.size >= tl.length) {
+      if (pointermap.pointers() >= tl.length) {
         var d = [];
         pointermap.forEach(function(key, value) {
           // Never remove pointerId == 1, which is mouse.
