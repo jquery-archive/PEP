@@ -54,11 +54,11 @@
       }
     },
     elementRemoved: function(el) {
-      this.scrollType.delete(el);
+      this.scrollType['delete'](el);
       dispatcher.unlisten(el, this.events);
       // remove touch-action from shadow
       allShadows(el).forEach(function(s) {
-        this.scrollType.delete(s);
+        this.scrollType['delete'](s);
         dispatcher.unlisten(s, this.events);
       }, this);
     },
@@ -291,7 +291,7 @@
       this.cleanUpPointer(inPointer);
     },
     cleanUpPointer: function(inPointer) {
-      pointermap.delete(inPointer.pointerId);
+      pointermap['delete'](inPointer.pointerId);
       this.removePrimaryPointer(inPointer);
     },
     // prevent synth mouse events from creating pointer events

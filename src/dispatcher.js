@@ -131,6 +131,9 @@
         es.unregister.call(es, element);
       }
     },
+    contains: scope.external.contains || function(container, contained) {
+      return container.contains(contained);
+    },
     // EVENTS
     down: function(inEvent) {
       this.fireEvent('pointerdown', inEvent);
@@ -161,13 +164,13 @@
       this.fireEvent('pointercancel', inEvent);
     },
     leaveOut: function(event) {
-      if (!event.target.contains(event.relatedTarget)) {
+      if (!this.contains(event.target, event.relatedTarget)) {
         this.leave(event);
       }
       this.out(event);
     },
     enterOver: function(event) {
-      if (!event.target.contains(event.relatedTarget)) {
+      if (!this.contains(event.target, event.relatedTarget)) {
         this.enter(event);
       }
       this.over(event);
@@ -199,10 +202,10 @@
         this.removeEvent(target, e);
       }, this);
     },
-    addEvent: function(target, eventName) {
+    addEvent: scope.external.addEvent || function(target, eventName) {
       target.addEventListener(eventName, this.boundHandler);
     },
-    removeEvent: function(target, eventName) {
+    removeEvent: scope.external.removeEvent || function(target, eventName) {
       target.removeEventListener(eventName, this.boundHandler);
     },
     // EVENT CREATION AND TRACKING
@@ -282,7 +285,7 @@
      * @param {Event} inEvent The event to be dispatched.
      * @return {Boolean} True if an event handler returns true, false otherwise.
      */
-    dispatchEvent: function(inEvent) {
+    dispatchEvent: scope.external.dispatchEvent || function(inEvent) {
       var t = this.getTarget(inEvent);
       if (t) {
         return t.dispatchEvent(inEvent);

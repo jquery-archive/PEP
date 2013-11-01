@@ -6,6 +6,7 @@
 
 (function(scope) {
   scope = scope || {};
+  scope.external = scope.external || {};
   var target = {
     shadow: function(inEl) {
       if (inEl) {
