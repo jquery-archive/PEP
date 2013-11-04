@@ -154,6 +154,16 @@
     processTouches: function(inEvent, inFunction) {
       var tl = inEvent.changedTouches;
       var pointers = touchMap(tl, this.touchToPointer, this);
+      // forward touch preventDefaults
+      pointers.forEach(function(p) {
+        var pd = p.preventDefault;
+        p.preventDefault = function() {
+          this.scrolling = false;
+          this.firstXY = null;
+          inEvent.preventDefault();
+          pd();
+        };
+      }, this);
       pointers.forEach(inFunction, this);
     },
     // For single axis scrollers, determines whether the element should emit
