@@ -78,7 +78,7 @@
       if (!s.elementFromPoint(x, y)) {
         s = document;
       }
-      return this.searchRoot(document, x, y);
+      return this.searchRoot(s, x, y);
     }
   };
   scope.targetFinding = target;
