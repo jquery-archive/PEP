@@ -223,7 +223,9 @@
         inEvent.relatedTarget = null;
       }
       var e = new PointerEvent(inType, inEvent);
-      e.preventDefault = inEvent.preventDefault;
+      if (inEvent.preventDefault) {
+        e.preventDefault = inEvent.preventDefault;
+      }
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
       return e;
     },
