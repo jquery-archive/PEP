@@ -223,6 +223,9 @@
         inEvent.relatedTarget = null;
       }
       var e = new PointerEvent(inType, inEvent);
+      if (inEvent.preventDefault) {
+        e.preventDefault = inEvent.preventDefault;
+      }
       this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
       return e;
     },
@@ -243,6 +246,12 @@
       for (var i = 0; i < CLONE_PROPS.length; i++) {
         p = CLONE_PROPS[i];
         eventCopy[p] = inEvent[p] || CLONE_DEFAULTS[i];
+      }
+      // keep the semantics of preventDefault
+      if (inEvent.preventDefault) {
+        eventCopy.preventDefault = function() {
+          inEvent.preventDefault();
+        };
       }
       return eventCopy;
     },

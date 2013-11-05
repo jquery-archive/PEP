@@ -42,6 +42,12 @@
     },
     prepareEvent: function(inEvent) {
       var e = dispatcher.cloneEvent(inEvent);
+      // forward mouse preventDefault
+      var pd = e.preventDefault;
+      e.preventDefault = function() {
+        inEvent.preventDefault();
+        pd();
+      };
       e.pointerId = this.POINTER_ID;
       e.isPrimary = true;
       e.pointerType = this.POINTER_TYPE;
