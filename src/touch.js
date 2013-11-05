@@ -156,12 +156,10 @@
       var pointers = touchMap(tl, this.touchToPointer, this);
       // forward touch preventDefaults
       pointers.forEach(function(p) {
-        var pd = p.preventDefault;
         p.preventDefault = function() {
           this.scrolling = false;
           this.firstXY = null;
           inEvent.preventDefault();
-          pd();
         };
       }, this);
       pointers.forEach(inFunction, this);
