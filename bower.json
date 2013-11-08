@@ -1,0 +1,25 @@
+{
+  "name": "PointerEvents",
+  "main": "pointerevents.js",
+  "version": "0.0.20131107",
+  "homepage": "https://github.com/Polymer/PointerEvents",
+  "authors": [
+    "The Polymer Authors"
+  ],
+  "description": "PointerEvents Polyfill: a unified event system for the web platform",
+  "keywords": [
+    "PointerEvents"
+  ],
+  "dependencies": {
+    "WeakMap": "Polymer/WeakMap"
+  },
+  "license": "BSD",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
