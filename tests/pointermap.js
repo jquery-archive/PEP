@@ -18,7 +18,7 @@ suite('PointerMap', function() {
   test('PointerMap .set', function() {
     var p = new PointerMap();
     p.set(1, true);
-    if (PointerMap !== window.Map) {
+    if (!window.Map || !(p instanceof Map)) {
       expect(p.keys).to.have.length(1);
       expect(p.values).to.have.length(1);
     }
@@ -62,7 +62,7 @@ suite('PointerMap', function() {
     p.set(1, true);
     p.set(2, false);
     p.set(3, {});
-    p.forEach(function(k, v, m) {
+    p.forEach(function(v, k, m) {
       expect(k).to.be.ok;
       expect(v).to.equal(p.get(k));
       expect(m).to.equal(p);

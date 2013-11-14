@@ -210,7 +210,7 @@
       // been processed yet.
       if (pointermap.pointers() >= tl.length) {
         var d = [];
-        pointermap.forEach(function(key, value) {
+        pointermap.forEach(function(value, key) {
           // Never remove pointerId == 1, which is mouse.
           // Touch identifiers are 2 smaller than their pointerId, which is the
           // index in pointermap.

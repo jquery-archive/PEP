@@ -49,9 +49,10 @@
       this.keys.length = 0;
       this.values.length = 0;
     },
+    // return value, key, map
     forEach: function(callback, thisArg) {
-      this.keys.forEach(function(id, i) {
-        callback.call(thisArg, id, this.values[i], this);
+      this.values.forEach(function(v, i) {
+        callback.call(thisArg, v, this.keys[i], this);
       }, this);
     },
     pointers: function() {
