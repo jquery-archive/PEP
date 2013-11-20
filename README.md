@@ -79,8 +79,12 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
 
 ### Getting Started
 
+1. Clone this repo or install from bower (pointerevents-polyfill)
 1. Place the loader script in the document head
-  - `<script src="PointerEvents/src/pointerevents.js"></script>`
+  - This Repo
+    - `<script src="PointerEvents/src/pointerevents.js"></script>`
+  - Bower
+    - `<script src="bower_components/pointerevents-polyfill/pointerevents.min.js></script>`
 1. Set up your event listeners
 1. You're Done!
 
