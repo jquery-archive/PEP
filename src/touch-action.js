@@ -4,6 +4,9 @@
  * license that can be found in the LICENSE file.
  */
 (function() {
+  function shadowSelector(v) {
+    return 'body ^^ ' + selector(v);
+  }
   function selector(v) {
     return '[touch-action="' + v + '"]';
   }
@@ -26,9 +29,11 @@
   var styles = '';
   attrib2css.forEach(function(r) {
     if (String(r) === r) {
-      styles += selector(r) + rule(r);
+      styles += selector(r) + rule(r) + '\n';
+      styles += shadowSelector(r) + rule(r) + '\n';
     } else {
-      styles += r.selectors.map(selector) + rule(r.rule);
+      styles += r.selectors.map(selector) + rule(r.rule) + '\n';
+      styles += r.selectors.map(shadowSelector) + rule(r.rule) + '\n';
     }
   });
   var el = document.createElement('style');
