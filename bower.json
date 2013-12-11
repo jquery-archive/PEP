@@ -1,7 +1,6 @@
 {
   "name": "PointerEvents",
   "main": "pointerevents.js",
-  "version": "0.0.20131107",
   "homepage": "https://github.com/Polymer/PointerEvents",
   "authors": [
     "The Polymer Authors"
