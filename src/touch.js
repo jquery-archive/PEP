@@ -15,8 +15,13 @@
   var CLICK_COUNT_TIMEOUT = 200;
   var ATTRIB = 'touch-action';
   var INSTALLER;
-  var HAS_TOUCH_ACTION = (typeof document.head.style.touchAction) === 'string';
-
+  // The presence of touch event handlers blocks scrolling, and so we must be careful to
+  // avoid adding handlers unnecessarily.  Chrome plans to add a touch-action-delay property
+  // (crbug.com/329559) to address this, and once we have that we can opt-in to a simpler
+  // handler registration mechanism.  Rather than try to predict how exactly to opt-in to
+  // that we'll just leave this disabled until there is a build of Chrome to test.
+  var HAS_TOUCH_ACTION_DELAY = false;
+  
   // handler block for native touch events
   var touchEvents = {
     scrollType: new WeakMap(),
@@ -27,14 +32,14 @@
       'touchcancel'
     ],
     register: function(target) {
-      if (HAS_TOUCH_ACTION) {
+      if (HAS_TOUCH_ACTION_DELAY) {
         dispatcher.listen(target, this.events);
       } else {
         INSTALLER.enableOnSubtree(target);
       }
     },
     unregister: function(target) {
-      if (HAS_TOUCH_ACTION) {
+      if (HAS_TOUCH_ACTION_DELAY) {
         dispatcher.unlisten(target, this.events);
       } else {
         // TODO(dfreedman): is it worth it to disconnect the MO?
@@ -322,7 +327,7 @@
     }
   };
 
-  if (!HAS_TOUCH_ACTION) {
+  if (!HAS_TOUCH_ACTION_DELAY) {
     INSTALLER = new scope.Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents.elementChanged, touchEvents);
   }
 
