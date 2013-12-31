@@ -15,7 +15,7 @@
   var CLICK_COUNT_TIMEOUT = 200;
   var ATTRIB = 'touch-action';
   var INSTALLER;
-  var HAS_TOUCH_ACTION = (typeof document.head.style.touchAction) === 'string';
+  var HAS_TOUCH_ACTION_DELAY = (typeof document.head.style.touchActionDelay) === 'string';
 
   // handler block for native touch events
   var touchEvents = {
@@ -27,14 +27,14 @@
       'touchcancel'
     ],
     register: function(target) {
-      if (HAS_TOUCH_ACTION) {
+      if (HAS_TOUCH_ACTION_DELAY) {
         dispatcher.listen(target, this.events);
       } else {
         INSTALLER.enableOnSubtree(target);
       }
     },
     unregister: function(target) {
-      if (HAS_TOUCH_ACTION) {
+      if (HAS_TOUCH_ACTION_DELAY) {
         dispatcher.unlisten(target, this.events);
       } else {
         // TODO(dfreedman): is it worth it to disconnect the MO?
@@ -322,7 +322,7 @@
     }
   };
 
-  if (!HAS_TOUCH_ACTION) {
+  if (!HAS_TOUCH_ACTION_DELAY) {
     INSTALLER = new scope.Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents.elementChanged, touchEvents);
   }
 
