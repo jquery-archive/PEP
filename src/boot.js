@@ -68,6 +68,10 @@
       while (s.parentNode) {
         s = s.parentNode;
       }
+      // the owner element is expected to be a Document or ShadowRoot
+      if (s.nodeType != Node.DOCUMENT_NODE && s.nodeType != Node.DOCUMENT_FRAGMENT_NODE) {
+        s = document;
+      }
       return s;
     },
     findTarget: function(inEvent) {
