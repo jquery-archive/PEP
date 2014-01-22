@@ -243,6 +243,7 @@
         outTarget: inPointer.target
       });
       dispatcher.over(inPointer);
+      dispatcher.enter(inPointer);
       dispatcher.down(inPointer);
     },
     touchmove: function(inEvent) {
@@ -292,6 +293,7 @@
       if (!this.scrolling) {
         dispatcher.up(inPointer);
         dispatcher.out(inPointer);
+        dispatcher.leave(inPointer);
       }
       this.cleanUpPointer(inPointer);
     },
@@ -301,6 +303,7 @@
     cancelOut: function(inPointer) {
       dispatcher.cancel(inPointer);
       dispatcher.out(inPointer);
+      dispatcher.leave(inPointer);
       this.cleanUpPointer(inPointer);
     },
     cleanUpPointer: function(inPointer) {
