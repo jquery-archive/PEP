@@ -86,8 +86,10 @@
     // is to call initMouseEvent with a buttonArg value of -1.
     //
     // This is fixed with DOM Level 4's use of buttons
-    var buttons = inDict.buttons;
-    if (buttons === undefined) {
+    var buttons;
+    if (inDict.buttons || HAS_BUTTONS) {
+      buttons = inDict.buttons;
+    } else {
       switch (inDict.which) {
         case 1: buttons = 1; break;
         case 2: buttons = 4; break;

@@ -57,7 +57,7 @@
     0,
     null,
     // DOM Level 3
-    undefined,
+    0,
     // PointerEvent
     0,
     0,
