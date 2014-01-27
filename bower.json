@@ -10,7 +10,7 @@
     "PointerEvents"
   ],
   "dependencies": {
-    "WeakMap": "Polymer/WeakMap#master"
+    "WeakMap": "Polymer/WeakMap#0.1.4"
   },
   "license": "BSD",
   "private": true,
@@ -20,5 +20,6 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "version": "0.1.4"
 }
