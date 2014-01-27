@@ -164,16 +164,16 @@
       this.fireEvent('pointercancel', inEvent);
     },
     leaveOut: function(event) {
+      this.out(event);
       if (!this.contains(event.target, event.relatedTarget)) {
         this.leave(event);
       }
-      this.out(event);
     },
     enterOver: function(event) {
+      this.over(event);
       if (!this.contains(event.target, event.relatedTarget)) {
         this.enter(event);
       }
-      this.over(event);
     },
     // LISTENER LOGIC
     eventHandler: function(inEvent) {
