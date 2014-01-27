@@ -21,7 +21,7 @@
   // handler registration mechanism.  Rather than try to predict how exactly to opt-in to
   // that we'll just leave this disabled until there is a build of Chrome to test.
   var HAS_TOUCH_ACTION_DELAY = false;
-  
+
   // handler block for native touch events
   var touchEvents = {
     scrollType: new WeakMap(),
@@ -137,13 +137,21 @@
         clearTimeout(this.resetId);
       }
     },
+    // if capturing for this pointer, skip expensive target finding
+    findTarget: function(touch, id) {
+      var ci = dispatcher.captureInfo;
+      if (ci && ci.id === id) {
+        return ci.target;
+      }
+      return findTarget(touch);
+    },
     touchToPointer: function(inTouch) {
       var e = dispatcher.cloneEvent(inTouch);
       // Spec specifies that pointerId 1 is reserved for Mouse.
       // Touch identifiers can start at 0.
       // Add 2 to the touch identifier for compatibility.
       e.pointerId = inTouch.identifier + 2;
-      e.target = findTarget(e);
+      e.target = this.findTarget(inTouch, e.pointerId);
       e.bubbles = true;
       e.cancelable = true;
       e.detail = this.clickCount;
