@@ -75,6 +75,8 @@
     0
   ];
 
+  var HAS_SVG_INSTANCE = (typeof SVGElementInstance !== 'undefined');
+
   /**
    * This module is for normalizing events. Mouse and Touch events will be
    * collected here, and fire PointerEvents that have the same semantics, no
@@ -246,6 +248,14 @@
       for (var i = 0; i < CLONE_PROPS.length; i++) {
         p = CLONE_PROPS[i];
         eventCopy[p] = inEvent[p] || CLONE_DEFAULTS[i];
+        // Work around SVGInstanceElement shadow tree
+        // Return the <use> element that is represented by the instance for Safari, Chrome, IE.
+        // This is the behavior implemented by Firefox.
+        if (HAS_SVG_INSTANCE && (p === 'target' || p === 'relatedTarget')) {
+          if (eventCopy[p] instanceof SVGElementInstance) {
+            eventCopy[p] = eventCopy[p].correspondingUseElement;
+          }
+        }
       }
       // keep the semantics of preventDefault
       if (inEvent.preventDefault) {
