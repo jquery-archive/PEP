@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-yuidoc');
   grunt.loadNpmTasks('grunt-karma');
 
-	var sourceFiles = grunt.file.readJSON('build.json');
+  var sourceFiles = grunt.file.readJSON('build.json');
   grunt.initConfig({
     concat: {
       pointerevents: {
@@ -12,6 +12,7 @@ module.exports = function(grunt) {
           stripBanners: true,
           banner: grunt.file.read('LICENSE')
         },
+        nonull: true,
         src: sourceFiles,
         dest: 'pointerevents.dev.js'
       }
@@ -22,6 +23,7 @@ module.exports = function(grunt) {
           // sourceMap: 'pointerevents.min.js.map',
           banner: grunt.file.read('LICENSE')
         },
+        nonull: true,
         dest: 'pointerevents.min.js',
         src: sourceFiles
       }
