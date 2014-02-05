@@ -1,7 +1,5 @@
 # PointerEvents
 
-[![PointerEvents build status](http://www.polymer-project.org/build/PointerEvents/status.png "PointerEvents build status")](http://build.chromium.org/p/client.polymer/waterfall)
-
 ## Learn the tech
 
 ### Why Pointer Events?
