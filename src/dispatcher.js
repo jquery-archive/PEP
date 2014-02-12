@@ -138,12 +138,15 @@
     },
     // EVENTS
     down: function(inEvent) {
+      inEvent.bubbles = true;
       this.fireEvent('pointerdown', inEvent);
     },
     move: function(inEvent) {
+      inEvent.bubbles = true;
       this.fireEvent('pointermove', inEvent);
     },
     up: function(inEvent) {
+      inEvent.bubbles = true;
       this.fireEvent('pointerup', inEvent);
     },
     enter: function(inEvent) {
@@ -163,6 +166,7 @@
       this.fireEvent('pointerout', inEvent);
     },
     cancel: function(inEvent) {
+      inEvent.bubbles = true;
       this.fireEvent('pointercancel', inEvent);
     },
     leaveOut: function(event) {
