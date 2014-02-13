@@ -1,5 +1,3 @@
-# PointerEvents
-
 ## Learn the tech
 
 ### Why Pointer Events?
