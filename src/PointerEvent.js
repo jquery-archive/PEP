@@ -26,6 +26,7 @@
     var ev = new MouseEvent('click', {buttons: 1});
     NEW_MOUSE_EVENT = true;
     HAS_BUTTONS = ev.buttons === 1;
+    ev = null;
   } catch(e) {
   }
 
@@ -86,10 +87,9 @@
     // is to call initMouseEvent with a buttonArg value of -1.
     //
     // This is fixed with DOM Level 4's use of buttons
-    var buttons;
-    if (inDict.buttons || HAS_BUTTONS) {
-      buttons = inDict.buttons;
-    } else {
+    var buttons = inDict.buttons;
+    // touch has two possible buttons state: 0 and 1, rely on being told the right one
+    if (!HAS_BUTTONS && inType !== 'touch') {
       switch (inDict.which) {
         case 1: buttons = 1; break;
         case 2: buttons = 4; break;

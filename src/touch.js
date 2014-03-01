@@ -137,6 +137,13 @@
         clearTimeout(this.resetId);
       }
     },
+    typeToButtons: function(type) {
+      var ret = 0;
+      if (type === 'touchstart' || type === 'touchmove') {
+        ret = 1;
+      }
+      return ret;
+    },
     touchToPointer: function(inTouch) {
       var e = dispatcher.cloneEvent(inTouch);
       // Spec specifies that pointerId 1 is reserved for Mouse.
@@ -148,7 +155,7 @@
       e.cancelable = true;
       e.detail = this.clickCount;
       e.button = 0;
-      e.buttons = 1;
+      e.buttons = this.typeToButtons(this.currentTouchEvent);
       e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
       e.height = inTouch.webkitRadiusY || inTouch.radiusY || 0;
       e.pressure = inTouch.webkitForce || inTouch.force || 0.5;
@@ -158,6 +165,7 @@
     },
     processTouches: function(inEvent, inFunction) {
       var tl = inEvent.changedTouches;
+      this.currentTouchEvent = inEvent.type;
       var pointers = touchMap(tl, this.touchToPointer, this);
       // forward touch preventDefaults
       pointers.forEach(function(p) {
