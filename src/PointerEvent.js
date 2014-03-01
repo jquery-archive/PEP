@@ -89,7 +89,7 @@
     // This is fixed with DOM Level 4's use of buttons
     var buttons = inDict.buttons;
     // touch has two possible buttons state: 0 and 1, rely on being told the right one
-    if (!HAS_BUTTONS && inType !== 'touch') {
+    if (!HAS_BUTTONS && !buttons && inType !== 'touch') {
       switch (inDict.which) {
         case 1: buttons = 1; break;
         case 2: buttons = 4; break;
