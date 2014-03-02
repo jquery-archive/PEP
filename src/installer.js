@@ -79,7 +79,11 @@
     },
     // register all touch-action = none nodes on document load
     installOnLoad: function() {
-      document.addEventListener('DOMContentLoaded', this.installNewSubtree.bind(this, document));
+      document.addEventListener('readystatechange', function() {
+        if (document.readyState === 'complete') {
+          this.installNewSubtree(document);
+        }
+      }.bind(this));
     },
     isElement: function(n) {
       return n.nodeType === Node.ELEMENT_NODE;
