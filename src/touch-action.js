@@ -5,7 +5,7 @@
  */
 (function() {
   function shadowSelector(v) {
-    return 'body ^^ ' + selector(v);
+    return 'body /shadow-deep/ ' + selector(v);
   }
   function selector(v) {
     return '[touch-action="' + v + '"]';
@@ -27,16 +27,29 @@
     }
   ];
   var styles = '';
-  attrib2css.forEach(function(r) {
-    if (String(r) === r) {
-      styles += selector(r) + rule(r) + '\n';
-      styles += shadowSelector(r) + rule(r) + '\n';
-    } else {
-      styles += r.selectors.map(selector) + rule(r.rule) + '\n';
-      styles += r.selectors.map(shadowSelector) + rule(r.rule) + '\n';
-    }
-  });
-  var el = document.createElement('style');
-  el.textContent = styles;
-  document.head.appendChild(el);
+  // only install stylesheet if the browser has touch action support
+  var head = document.head;
+  var hasNativePE = window.PointerEvent || window.MSPointerEvent;
+  // only add shadow selectors if shadowdom is supported
+  var hasShadowRoot = !window.ShadowDOMPolyfill && document.head.createShadowRoot;
+
+  if (hasNativePE) {
+    attrib2css.forEach(function(r) {
+      if (String(r) === r) {
+        styles += selector(r) + rule(r) + '\n';
+        if (hasShadowRoot) {
+          styles += shadowSelector(r) + rule(r) + '\n';
+        }
+      } else {
+        styles += r.selectors.map(selector) + rule(r.rule) + '\n';
+        if (hasShadowRoot) {
+          styles += r.selectors.map(shadowSelector) + rule(r.rule) + '\n';
+        }
+      }
+    });
+
+    var el = document.createElement('style');
+    el.textContent = styles;
+    document.head.appendChild(el);
+  }
 })();
