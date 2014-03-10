@@ -315,7 +315,7 @@
       }
     },
     asyncDispatchEvent: function(inEvent) {
-      setTimeout(this.dispatchEvent.bind(this, inEvent), 0);
+      requestAnimationFrame(this.dispatchEvent.bind(this, inEvent));
     }
   };
   dispatcher.boundHandler = dispatcher.eventHandler.bind(dispatcher);
