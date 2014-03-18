@@ -9,9 +9,6 @@
   "keywords": [
     "PointerEvents"
   ],
-  "dependencies": {
-    "WeakMap": "Polymer/WeakMap#master"
-  },
   "license": "BSD",
   "private": true,
   "ignore": [

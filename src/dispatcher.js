@@ -37,7 +37,9 @@
     'type',
     'target',
     'currentTarget',
-    'which'
+    'which',
+    'pageX',
+    'pageY'
   ];
 
   var CLONE_DEFAULTS = [
@@ -72,6 +74,8 @@
     '',
     null,
     null,
+    0,
+    0,
     0
   ];
 
@@ -90,13 +94,11 @@
    *   - pointercancel: a pointer will no longer generate events
    */
   var dispatcher = {
-    targets: new WeakMap(),
-    handledEvents: new WeakMap(),
     pointermap: new scope.PointerMap(),
     eventMap: {},
     // Scope objects for native events.
     // This exists for ease of testing.
-    eventSources: {},
+    eventSources: Object.create(null),
     eventSourceList: [],
     /**
      * Add a new event source that will generate pointer events.
@@ -186,7 +188,7 @@
       // This is used to prevent multiple dispatch of pointerevents from
       // platform events. This can happen when two elements in different scopes
       // are set up to create pointer events, which is relevant to Shadow DOM.
-      if (this.handledEvents.get(inEvent)) {
+      if (inEvent._handledByPE) {
         return;
       }
       var type = inEvent.type;
@@ -194,7 +196,7 @@
       if (fn) {
         fn(inEvent);
       }
-      this.handledEvents.set(inEvent, true);
+      inEvent._handledByPE = true;
     },
     // set up event listeners
     listen: function(target, events) {
@@ -232,7 +234,7 @@
       if (inEvent.preventDefault) {
         e.preventDefault = inEvent.preventDefault;
       }
-      this.targets.set(e, this.targets.get(inEvent) || inEvent.target);
+      e._target = e._target || inEvent.target;
       return e;
     },
     // make and dispatch an event in one call
@@ -248,7 +250,7 @@
      *    properties.
      */
     cloneEvent: function(inEvent) {
-      var eventCopy = {}, p;
+      var eventCopy = Object.create(null), p;
       for (var i = 0; i < CLONE_PROPS.length; i++) {
         p = CLONE_PROPS[i];
         eventCopy[p] = inEvent[p] || CLONE_DEFAULTS[i];
@@ -277,7 +279,7 @@
           return this.captureInfo.target;
         }
       }
-      return this.targets.get(inEvent);
+      return inEvent._target;
     },
     setCapture: function(inPointerId, inTarget) {
       if (this.captureInfo) {
@@ -288,7 +290,7 @@
       this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
       document.addEventListener('pointerup', this.implicitRelease);
       document.addEventListener('pointercancel', this.implicitRelease);
-      this.targets.set(e, inTarget);
+      e._target = inTarget;
       this.asyncDispatchEvent(e);
     },
     releaseCapture: function(inPointerId) {
@@ -298,7 +300,7 @@
         this.captureInfo = null;
         document.removeEventListener('pointerup', this.implicitRelease);
         document.removeEventListener('pointercancel', this.implicitRelease);
-        this.targets.set(e, t);
+        e._target = t;
         this.asyncDispatchEvent(e);
       }
     },

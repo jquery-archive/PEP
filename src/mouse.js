@@ -10,6 +10,13 @@
   // radius around touchend that swallows mouse events
   var DEDUP_DIST = 25;
 
+  var WHICH_TO_BUTTONS = [0, 1, 4, 2];
+
+  var HAS_BUTTONS = false;
+  try {
+    HAS_BUTTONS = new MouseEvent('test', {buttons: 1}).buttons === 1;
+  } catch (e) {}
+
   // handler block for native mouse events
   var mouseEvents = {
     POINTER_ID: 1,
@@ -51,6 +58,9 @@
       e.pointerId = this.POINTER_ID;
       e.isPrimary = true;
       e.pointerType = this.POINTER_TYPE;
+      if (!HAS_BUTTONS) {
+        e.buttons = WHICH_TO_BUTTONS[e.which] || 0;
+      }
       return e;
     },
     mousedown: function(inEvent) {

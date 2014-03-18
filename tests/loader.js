@@ -16,9 +16,6 @@ suite('Loader', function() {
     test('PointerMap', function() {
       expect(pep.PointerMap).to.be.ok;
     });
-    test('WeakMap', function() {
-      expect(WeakMap).to.be.ok;
-    });
     test('Dispatcher', function() {
       expect(pep.dispatcher).to.be.ok;
     });
