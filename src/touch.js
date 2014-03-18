@@ -24,7 +24,6 @@
   
   // handler block for native touch events
   var touchEvents = {
-    scrollType: new WeakMap(),
     events: [
       'touchstart',
       'touchmove',
@@ -49,21 +48,21 @@
       var a = el.getAttribute(ATTRIB);
       var st = this.touchActionToScrollType(a);
       if (st) {
-        this.scrollType.set(el, st);
+        el._scrollType = st;
         dispatcher.listen(el, this.events);
         // set touch-action on shadows as well
         allShadows(el).forEach(function(s) {
-          this.scrollType.set(s, st);
+          s._scrollType = st;
           dispatcher.listen(s, this.events);
         }, this);
       }
     },
     elementRemoved: function(el) {
-      this.scrollType['delete'](el);
+      el._scrollType = undefined;
       dispatcher.unlisten(el, this.events);
       // remove touch-action from shadow
       allShadows(el).forEach(function(s) {
-        this.scrollType['delete'](s);
+        s._scrollType = undefined;
         dispatcher.unlisten(s, this.events);
       }, this);
     },
@@ -73,9 +72,9 @@
       var oldSt = this.touchActionToScrollType(oldValue);
       // simply update scrollType if listeners are already established
       if (st && oldSt) {
-        this.scrollType.set(el, st);
+        el._scrollType = st;
         allShadows(el).forEach(function(s) {
-          this.scrollType.set(s, st);
+          s._scrollType = st;
         }, this);
       } else if (oldSt) {
         this.elementRemoved(el);
@@ -145,6 +144,7 @@
       return ret;
     },
     touchToPointer: function(inTouch) {
+      var cte = this.currentTouchEvent;
       var e = dispatcher.cloneEvent(inTouch);
       // Spec specifies that pointerId 1 is reserved for Mouse.
       // Touch identifiers can start at 0.
@@ -157,34 +157,35 @@
       e.cancelable = true;
       e.detail = this.clickCount;
       e.button = 0;
-      e.buttons = this.typeToButtons(this.currentTouchEvent);
+      e.buttons = this.typeToButtons(cte.type);
       e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
       e.height = inTouch.webkitRadiusY || inTouch.radiusY || 0;
       e.pressure = inTouch.webkitForce || inTouch.force || 0.5;
       e.isPrimary = this.isPrimaryTouch(inTouch);
       e.pointerType = this.POINTER_TYPE;
+      // forward touch preventDefaults
+      var self = this;
+      e.preventDefault = function() {
+        self.scrolling = false;
+        self.firstXY = null;
+        cte.preventDefault();
+      };
       return e;
     },
     processTouches: function(inEvent, inFunction) {
       var tl = inEvent.changedTouches;
-      this.currentTouchEvent = inEvent.type;
-      var pointers = touchMap(tl, this.touchToPointer, this);
-      // forward touch preventDefaults
-      pointers.forEach(function(p) {
-        p.preventDefault = function() {
-          this.scrolling = false;
-          this.firstXY = null;
-          inEvent.preventDefault();
-        };
-      }, this);
-      pointers.forEach(inFunction, this);
+      this.currentTouchEvent = inEvent;
+      for (var i = 0, t; i < tl.length; i++) {
+        t = tl[i];
+        inFunction.call(this, this.touchToPointer(t));
+      }
     },
     // For single axis scrollers, determines whether the element should emit
     // pointer events or behave as a scroller
     shouldScroll: function(inEvent) {
       if (this.firstXY) {
         var ret;
-        var scrollAxis = this.scrollType.get(inEvent.currentTarget);
+        var scrollAxis = inEvent.currentTarget._scrollType;
         if (scrollAxis === 'none') {
           // this element is a touch-action: none, should never scroll
           ret = false;
@@ -231,7 +232,7 @@
           // index in pointermap.
           if (key !== 1 && !this.findTouch(tl, key - 2)) {
             var p = value.out;
-            d.push(this.touchToPointer(p));
+            d.push(p);
           }
         }, this);
         d.forEach(this.cancelOut, this);
