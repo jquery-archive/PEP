@@ -286,7 +286,9 @@
         this.releaseCapture(this.captureInfo.id);
       }
       this.captureInfo = {id: inPointerId, target: inTarget};
-      var e = new PointerEvent('gotpointercapture', { bubbles: true });
+      var e = document.createEvent('Event');
+      e.initEvent('gotpointercapture', true, false);
+      e.pointerId = inPointerId;
       this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
       document.addEventListener('pointerup', this.implicitRelease);
       document.addEventListener('pointercancel', this.implicitRelease);
@@ -295,7 +297,9 @@
     },
     releaseCapture: function(inPointerId) {
       if (this.captureInfo && this.captureInfo.id === inPointerId) {
-        var e = new PointerEvent('lostpointercapture', { bubbles: true });
+        var e = document.createEvent('Event');
+        e.initEvent('lostpointercapture', true, false);
+        e.pointerId = inPointerId;
         var t = this.captureInfo.target;
         this.captureInfo = null;
         document.removeEventListener('pointerup', this.implicitRelease);
