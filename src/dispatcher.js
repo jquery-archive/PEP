@@ -95,7 +95,8 @@
    */
   var dispatcher = {
     pointermap: new scope.PointerMap(),
-    eventMap: {},
+    eventMap: Object.create(null),
+    captureInfo: Object.create(null),
     // Scope objects for native events.
     // This exists for ease of testing.
     eventSources: Object.create(null),
@@ -227,7 +228,7 @@
      */
     makeEvent: function(inType, inEvent) {
       // relatedTarget must be null if pointer is captured
-      if (this.captureInfo) {
+      if (this.captureInfo[inEvent.pointerId]) {
         inEvent.relatedTarget = null;
       }
       var e = new PointerEvent(inType, inEvent);
@@ -274,18 +275,13 @@
     getTarget: function(inEvent) {
       // if pointer capture is set, route all events for the specified pointerId
       // to the capture target
-      if (this.captureInfo) {
-        if (this.captureInfo.id === inEvent.pointerId) {
-          return this.captureInfo.target;
-        }
-      }
-      return inEvent._target;
+      return this.captureInfo[inEvent.pointerId] || inEvent._target;
     },
     setCapture: function(inPointerId, inTarget) {
-      if (this.captureInfo) {
-        this.releaseCapture(this.captureInfo.id);
+      if (this.captureInfo[inPointerId]) {
+        this.releaseCapture(inPointerId);
       }
-      this.captureInfo = {id: inPointerId, target: inTarget};
+      this.captureInfo[inPointerId] = inTarget;
       var e = document.createEvent('Event');
       e.initEvent('gotpointercapture', true, false);
       e.pointerId = inPointerId;
@@ -296,12 +292,12 @@
       this.asyncDispatchEvent(e);
     },
     releaseCapture: function(inPointerId) {
-      if (this.captureInfo && this.captureInfo.id === inPointerId) {
+      var t = this.captureInfo[inPointerId];
+      if (t) {
         var e = document.createEvent('Event');
         e.initEvent('lostpointercapture', true, false);
         e.pointerId = inPointerId;
-        var t = this.captureInfo.target;
-        this.captureInfo = null;
+        this.captureInfo[inPointerId] = undefined;
         document.removeEventListener('pointerup', this.implicitRelease);
         document.removeEventListener('pointercancel', this.implicitRelease);
         e._target = t;

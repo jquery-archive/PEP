@@ -6,6 +6,7 @@
 
 (function(scope) {
   var dispatcher = scope.dispatcher;
+  var captureInfo = dispatcher.captureInfo;
   var findTarget = scope.findTarget;
   var allShadows = scope.targetFinding.allShadows.bind(scope.targetFinding);
   var pointermap = dispatcher.pointermap;
@@ -149,10 +150,8 @@
       // Spec specifies that pointerId 1 is reserved for Mouse.
       // Touch identifiers can start at 0.
       // Add 2 to the touch identifier for compatibility.
-      var pi = e.pointerId = inTouch.identifier + 2;
-      var ci = dispatcher.captureInfo;
-      var t = ci && ci.id === pi && ci.target;
-      e.target = t || findTarget(e);
+      var id = e.pointerId = inTouch.identifier + 2;
+      e.target = captureInfo[id] || findTarget(e);
       e.bubbles = true;
       e.cancelable = true;
       e.detail = this.clickCount;

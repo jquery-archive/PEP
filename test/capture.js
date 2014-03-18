@@ -5,11 +5,11 @@
  */
 
 suite('Pointer Capture', function() {
-  var set = function(el) {
-    el.setPointerCapture(1);
+  var set = function(el, id) {
+    el.setPointerCapture(id || 1);
   };
-  var release = function(el) {
-    el.releasePointerCapture(1);
+  var release = function(el, id) {
+    el.releasePointerCapture(id || 1);
   };
 
   test('Element has setPointerCapture and releasePointerCapture', function() {
@@ -89,6 +89,27 @@ suite('Pointer Capture', function() {
         set(inner);
         fire('up', host);
       }
+    });
+
+    test('capture multiple pointers', function(done) {
+      var pm = PointerEventsPolyfill.dispatcher.pointermap;
+      var ids = 0;
+      function wait(e) {
+        ids += e.pointerId;
+        if (ids == 3) {
+          pm.clear();
+          done();
+        }
+      }
+      host.addEventListener('gotpointercapture', wait);
+      var e = new PointerEvent('pointerdown', {pointerId: 1});
+      pm.set(1, e);
+      host.dispatchEvent(e);
+      set(host, 1);
+      e = new PointerEvent('pointerdown', {pointerId: 2});
+      pm.set(2, e);
+      host.dispatchEvent(e);
+      set(host, 2);
     });
   });
 });
