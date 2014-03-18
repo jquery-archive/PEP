@@ -8,8 +8,8 @@ module.exports = function(karma) {
     files: [
       'PointerEvents/node_modules/chai/chai.js',
       'PointerEvents/node_modules/chai-spies/chai-spies.js',
-      'WeakMap/weakmap.js',
       'PointerEvents/src/boot.js',
+      'PointerEvents/src/touch-action.js',
       'PointerEvents/src/PointerEvent.js',
       'PointerEvents/src/pointermap.js',
       'PointerEvents/src/dispatcher.js',
@@ -19,9 +19,9 @@ module.exports = function(karma) {
       'PointerEvents/src/ms.js',
       'PointerEvents/src/platform-events.js',
       'PointerEvents/src/capture.js',
-      'PointerEvents/tests/setup.js',
-      'PointerEvents/tests/karma-setup.js',
-      'PointerEvents/tests/!(setup|karma-setup).js'
+      'PointerEvents/test/setup.js',
+      'PointerEvents/test/karma-setup.js',
+      'PointerEvents/test/!(setup|karma-setup).js'
     ],
   }));
 };
