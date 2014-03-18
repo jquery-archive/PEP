@@ -149,8 +149,10 @@
       // Spec specifies that pointerId 1 is reserved for Mouse.
       // Touch identifiers can start at 0.
       // Add 2 to the touch identifier for compatibility.
-      e.pointerId = inTouch.identifier + 2;
-      e.target = findTarget(e);
+      var pi = e.pointerId = inTouch.identifier + 2;
+      var ci = dispatcher.captureInfo;
+      var t = ci && ci.id === pi && ci.target;
+      e.target = t || findTarget(e);
       e.bubbles = true;
       e.cancelable = true;
       e.detail = this.clickCount;
