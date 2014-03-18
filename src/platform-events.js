@@ -13,8 +13,7 @@
   var dispatcher = scope.dispatcher;
 
   // only activate if this platform does not have pointer events
-  if (window.navigator.pointerEnabled === undefined) {
-    Object.defineProperty(window.navigator, 'pointerEnabled', {value: true, enumerable: true});
+  if (!window.PointerEvent) {
 
     if (window.navigator.msPointerEnabled) {
       var tp = window.navigator.msMaxTouchPoints;
