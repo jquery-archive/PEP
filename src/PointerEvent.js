@@ -80,6 +80,10 @@
       pressure = e.buttons ? 0.5 : 0;
     }
 
+    // add x/y properties aliased to clientX/Y
+    e.x = e.clientX;
+    e.y = e.clientY;
+
     // define the properties of the PointerEvent interface
     e.pointerId = inDict.pointerId || 0;
     e.width = inDict.width || 0;
