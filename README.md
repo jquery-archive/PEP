@@ -80,7 +80,7 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
   - This Repo
     - `<script src="PointerEvents/src/pointerevents.js"></script>`
   - Bower
-    - `<script src="bower_components/pointerevents-polyfill/pointerevents.min.js></script>`
+    - `<script src="bower_components/pointerevents-polyfill/pointerevents.min.js"></script>`
 1. Set up your event listeners
 1. You're Done!
 
