@@ -12,6 +12,19 @@ suite('Pointer Capture', function() {
     el.releasePointerCapture(id || 1);
   };
 
+  var container, host, inner;
+  setup(function() {
+    container = document.createElement('div');
+    container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
+    host = container.firstElementChild;
+    inner = host.firstElementChild;
+    document.body.appendChild(container);
+  });
+
+  teardown(function() {
+    document.body.removeChild(container);
+  });
+
   test('Element has setPointerCapture and releasePointerCapture', function() {
     expect(host).to.have.property('setPointerCapture');
     expect(host).to.have.property('releasePointerCapture');

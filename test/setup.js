@@ -4,14 +4,7 @@
  * license that can be found in the LICENSE file.
  */
 
-// install sample DOM for event dispatching
-container = document.createElement('div');
-container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
-host = container.firstChild;
-inner = host.firstChild;
-document.body.appendChild(container);
-
-chai.Assertion.includeStack = true;
+chai.config.includeStack = true;
 expect = chai.expect;
 
 var HAS_TOUCH = 'ontouchstart' in window, HAS_MS = Boolean(navigator.msPointerEnabled);

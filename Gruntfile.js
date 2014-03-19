@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-yuidoc');
   grunt.loadNpmTasks('grunt-karma');
 
   var sourceFiles = grunt.file.readJSON('build.json');
@@ -30,7 +29,8 @@ module.exports = function(grunt) {
     },
     karma: {
       options: {
-        configFile: 'karma.conf.js'
+        configFile: 'karma.conf.js',
+        keepalive: true
       },
       pointerevents: {
       },
@@ -41,7 +41,8 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadTasks('../tools/tasks');
   grunt.registerTask('default', ['concat', 'uglify']);
-  grunt.registerTask('test', 'karma:pointerevents');
-  grunt.registerTask('test-buildbot', 'karma:buildbot');
+  grunt.registerTask('test', ['override-chrome-launcher', 'karma:pointerevents']);
+  grunt.registerTask('test-buildbot', ['override-chrome-launcher', 'karma:buildbot']);
 };
