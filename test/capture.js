@@ -105,24 +105,28 @@ suite('Pointer Capture', function() {
     });
 
     test('capture multiple pointers', function(done) {
-      var pm = PointerEventsPolyfill.dispatcher.pointermap;
-      var ids = 0;
-      function wait(e) {
-        ids += e.pointerId;
-        if (ids == 3) {
-          pm.clear();
-          done();
+      if (!HAS_MS) {
+        var pm = PointerEventsPolyfill.dispatcher.pointermap;
+        var ids = 0;
+        function wait(e) {
+          ids += e.pointerId;
+          if (ids == 3) {
+            pm.clear();
+            done();
+          }
         }
+        host.addEventListener('gotpointercapture', wait);
+        var e = new PointerEvent('pointerdown', {pointerId: 1});
+        pm.set(1, e);
+        host.dispatchEvent(e);
+        set(host, 1);
+        e = new PointerEvent('pointerdown', {pointerId: 2});
+        pm.set(2, e);
+        host.dispatchEvent(e);
+        set(host, 2);
+      } else {
+        done();
       }
-      host.addEventListener('gotpointercapture', wait);
-      var e = new PointerEvent('pointerdown', {pointerId: 1});
-      pm.set(1, e);
-      host.dispatchEvent(e);
-      set(host, 1);
-      e = new PointerEvent('pointerdown', {pointerId: 2});
-      pm.set(2, e);
-      host.dispatchEvent(e);
-      set(host, 2);
     });
   });
 });
