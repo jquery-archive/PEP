@@ -6,6 +6,19 @@
 
 suite('Event Generation and Dispatching', function() {
 
+  var container, host, inner;
+  setup(function() {
+    container = document.createElement('div');
+    container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
+    host = container.firstElementChild;
+    inner = host.firstElementChild;
+    document.body.appendChild(container);
+  });
+
+  teardown(function() {
+    document.body.removeChild(container);
+  });
+
   var pepde = PointerEventsPolyfill.dispatcher.eventSources;
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
     if (!HAS_MS) {

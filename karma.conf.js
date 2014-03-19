@@ -19,9 +19,13 @@ module.exports = function(karma) {
       'PointerEvents/src/ms.js',
       'PointerEvents/src/platform-events.js',
       'PointerEvents/src/capture.js',
-      'PointerEvents/test/setup.js',
       'PointerEvents/test/karma-setup.js',
-      'PointerEvents/test/!(setup|karma-setup).js'
-    ],
+      'PointerEvents/test/setup.js',
+      'PointerEvents/test/loader.js',
+      'PointerEvents/test/constructor.js',
+      'PointerEvents/test/dispatcher.js',
+      'PointerEvents/test/pointermap.js',
+      'PointerEvents/test/capture.js'
+    ]
   }));
 };
