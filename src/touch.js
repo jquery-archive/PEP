@@ -7,7 +7,6 @@
 (function(scope) {
   var dispatcher = scope.dispatcher;
   var captureInfo = dispatcher.captureInfo;
-  var findTarget = scope.findTarget;
   var allShadows = scope.targetFinding.allShadows.bind(scope.targetFinding);
   var pointermap = dispatcher.pointermap;
   var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
@@ -144,6 +143,12 @@
       }
       return ret;
     },
+    findTarget: function(ev) {
+      if (this.currentTouchEvent.type === 'touchstart') {
+        return this.currentTouchEvent.target;
+      }
+      return scope.findTarget(ev);
+    },
     touchToPointer: function(inTouch) {
       var cte = this.currentTouchEvent;
       var e = dispatcher.cloneEvent(inTouch);
@@ -151,11 +156,10 @@
       // Touch identifiers can start at 0.
       // Add 2 to the touch identifier for compatibility.
       var id = e.pointerId = inTouch.identifier + 2;
-      e.target = captureInfo[id] || findTarget(e);
+      e.target = captureInfo[id] || this.findTarget(e);
       e.bubbles = true;
       e.cancelable = true;
       e.detail = this.clickCount;
-      e.button = 0;
       e.buttons = this.typeToButtons(cte.type);
       e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
       e.height = inTouch.webkitRadiusY || inTouch.radiusY || 0;
