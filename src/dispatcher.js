@@ -39,7 +39,8 @@
     'currentTarget',
     'which',
     'pageX',
-    'pageY'
+    'pageY',
+    'timeStamp'
   ];
 
   var CLONE_DEFAULTS = [
@@ -74,6 +75,7 @@
     '',
     null,
     null,
+    0,
     0,
     0,
     0
