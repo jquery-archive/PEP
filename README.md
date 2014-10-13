@@ -1,7 +1,3 @@
-# THIS REPO IS DEPRECATED
-
-Due to a [number of reasons](https://groups.google.com/forum/#!topic/polymer-dev/ba4aDyOozm8), Polymer has moved on to using [polymer-gestures](https://github.com/Polymer/polymer-gestures), which is scoped to solving the gesture needs of Polymer elements more directly.
-
 ## Learn the tech
 
 ### Why Pointer Events?

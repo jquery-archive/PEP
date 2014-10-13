@@ -28,10 +28,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Polymer/PointerEvents.git"
+    "url": "git://github.com/jquery/PointerEvents.git"
   },
-  "author": "Polymer Authors",
-  "license": "BSD",
+  "author": {
+    "name": "jQuery Foundation and other contributors",
+    "url": "https://github.com/jquery/PointerEvents/blob/master/AUTHORS.txt"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/jquery/PointerEvents/blob/master/LICENSE.txt"
+    }
+  ],
   "readmeFilename": "README.md",
   "gitHead": "fc4d102296f7c8c5ed23d2dc8988920e685d050f"
 }
