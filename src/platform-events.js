@@ -1,9 +1,3 @@
-/*
- * Copyright 2013 The Polymer Authors. All rights reserved.
- * Use of this source code is governed by a BSD-style
- * license that can be found in the LICENSE file.
- */
-
 /**
  * This module contains the handlers for native platform events.
  * From here, the dispatcher is called to create unified pointer events.
