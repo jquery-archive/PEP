@@ -9,7 +9,7 @@ module.exports = function(grunt) {
       pointerevents: {
         options: {
           stripBanners: true,
-          banner: grunt.file.read('LICENSE')
+          banner: grunt.file.read('LICENSE.txt')
         },
         nonull: true,
         src: sourceFiles,
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       pointerevents: {
         options: {
           // sourceMap: 'pointerevents.min.js.map',
-          banner: grunt.file.read('LICENSE')
+          banner: grunt.file.read('LICENSE.txt')
         },
         nonull: true,
         dest: 'pointerevents.min.js',
