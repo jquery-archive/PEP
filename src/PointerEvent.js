@@ -90,6 +90,12 @@
     e.isPrimary = inDict.isPrimary || false;
     return e;
   }
+  
+  // define constants
+  PointerEvent.prototype.POINTER_TYPE_UNAVAILABLE = PointerEvent.POINTER_TYPE_UNAVAILABLE = 'unavailable';
+  PointerEvent.prototype.POINTER_TYPE_TOUCH = PointerEvent.POINTER_TYPE_TOUCH = 'touch';
+  PointerEvent.prototype.POINTER_TYPE_PEN = PointerEvent.POINTER_TYPE_PEN = 'pen';
+  PointerEvent.prototype.POINTER_TYPE_MOUSE = PointerEvent.POINTER_TYPE_MOUSE = 'mouse';
 
   // attach to window
   if (!scope.PointerEvent) {
