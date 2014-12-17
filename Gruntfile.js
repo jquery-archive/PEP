@@ -41,7 +41,6 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadTasks('../tools/tasks');
   grunt.registerTask('default', ['concat', 'uglify']);
   grunt.registerTask('test', ['override-chrome-launcher', 'karma:pointerevents']);
   grunt.registerTask('test-buildbot', ['override-chrome-launcher', 'karma:buildbot']);
