@@ -66,10 +66,10 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
 
 ### Examples
 
-- [Simple Event Example](http://polymer.github.io/PointerEvents/samples/simple/index.html)
-- [Pointer Painting](http://polymer.github.io/PointerEvents/samples/paint/index.html)
-- [Multi Pointer Trac](http://polymer.github.io/PointerEvents/samples/tracker/index.html)
-- [Empty Space Game!](http://polymer.github.io/PointerEvents/samples/spaceship/index.html)
+- [Simple Event Example](http://jquery.github.io/PointerEvents/samples/simple/index.html)
+- [Pointer Painting](http://jquery.github.io/PointerEvents/samples/paint/index.html)
+- [Multi Pointer Trac](http://jquery.github.io/PointerEvents/samples/tracker/index.html)
+- [Empty Space Game!](http://jquery.github.io/PointerEvents/samples/spaceship/index.html)
 
 ## Polyfill Details
 
