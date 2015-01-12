@@ -1,11 +1,10 @@
 {
   "name": "PointerEvents",
   "version": "0.0.0",
-  "description": "Polyfill of the PointerEvents w3c spec",
-  "main": "Gruntfile.js",
+  "description": "Polyfill of the PointerEvents W3C spec",
   "directories": {
     "doc": "docs",
-    "test": "tests"
+    "test": "test"
   },
   "devDependencies": {
     "mocha": "*",
@@ -39,7 +38,5 @@
       "type": "MIT",
       "url": "https://github.com/jquery/PointerEvents/blob/master/LICENSE.txt"
     }
-  ],
-  "readmeFilename": "README.md",
-  "gitHead": "fc4d102296f7c8c5ed23d2dc8988920e685d050f"
+  ]
 }
