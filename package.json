@@ -1,5 +1,5 @@
 {
-  "name": "PointerEvents",
+  "name": "PEP",
   "version": "0.0.0",
   "description": "Polyfill of the PointerEvents W3C spec",
   "directories": {
@@ -27,16 +27,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jquery/PointerEvents.git"
+    "url": "git://github.com/jquery/PEP.git"
   },
   "author": {
     "name": "jQuery Foundation and other contributors",
-    "url": "https://github.com/jquery/PointerEvents/blob/master/AUTHORS.txt"
+    "url": "https://github.com/jquery/PEP/blob/master/AUTHORS.txt"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/jquery/PointerEvents/blob/master/LICENSE.txt"
+      "url": "https://github.com/jquery/PEP/blob/master/LICENSE.txt"
     }
   ]
 }
