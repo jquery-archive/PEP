@@ -64,13 +64,6 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
 
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of PointerEvents.
 
-### Examples
-
-- [Simple Event Example](http://jquery.github.io/PointerEvents/samples/simple/index.html)
-- [Pointer Painting](http://jquery.github.io/PointerEvents/samples/paint/index.html)
-- [Multi Pointer Trac](http://jquery.github.io/PointerEvents/samples/tracker/index.html)
-- [Empty Space Game!](http://jquery.github.io/PointerEvents/samples/spaceship/index.html)
-
 ## Polyfill Details
 
 ### Getting Started
