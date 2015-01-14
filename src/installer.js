@@ -55,7 +55,11 @@
     },
     findElements: function(target) {
       if (target.querySelectorAll) {
-        return target.querySelectorAll(SELECTOR);
+        var result = target.querySelectorAll(SELECTOR);
+        if(target.hasAttribute && target.hasAttribute('touch-action')) { 
+          return [].concat.apply([target],result);
+        }
+      	return result;
       }
       return [];
     },
