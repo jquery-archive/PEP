@@ -1,13 +1,13 @@
-/**
- * This module contains the handlers for native platform events.
- * From here, the dispatcher is called to create unified pointer events.
- * Included are touch events (v1), mouse events, and MSPointerEvents.
- */
-(function(scope) {
-  var dispatcher = scope.dispatcher;
+import PointerEvent from 'PointerEvent';
+import dispatcher from 'dispatcher';
+import mouseEvents from 'mouse';
+import touchEvents from 'touch';
+import msEvents from 'ms';
 
+export function applyPolyfill() {
   // only activate if this platform does not have pointer events
-  if (window.PointerEvent !== scope.PointerEvent) {
+  if (!window.PointerEvent) {
+    window.PointerEvent = PointerEvent;
 
     if (window.navigator.msPointerEnabled) {
       var tp = window.navigator.msMaxTouchPoints;
@@ -15,14 +15,14 @@
         value: tp,
         enumerable: true
       });
-      dispatcher.registerSource('ms', scope.msEvents);
+      dispatcher.registerSource('ms', msEvents);
     } else {
-      dispatcher.registerSource('mouse', scope.mouseEvents);
+      dispatcher.registerSource('mouse', mouseEvents);
       if (window.ontouchstart !== undefined) {
-        dispatcher.registerSource('touch', scope.touchEvents);
+        dispatcher.registerSource('touch', touchEvents);
       }
     }
 
     dispatcher.register(document);
   }
-})(window.PointerEventsPolyfill);
+}
