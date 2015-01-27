@@ -1,37 +1,20 @@
-/*!
- * Copyright jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
+import dispatcher from 'dispatcher';
+import PointerMap from 'pointermap';
+import Installer from 'installer';
+import targeting from 'targeting';
+import PointerEvent from 'PointerEvent';
+import { applyAttributeStyles } from 'touch-action';
+import { applyPolyfill as applyPointerEventPolyfill } from 'platform-events';
+import { applyPolyfill as applyCapturePolyfill } from 'capture';
 
-(function() {
-  var thisFile = 'pointerevents.js';
-  var scopeName = 'PointerEventsPolyfill';
-  var modules = [
-    'src/boot.js',
-    'src/touch-action.js',
-    'src/PointerEvent.js',
-    'src/pointermap.js',
-    'src/dispatcher.js',
-    'src/installer.js',
-    'src/mouse.js',
-    'src/touch.js',
-    'src/ms.js',
-    'src/platform-events.js',
-    'src/capture.js'
-  ];
+applyAttributeStyles();
+applyPointerEventPolyfill();
+applyCapturePolyfill();
 
-  window[scopeName] = {
-    entryPointName: thisFile,
-    modules: modules
-  };
-
-  var script = document.querySelector('script[src $= "' + thisFile + '"]');
-  var src = script.attributes.src.value;
-  var basePath = src.slice(0, src.indexOf(thisFile));
-
-  modules.forEach(function( module ) {
-    document.write('<script src="' + basePath + module + '"></script>');
-  });
-
-})();
+export default {
+  dispatcher: dispatcher,
+  Installer: Installer,
+  PointerEvent: PointerEvent,
+  PointerMap: PointerMap,
+  targetFinding: targeting
+};

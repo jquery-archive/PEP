@@ -1,33 +1,33 @@
-(function() {
-  function shadowSelector(v) {
-    return 'body /shadow-deep/ ' + selector(v);
+function shadowSelector(v) {
+  return 'body /shadow-deep/ ' + selector(v);
+}
+function selector(v) {
+  return '[touch-action="' + v + '"]';
+}
+function rule(v) {
+  return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; touch-action-delay: none; }';
+}
+var attrib2css = [
+  'none',
+  'auto',
+  'pan-x',
+  'pan-y',
+  {
+    rule: 'pan-x pan-y',
+    selectors: [
+      'pan-x pan-y',
+      'pan-y pan-x'
+    ]
   }
-  function selector(v) {
-    return '[touch-action="' + v + '"]';
-  }
-  function rule(v) {
-    return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; touch-action-delay: none; }';
-  }
-  var attrib2css = [
-    'none',
-    'auto',
-    'pan-x',
-    'pan-y',
-    {
-      rule: 'pan-x pan-y',
-      selectors: [
-        'pan-x pan-y',
-        'pan-y pan-x'
-      ]
-    }
-  ];
-  var styles = '';
-  // only install stylesheet if the browser has touch action support
-  var head = document.head;
-  var hasNativePE = window.PointerEvent || window.MSPointerEvent;
-  // only add shadow selectors if shadowdom is supported
-  var hasShadowRoot = !window.ShadowDOMPolyfill && document.head.createShadowRoot;
+];
+var styles = '';
+// only install stylesheet if the browser has touch action support
+var head = document.head;
+var hasNativePE = window.PointerEvent || window.MSPointerEvent;
+// only add shadow selectors if shadowdom is supported
+var hasShadowRoot = !window.ShadowDOMPolyfill && document.head.createShadowRoot;
 
+export function applyAttributeStyles() {
   if (hasNativePE) {
     attrib2css.forEach(function(r) {
       if (String(r) === r) {
@@ -47,4 +47,4 @@
     el.textContent = styles;
     document.head.appendChild(el);
   }
-})();
+}
