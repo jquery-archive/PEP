@@ -3,10 +3,10 @@ module.exports = function(grunt) {
 grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-karma');
 
-var package = require('./package');
+var version = require('./package').version;
 var header =
   '/*!\n' +
-  ' * PEP v' + package.version + ' | https://github.com/jquery/PEP\n' +
+  ' * PEP v' + version + ' | https://github.com/jquery/PEP\n' +
   ' * Copyright jQuery Foundation and other contributors | http://jquery.org/license\n'+
   ' */\n';
 
