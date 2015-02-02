@@ -1,3 +1,7 @@
+define([ 'intern/chai!' ],
+       function (chai, expect) {
+           with (chai) {
+
 chai.config.includeStack = true;
 expect = chai.expect;
 
@@ -66,3 +70,6 @@ function prep(event, target, callback) {
   };
   target.addEventListener(event, fn);
 }
+
+}
+});
