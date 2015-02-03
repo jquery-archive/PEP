@@ -1,26 +1,23 @@
 define([ 'intern!tdd',
-        'intern/chai!',
-        'intern/chai!expect',
-        '../pointerevents',
-        'src/boot',
-        'src/pointermap',
-        'src/capture',
-        'src/dispatcher',
-        'src/installer',
-        'src/mouse',
-        'src/ms',
-        'src/platform-events',
-        'src/PointerEvent',
-        'src/touch',
-        'src/touch-action'
-       ],
-       function (tdd, expect) {
-           with (tdd) {
+    'intern/chai!',
+    'intern/chai!expect',
+    '../pointerevents.dev',
+    'src/boot',
+    'src/pointermap',
+    'src/capture',
+    'src/dispatcher',
+    'src/installer',
+    'src/mouse',
+    'src/ms',
+    'src/platform-events'
+    ],
+    function (tdd, expect) {
+        with (tdd) {
 
 suite('Event Generation and Dispatching', function() {
 
   var container, host, inner;
-  before(function () {
+  before(function() {
     container = document.createElement('div');
     container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
     host = container.firstElementChild;
@@ -28,23 +25,10 @@ suite('Event Generation and Dispatching', function() {
     document.body.appendChild(container);
   });
 
-  after(function () {
+  after(function() {
     document.body.removeChild(container);
   });
 
-// replace with internjs 'before' / 'after'
-/*  setup(function() {
-    container = document.createElement('div');
-    container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
-    host = container.firstElementChild;
-    inner = host.firstElementChild;
-    document.body.appendChild(container);
-  });
-
-  teardown(function() {
-    document.body.removeChild(container);
-  });
-*/
   var pepde = PointerEventsPolyfill.dispatcher.eventSources;
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
     if (!HAS_MS) {

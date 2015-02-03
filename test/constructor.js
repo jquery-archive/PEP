@@ -1,20 +1,9 @@
 define([ 'intern!tdd',
-        'intern/chai!expect',
-        '../pointerevents',
-        'src/boot',
-        'src/pointermap',
-        'src/capture',
-        'src/dispatcher',
-        'src/installer',
-        'src/mouse',
-        'src/ms',
-        'src/platform-events',
-        'src/PointerEvent',
-        'src/touch',
-        'src/touch-action'
-       ],
-       function (tdd, expect) {
-           with (tdd) {
+    'intern/chai!expect',
+    '../pointerevents.dev'
+   ],
+   function (tdd, expect) {
+       with (tdd) {
 
 suite('Constructor', function() {
 

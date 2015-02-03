@@ -1,6 +1,8 @@
-define([ 'intern/chai!' ],
-       function (chai, expect) {
-           with (chai) {
+define([ 'intern/chai!',
+    '../pointerevents.dev'
+    ],
+   function (chai, expect) {
+       with (chai) {
 
 chai.config.includeStack = true;
 expect = chai.expect;
