@@ -1,3 +1,10 @@
+define([ 'intern!tdd',
+    'intern/chai!expect',
+    '../pointerevents.dev'
+   ],
+   function (tdd, expect) {
+       with (tdd) {
+
 suite('Loader', function() {
   test('PointerEvent', function() {
     expect(PointerEvent).to.be.ok;
@@ -20,4 +27,7 @@ suite('Loader', function() {
       expect(pep.targetFinding).to.be.ok;
     });
   });
+});
+
+}
 });

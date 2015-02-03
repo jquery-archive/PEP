@@ -1,7 +1,23 @@
+define([ 'intern!tdd',
+    'intern/chai!',
+    'intern/chai!expect',
+    '../pointerevents.dev',
+    'src/boot',
+    'src/pointermap',
+    'src/capture',
+    'src/dispatcher',
+    'src/installer',
+    'src/mouse',
+    'src/ms',
+    'src/platform-events'
+    ],
+    function (tdd, expect) {
+        with (tdd) {
+
 suite('Event Generation and Dispatching', function() {
 
   var container, host, inner;
-  setup(function() {
+  before(function() {
     container = document.createElement('div');
     container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
     host = container.firstElementChild;
@@ -9,7 +25,7 @@ suite('Event Generation and Dispatching', function() {
     document.body.appendChild(container);
   });
 
-  teardown(function() {
+  after(function() {
     document.body.removeChild(container);
   });
 
@@ -88,4 +104,7 @@ suite('Event Generation and Dispatching', function() {
     // this will fire twice in mouse environment, and four times in MSPointerEvents
     expect(cb).to.have.been.called.exactly(navigator.msPointerEnabled ? 4 : 2);
   }); */
+});
+
+}
 });
