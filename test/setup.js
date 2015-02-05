@@ -1,5 +1,5 @@
-chai.config.includeStack = true;
-expect = chai.expect;
+//chai.config.includeStack = true;
+//expect = chai.expect;
 
 var HAS_TOUCH = 'ontouchstart' in window, HAS_MS = Boolean(navigator.msPointerEnabled);
 

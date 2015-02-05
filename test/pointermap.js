@@ -1,3 +1,10 @@
+define([ 'intern!tdd',
+    'intern/chai!expect',
+    '../pointerevents.dev'
+   ],
+   function (tdd, expect) {
+       with (tdd) {
+
 suite('PointerMap', function() {
   var PointerMap = PointerEventsPolyfill.PointerMap;
   test('PointerMap has Map API', function() {
@@ -68,4 +75,8 @@ suite('PointerMap', function() {
       expect(m).to.equal(p);
     });
   });
+});
+
+
+}
 });

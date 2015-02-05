@@ -1,3 +1,10 @@
+define([ 'intern!tdd',
+    'intern/chai!expect',
+    '../pointerevents.dev'
+   ],
+   function (tdd, expect) {
+       with (tdd) {
+
 suite('Constructor', function() {
 
   test('PointerEvents have the required properties', function() {
@@ -47,4 +54,8 @@ suite('Constructor', function() {
     p = new PointerEvent('bar');
     expect(p.pressure).to.equal(0);
   });
+});
+
+
+}
 });

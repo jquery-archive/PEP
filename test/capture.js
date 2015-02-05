@@ -1,3 +1,10 @@
+define([ 'intern!tdd',
+    'intern/chai!expect',
+    '../pointerevents.dev'
+   ],
+   function (tdd, expect) {
+       with (tdd) {
+
 suite('Pointer Capture', function() {
   var set = function(el, id) {
     el.setPointerCapture(id || 1);
@@ -7,7 +14,7 @@ suite('Pointer Capture', function() {
   };
 
   var container, host, inner;
-  setup(function() {
+  before(function() {
     container = document.createElement('div');
     container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
     host = container.firstElementChild;
@@ -15,7 +22,7 @@ suite('Pointer Capture', function() {
     document.body.appendChild(container);
   });
 
-  teardown(function() {
+  after(function() {
     document.body.removeChild(container);
   });
 
@@ -123,4 +130,8 @@ suite('Pointer Capture', function() {
       }
     });
   });
+});
+
+
+}
 });
