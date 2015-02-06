@@ -1,20 +1,18 @@
 {
   "name": "PEP",
-  "main": "pointerevents.js",
+  "main": "dist/PEP.js",
   "homepage": "https://github.com/jquery/PEP",
   "authors": [
     "jQuery Foundation and other contributors"
   ],
-  "description": "PointerEvents Polyfill: a unified event system for the web platform",
+  "description": "Polyfill of the PointerEvents W3C spec",
   "keywords": [
     "PointerEvents"
   ],
   "license": "MIT",
-  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
     "test"
   ]
 }
