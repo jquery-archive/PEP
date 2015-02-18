@@ -1,9 +1,11 @@
 define([ 'intern!tdd',
     'intern/chai!expect',
-    '../pointerevents.dev'
+    '../dist/PEP'
    ],
    function (tdd, expect) {
-       with (tdd) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
 
 suite('Constructor', function() {
 
@@ -57,5 +59,4 @@ suite('Constructor', function() {
 });
 
 
-}
 });
