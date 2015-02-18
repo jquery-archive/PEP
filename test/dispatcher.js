@@ -1,7 +1,7 @@
 define([ 'intern!tdd',
     'intern/chai!',
     'intern/chai!expect',
-    '../pointerevents.dev',
+    '../dist/PEP',
     'test/setup'
     ],
     function (tdd, expect) {

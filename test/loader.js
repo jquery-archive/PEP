@@ -1,10 +1,11 @@
 define([ 'intern!tdd',
     'intern/chai!expect',
-    '../pointerevents.dev'
+    '../dist/PEP'
    ],
    function (tdd, expect) {
-       with (tdd) {
 
+var suite = tdd.suite;
+var test = tdd.test;
 suite('Loader', function() {
   test('PointerEvent', function() {
     expect(PointerEvent).to.be.ok;
@@ -12,7 +13,7 @@ suite('Loader', function() {
   suite('PointerEventsPolyfill modules', function() {
     var pep = window.PointerEventsPolyfill;
     test('PointerEventsPolyfill', function() {
-      expect(pep).to.be.ok;
+        expect(pep).to.be.ok;
     });
     test('PointerMap', function() {
       expect(pep.PointerMap).to.be.ok;
@@ -29,6 +30,4 @@ suite('Loader', function() {
   });
 });
 
-
-}
 });
