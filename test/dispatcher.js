@@ -1,10 +1,9 @@
 define([ 'intern!tdd',
         'intern/chai!',
         'intern/chai!expect',
-        '../dist/PEP',
-        'test/setup'
+        '../dist/PEP'
     ],
-    function (tdd, expect, pepde, chai) {
+    function (tdd, expect, pepde) {
 
     var suite = tdd.suite;
     var test = tdd.test;
