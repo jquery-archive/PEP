@@ -1,11 +1,15 @@
 define([ 'intern!tdd',
-    'intern/chai!',
-    'intern/chai!expect',
-    '../dist/PEP',
-    'test/setup'
+        'intern/chai!',
+        'intern/chai!expect',
+        '../dist/PEP',
+        'test/setup'
     ],
-    function (tdd, expect) {
-        with (tdd) {
+    function (tdd, expect, pepde, chai) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
+    var before = tdd.before;
+    var after = tdd.after;
 
 suite('Event Generation and Dispatching', function() {
 
@@ -22,7 +26,6 @@ suite('Event Generation and Dispatching', function() {
     document.body.removeChild(container);
   });
 
-  var pepde = PointerEventsPolyfill.dispatcher.eventSources;
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
     if (!HAS_MS) {
       expect(pepde).to.have.property('mouse');
@@ -99,5 +102,4 @@ suite('Event Generation and Dispatching', function() {
   }); */
 });
 
-}
 });

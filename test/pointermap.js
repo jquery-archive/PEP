@@ -2,11 +2,13 @@ define([ 'intern!tdd',
     'intern/chai!expect',
     '../dist/PEP'
    ],
-   function (tdd, expect) {
-       with (tdd) {
+   function (tdd, expect, pep) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
 
 suite('PointerMap', function() {
-  var PointerMap = PointerEventsPolyfill.PointerMap;
+  var PointerMap = pep.PointerMap;
   test('PointerMap has Map API', function() {
     var keys = [
       'set',
@@ -77,6 +79,4 @@ suite('PointerMap', function() {
   });
 });
 
-
-}
 });

@@ -2,8 +2,12 @@ define([ 'intern!tdd',
     'intern/chai!expect',
     '../dist/PEP'
    ],
-   function (tdd, expect) {
-       with (tdd) {
+   function (tdd, expect, pep) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
+    var before = tdd.before;
+    var after = tdd.after;
 
 suite('Pointer Capture', function() {
   var set = function(el, id) {
@@ -107,7 +111,7 @@ suite('Pointer Capture', function() {
 
     test('capture multiple pointers', function(done) {
       if (!HAS_MS) {
-        var pm = PointerEventsPolyfill.dispatcher.pointermap;
+        var pm = pep.dispatcher.pointermap;
         var ids = 0;
         function wait(e) {
           ids += e.pointerId;
@@ -132,6 +136,4 @@ suite('Pointer Capture', function() {
   });
 });
 
-
-}
 });

@@ -3,7 +3,9 @@ define([ 'intern!tdd',
     '../dist/PEP'
    ],
    function (tdd, expect) {
-       with (tdd) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
 
 suite('Constructor', function() {
 
@@ -57,5 +59,4 @@ suite('Constructor', function() {
 });
 
 
-}
 });

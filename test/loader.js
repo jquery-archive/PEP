@@ -2,16 +2,16 @@ define([ 'intern!tdd',
     'intern/chai!expect',
     '../dist/PEP'
    ],
-   function (tdd, expect) {
+   function (tdd, expect, pep) {
 
-var suite = tdd.suite;
-var test = tdd.test;
+    var suite = tdd.suite;
+    var test = tdd.test;
+
 suite('Loader', function() {
   test('PointerEvent', function() {
     expect(PointerEvent).to.be.ok;
   });
   suite('PointerEventsPolyfill modules', function() {
-    var pep = window.PointerEventsPolyfill;
     test('PointerEventsPolyfill', function() {
         expect(pep).to.be.ok;
     });
