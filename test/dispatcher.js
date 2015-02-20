@@ -3,7 +3,7 @@ define([ 'intern!tdd',
         'intern/chai!expect',
         '../dist/PEP'
     ],
-    function (tdd, expect, pepde) {
+    function (tdd, chai, expect, pep) {
 
     var suite = tdd.suite;
     var test = tdd.test;
@@ -24,6 +24,8 @@ suite('Event Generation and Dispatching', function() {
   after(function() {
     document.body.removeChild(container);
   });
+
+  var pepde = pep.dispatcher.eventSources;
 
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
     if (!HAS_MS) {
@@ -73,7 +75,7 @@ suite('Event Generation and Dispatching', function() {
 
   test('PointerEvents from mouse fire anywhere by default', function() {
     // move always fires
-    var cb = chai.spy();
+    var cb = chai.spy;
     var events = ['down', 'up', 'over', 'out', 'enter', 'leave'];
     eventSetup(events, container, cb);
     fire('down', container);
