@@ -1,14 +1,16 @@
 define([ 'intern!tdd',
         'intern/chai!',
         'intern/chai!expect',
+        'node_modules/chai-spies/chai-spies',
         '../dist/PEP'
     ],
-    function (tdd, chai, expect, pep) {
+    function (tdd, chai, expect, spies, pep) {
 
     var suite = tdd.suite;
     var test = tdd.test;
     var before = tdd.before;
     var after = tdd.after;
+    chai.use(spies);
 
 suite('Event Generation and Dispatching', function() {
 
@@ -75,7 +77,7 @@ suite('Event Generation and Dispatching', function() {
 
   test('PointerEvents from mouse fire anywhere by default', function() {
     // move always fires
-    var cb = chai.spy;
+    var cb = chai.spy();
     var events = ['down', 'up', 'over', 'out', 'enter', 'leave'];
     eventSetup(events, container, cb);
     fire('down', container);

@@ -13,7 +13,7 @@ suite('Loader', function() {
   });
   suite('PointerEventsPolyfill modules', function() {
     test('PointerEventsPolyfill', function() {
-        expect(pep).to.be.ok;
+      expect(pep).to.be.ok;
     });
     test('PointerMap', function() {
       expect(pep.PointerMap).to.be.ok;
