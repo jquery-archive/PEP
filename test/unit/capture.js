@@ -1,6 +1,7 @@
-define([ 'intern!tdd',
+define([ '../support/interface',
     'intern/chai!expect',
-    '../dist/PEP'
+    '../../dist/PEP',
+    './setup'
    ],
    function (tdd, expect, pep) {
 

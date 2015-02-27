@@ -1,6 +1,6 @@
 define([ 'intern!tdd',
     'intern/chai!expect',
-    '../dist/PEP'
+    '../../dist/PEP'
    ],
    function (tdd, expect, pep) {
 

@@ -2,7 +2,7 @@ define([ 'intern!tdd',
         'intern/chai!',
         'intern/chai!expect',
         'node_modules/chai-spies/chai-spies',
-        '../dist/PEP'
+        '../../dist/PEP'
     ],
     function (tdd, chai, expect, spies, pep) {
 

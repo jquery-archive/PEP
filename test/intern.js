@@ -38,7 +38,7 @@ define({
         packages: [ { name: 'app', location: '.' } ]
     },
     // Non-functional test suite(s) to run in each browser
-    suites: [ 'test/setup', 'test/loader', 'test/constructor', 'test/dispatcher', 'test/pointermap', 'test/capture' ],
+    suites: [ 'test/unit/loader', 'test/unit/constructor', 'test/unit/dispatcher', 'test/unit/pointermap', 'test/unit/capture' ],
     // Functional test suite(s) to run in each browser once non-functional tests are completed
     //functionalSuites: [ 'test/functional/index' ],
     // A regular expression matching URLs to files that should not be included in code coverage analysis
