@@ -1,3 +1,12 @@
+define([ 'intern!tdd',
+    'intern/chai!expect',
+    '../../dist/PEP'
+   ],
+   function (tdd, expect) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
+
 suite('Constructor', function() {
 
   test('PointerEvents have the required properties', function() {
@@ -47,4 +56,7 @@ suite('Constructor', function() {
     p = new PointerEvent('bar');
     expect(p.pressure).to.equal(0);
   });
+});
+
+
 });

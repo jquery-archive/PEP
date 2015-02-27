@@ -1,7 +1,21 @@
+define([ 'intern!tdd',
+        'intern/chai!',
+        'intern/chai!expect',
+        'node_modules/chai-spies/chai-spies',
+        '../../dist/PEP'
+    ],
+    function (tdd, chai, expect, spies, pep) {
+
+    var suite = tdd.suite;
+    var test = tdd.test;
+    var before = tdd.before;
+    var after = tdd.after;
+    chai.use(spies);
+
 suite('Event Generation and Dispatching', function() {
 
   var container, host, inner;
-  setup(function() {
+  before(function() {
     container = document.createElement('div');
     container.innerHTML = '<div id="host" touch-action="none"><div id="inner"></div></div>';
     host = container.firstElementChild;
@@ -9,11 +23,12 @@ suite('Event Generation and Dispatching', function() {
     document.body.appendChild(container);
   });
 
-  teardown(function() {
+  after(function() {
     document.body.removeChild(container);
   });
 
-  var pepde = PointerEventsPolyfill.dispatcher.eventSources;
+  var pepde = pep.dispatcher.eventSources;
+
   test('MouseEvents are a source when not in an MSPointerEvent environment', function() {
     if (!HAS_MS) {
       expect(pepde).to.have.property('mouse');
@@ -88,4 +103,6 @@ suite('Event Generation and Dispatching', function() {
     // this will fire twice in mouse environment, and four times in MSPointerEvents
     expect(cb).to.have.been.called.exactly(navigator.msPointerEnabled ? 4 : 2);
   }); */
+});
+
 });
