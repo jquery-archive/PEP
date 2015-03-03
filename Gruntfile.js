@@ -2,6 +2,7 @@ module.exports = function(grunt) {
 
 grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-karma');
+grunt.loadNpmTasks('grunt-git-authors');
 
 var version = require('./package').version;
 var header =

@@ -1,16 +1,16 @@
 Authors ordered by first contribution
 
 Daniel Freedman <dfreedm@google.com>
-Steve Orvell <sorvell@google.com>
-Frankie Fu <frankiefu@yahoo.com>
-Scott J. Miles <sjmiles@google.com>
 Boris Smus <boris@smus.com>
 Yvonne Yip <ykyyip@google.com>
 Erik Arvidsson <arv@chromium.org>
 Eric Bidelman <ebidel@gmail.com>
 Kris Borchers <kris.borchers@gmail.com>
+Scott J. Miles <sjmiles@google.com>
 Scott González <scott.gonzalez@gmail.com>
+Steve Orvell <sorvell@google.com>
 Rick Byers <rb-github@rbyers.net>
 Günter Zöchbauer <guenter@gzoechbauer.com>
 Tom Buckley <tbuckley89@gmail.com>
 Addy Osmani <addyosmani@gmail.com>
+龙天 <wyvernnot@gmail.com>

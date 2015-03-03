@@ -7,20 +7,21 @@
     "test": "test"
   },
   "devDependencies": {
-    "mocha": "*",
     "chai": "^1.9.1",
     "chai-spies": "^0.5.1",
     "esperanto": "^0.6.6",
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "^0.4.0",
-    "karma": "~0.12.0",
-    "karma-mocha": "*",
-    "karma-ie-launcher": "*",
-    "karma-script-launcher": "*",
-    "karma-crbot-reporter": "*",
+    "grunt-git-authors": "^3.0.0",
     "grunt-karma": "*",
+    "karma": "~0.12.0",
+    "karma-crbot-reporter": "*",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-ie-launcher": "*",
+    "karma-mocha": "*",
     "karma-safari-launcher": "~0.1.1",
-    "karma-firefox-launcher": "^0.1.3"
+    "karma-script-launcher": "*",
+    "mocha": "*"
   },
   "scripts": {
     "test": "grunt test"
