@@ -1,6 +1,6 @@
 {
   "name": "PEP",
-  "version": "0.0.0",
+  "version": "0.3.0-pre",
   "description": "Polyfill of the PointerEvents W3C spec",
   "author": {
     "name": "jQuery Foundation and other contributors",
