@@ -1,0 +1,7 @@
+{
+	"browser": true,
+	"expr": true,
+	"predef": [ "define" ],
+	"undef": true,
+	"unused": true
+}
