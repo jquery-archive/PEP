@@ -48,9 +48,12 @@ module.exports = function(grunt) {
       entry: '../pointerevents.js'
     }).then(function (bundle) {
       var umd = bundle.toUmd({
-        name: 'PointerEventsPolyfill'
+        name: 'PointerEventsPolyfill',
+        sourceMap: true,
+        sourceMapFile: 'dist/PEP.js'
       });
       grunt.file.write('dist/PEP.js', header + umd.code);
+      grunt.file.write('dist/PEP.js.map', umd.map.toString());
     }).then(
       function() {
         grunt.log.ok();
