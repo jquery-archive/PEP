@@ -3,9 +3,7 @@ define([ 'intern!tdd' ], function (tdd) {
     return function () {
       var promise = testFn.apply(this, arguments);
 
-      // testFn.length is checked ONLY to ensure we wrap functions that
-      // were written to receive a `done` function so they can be fixed
-      if (promise && promise.then || this.isAsync || testFn.length > 0) {
+      if (promise && promise.then || this.isAsync) {
         var dfd = this.async();
 
         if (promise && promise !== dfd.promise) {
