@@ -1,5 +1,5 @@
 {
-  "name": "PEP",
+  "name": "pepjs",
   "version": "0.3.0-pre",
   "description": "Polyfill of the PointerEvents W3C spec",
   "author": {
