@@ -1,6 +1,6 @@
 {
   "name": "pepjs",
-  "main": "dist/PEP.js",
+  "main": "dist/pep.js",
   "homepage": "https://github.com/jquery/PEP",
   "authors": [
     "jQuery Foundation and other contributors"

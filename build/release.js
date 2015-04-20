@@ -12,8 +12,8 @@ Release.define( {
 	generateArtifacts: function( callback ) {
 		Release.exec( "grunt" );
 		callback( [
-			"dist/PEP.js",
-			"dist/PEP.min.js"
+			"dist/pep.js",
+			"dist/pep.min.js"
 		] );
 	}
 } );
