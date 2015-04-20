@@ -75,7 +75,7 @@ By default, no PointerEvents are sent from an element. This maximizes possibilit
 1. Run the build script
   - `grunt`
 1. Place the built script in the document head
-  - `<script src="PEP/dist/PEP.js"></script>`
+  - `<script src="PEP/dist/pep.js"></script>`
 1. Set up your event listeners
 1. You're Done!
 

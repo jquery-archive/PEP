@@ -17,8 +17,8 @@ module.exports = function(grunt) {
           preserveComments: 'some'
         },
         nonull: true,
-        dest: 'dist/PEP.min.js',
-        src: 'dist/PEP.js'
+        dest: 'dist/pep.min.js',
+        src: 'dist/pep.js'
       }
     },
     intern: {
@@ -50,10 +50,10 @@ module.exports = function(grunt) {
       var umd = bundle.toUmd({
         name: 'PointerEventsPolyfill',
         sourceMap: true,
-        sourceMapFile: 'dist/PEP.js'
+        sourceMapFile: 'dist/pep.js'
       });
-      grunt.file.write('dist/PEP.js', header + umd.code);
-      grunt.file.write('dist/PEP.js.map', umd.map.toString());
+      grunt.file.write('dist/pep.js', header + umd.code);
+      grunt.file.write('dist/pep.js.map', umd.map.toString());
     }).then(
       function() {
         grunt.log.ok();
