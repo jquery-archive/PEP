@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width user-scalable=no">
+    <title>PointerEvent scrolling sample</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body, html {
+        margin: 0;
+        height: 100%;
+        position: relative;
+      }
+      #scroller {
+        height: 400px;
+        width: 100%;
+        border: 2px solid red;
+        overflow: auto;
+      }
+      #big {
+        height: 1000px;
+        width: 1000px;
+      }
+      .holder {
+        width: 100%;
+        height: 20px;
+      }
+      .inner {
+        padding: 0 5px;
+        text-align: center;
+      }
+      button {
+        height: 100px;
+        width: 100px;
+      }
+    </style>
+    <script src="https://code.jquery.com/pep/0.3.0/pep.js"></script>
+  </head>
+  <body>
+    <div id="scroller">
+      <div id="big"></div>
+    </div>
+    <br>
+    <button onclick="x()">Pan-X</button>
+    <button onclick="y()">Pan-Y</button>
+    <button onclick="scroll()">Scroll</button>
+    <button onclick="none()">None</button>
+    <script>
+      var size = 50;
+      for (var i = 0; i < size; i++) {
+        var holder = document.createElement('div');
+        holder.classList.add('holder');
+        for (var j = 0; j < size; j++) {
+          var e = document.createElement('span');
+          e.textContent = i + ',' + j;
+          e.classList.add('inner');
+          holder.appendChild(e);
+        }
+        big.appendChild(holder);
+      }
+      function x() {
+        scroller.setAttribute('touch-action', 'pan-x');
+      }
+      function y() {
+        scroller.setAttribute('touch-action', 'pan-y');
+      }
+      function scroll() {
+        scroller.setAttribute('touch-action', 'auto');
+      }
+      function none() {
+        scroller.setAttribute('touch-action', 'none');
+      }
+      [
+        'pointerdown',
+        'pointerup',
+        'pointermove',
+        'pointercancel'
+      ].forEach(function(e) {
+        document.addEventListener(e, function(e) {
+          console.log(e.type, e.target, e.clientX, e.clientY);
+        });
+      });
+    </script>
+  </body>
+</html>
