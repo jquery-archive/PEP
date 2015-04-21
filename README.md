@@ -60,6 +60,10 @@ By default, no Pointer Events are sent from an element. This maximizes possibili
 1. Set up your event listeners
 1. You're done!
 
+### Samples
+
+Check out some of the samples at http://jquery.github.io/PEP/.
+
 ## Polyfill Limitations
 
 ### touch-action
