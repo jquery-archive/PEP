@@ -13,7 +13,7 @@ define({
   loader: {
     packages: [
       { name: 'chai-spies', location: 'node_modules/chai-spies', main: 'chai-spies' },
-      { name: 'pep', location: 'dist', main: 'PEP' },
+      { name: 'pep', location: 'dist', main: 'pep' },
       { name: 'tests', location: 'tests' }
     ]
   },
