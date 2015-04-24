@@ -395,3 +395,9 @@ try {
 } catch (e) {
 }
 // vim: set expandtab shiftwidth=4 tabstop=4:
+
+// PEP customization
+document.write("<script src='/dist/pep.js'></script>");
+add_completion_callback(function(tests /*, status */) {
+    window.w3cTests = tests;
+});
