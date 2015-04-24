@@ -25,6 +25,10 @@ define({
     'tests/unit/loader',
     'tests/unit/pointermap'
   ],
-  functionalSuites: [],
-  excludeInstrumentation: /^(?:node_modules|tests)\//
+  functionalSuites: [
+
+    // 'tests/functional/pointerevent_button_attribute_mouse-manual',
+    'tests/functional/pointerevent_capture_mouse-manual'
+  ],
+  excludeInstrumentation: /^(?:node_modules|tests|pointerevents|resources)\//
 });

@@ -15,6 +15,7 @@
 	"esnext": true,
 
 	"globals": {
+		"add_completion_callback": false,
 		"define": false,
 		"PointerEvent": true
 	}
