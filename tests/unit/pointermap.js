@@ -32,9 +32,6 @@ define([
       }
       expect(p.pointers()).to.equal(1);
     });
-    test('PointerMap .get', function() {
-      var p = new PointerMap();
-    });
     test('PointerMap .pointers', function() {
       var p = new PointerMap();
       expect(p.pointers).to.be.a('function');

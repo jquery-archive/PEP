@@ -111,11 +111,4 @@ Installer.prototype = {
   }
 };
 
-if (!MO) {
-  Installer.prototype.watchSubtree = function() {
-    console.warn('PointerEventsPolyfill: MutationObservers not found, ' +
-      'touch-action will not be dynamically detected');
-  };
-}
-
 export default Installer;
