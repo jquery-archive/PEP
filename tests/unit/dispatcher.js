@@ -4,7 +4,7 @@ define([
   'intern/chai!expect',
   '../support/setup',
   'pep'
-], function (tdd, chai, expect, util, pep) {
+], function(tdd, chai, expect, util, pep) {
   var HAS_MS = util.HAS_MS;
   var HAS_TOUCH = util.HAS_TOUCH;
   var correctTarget = util.correctTarget;
@@ -51,7 +51,7 @@ define([
     });
 
     test('MouseEvent makes a PointerEvent', function() {
-      var cb = function(e){
+      var cb = function(e) {
         expect(e.type).to.equal('pointermove');
       };
       eventSetup('move', container, cb);
@@ -60,7 +60,7 @@ define([
     });
 
     test('Mouse generated PointerEvents have pointerId 1', function() {
-      var handler = function (e) {
+      var handler = function(e) {
         expect(e.pointerId).to.equal(1);
       };
       eventSetup('move', host, handler);
@@ -79,9 +79,10 @@ define([
     });
 
     test('PointerEvents from mouse fire anywhere by default', function() {
+
       // move always fires
       var cb = chai.spy();
-      var events = ['down', 'up', 'over', 'out', 'enter', 'leave'];
+      var events = [ 'down', 'up', 'over', 'out', 'enter', 'leave' ];
       eventSetup(events, container, cb);
       fire('down', container);
       fire('over', container);
@@ -92,7 +93,8 @@ define([
     });
 
     // TODO(dfreedman) rework test with touch events
-    /* test('PointerEvents from touch will fire anywhere after a down in a touch-action: none area', function() {
+    /*
+      test('touch will fire events anywhere after a down in a touch-action: none area', function() {
       fire('down', host);
       var cb = chai.spy();
       eventSetup(['over', 'enter'], container, cb);
@@ -105,6 +107,7 @@ define([
       eventRemove(['over', 'enter'], container, cb);
       // this will fire twice in mouse environment, and four times in MSPointerEvents
       expect(cb).to.have.been.called.exactly(navigator.msPointerEnabled ? 4 : 2);
-    }); */
+    });
+    */
   });
 });

@@ -3,7 +3,7 @@ define([
   'intern/chai!expect',
   '../support/setup',
   'pep'
-], function (tdd, expect, util, pep) {
+], function(tdd, expect, util, pep) {
   var HAS_MS = util.HAS_MS;
   var fire = util.fire;
   var prep = util.prep;
@@ -39,11 +39,11 @@ define([
     });
 
     test('setPointerCapture throw exceptions when the pointerId is not on screen', function() {
-      expect(function(){ set(host); }).to.throw(/InvalidPointerId/);
+      expect(function() { set(host); }).to.throw(/InvalidPointerId/);
     });
 
     test('releasePointerCapture throws exception when the pointerId is not on screen', function() {
-      expect(function(){ release(host); }).to.throw(/InvalidPointerId/);
+      expect(function() { release(host); }).to.throw(/InvalidPointerId/);
     });
 
     suite('pointercapture events', function() {
@@ -72,7 +72,7 @@ define([
         fire('up', host);
       });
 
-      test('pointerup fires a lostpointercapture event for the element capturing that pointerId', function() {
+      test('pointerup fires lostpointercapture for the capturing element', function() {
         if (HAS_MS) {
           this.skip('this test disabled for MSPointerEvents due to flakiness');
         }
@@ -114,7 +114,7 @@ define([
       });
 
       test('capture multiple pointers', function() {
-        this.skip('This test is broken and breaks "PointerEvents from mouse fire anywhere by default"');
+        this.skip('This test breaks "PointerEvents from mouse fire anywhere by default"');
 
         if (HAS_MS) {
           this.skip('this test disabled for MSPointerEvents due to flakiness');
@@ -131,11 +131,11 @@ define([
           }
         }
         host.addEventListener('gotpointercapture', wait);
-        var e = new pep.PointerEvent('pointerdown', {pointerId: 1});
+        var e = new pep.PointerEvent('pointerdown', { pointerId: 1 });
         pm.set(1, e);
         host.dispatchEvent(e);
         set(host, 1);
-        e = new pep.PointerEvent('pointerdown', {pointerId: 2});
+        e = new pep.PointerEvent('pointerdown', { pointerId: 2 });
         pm.set(2, e);
         host.dispatchEvent(e);
         set(host, 2);

@@ -2,7 +2,7 @@ define([
   '../support/tdd',
   'intern/chai!expect',
   'pep'
-], function (tdd, expect, pep) {
+], function(tdd, expect, pep) {
   var suite = tdd.suite;
   var test = tdd.test;
 
