@@ -1,14 +1,15 @@
 import dispatcher from 'dispatcher';
 
 var pointermap = dispatcher.pointermap;
+
 // radius around touchend that swallows mouse events
 var DEDUP_DIST = 25;
 
-var WHICH_TO_BUTTONS = [0, 1, 4, 2];
+var WHICH_TO_BUTTONS = [ 0, 1, 4, 2 ];
 
 var HAS_BUTTONS = false;
 try {
-  HAS_BUTTONS = new MouseEvent('test', {buttons: 1}).buttons === 1;
+  HAS_BUTTONS = new MouseEvent('test', { buttons: 1 }).buttons === 1;
 } catch (e) {}
 
 // handler block for native mouse events
@@ -29,13 +30,17 @@ var mouseEvents = {
     dispatcher.unlisten(target, this.events);
   },
   lastTouches: [],
+
   // collide with the global mouse listener
   isEventSimulatedFromTouch: function(inEvent) {
     var lts = this.lastTouches;
-    var x = inEvent.clientX, y = inEvent.clientY;
-    for (var i = 0, l = lts.length, t; i < l && (t = lts[i]); i++) {
+    var x = inEvent.clientX;
+    var y = inEvent.clientY;
+    for (var i = 0, l = lts.length, t; i < l && (t = lts[ i ]); i++) {
+
       // simulated mouse events will be swallowed near a primary touchend
-      var dx = Math.abs(x - t.x), dy = Math.abs(y - t.y);
+      var dx = Math.abs(x - t.x);
+      var dy = Math.abs(y - t.y);
       if (dx <= DEDUP_DIST && dy <= DEDUP_DIST) {
         return true;
       }
@@ -43,6 +48,7 @@ var mouseEvents = {
   },
   prepareEvent: function(inEvent) {
     var e = dispatcher.cloneEvent(inEvent);
+
     // forward mouse preventDefault
     var pd = e.preventDefault;
     e.preventDefault = function() {
@@ -53,13 +59,14 @@ var mouseEvents = {
     e.isPrimary = true;
     e.pointerType = this.POINTER_TYPE;
     if (!HAS_BUTTONS) {
-      e.buttons = WHICH_TO_BUTTONS[e.which] || 0;
+      e.buttons = WHICH_TO_BUTTONS[ e.which ] || 0;
     }
     return e;
   },
   mousedown: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var p = pointermap.has(this.POINTER_ID);
+
       // TODO(dfreedman) workaround for some elements not sending mouseup
       // http://crbug/149091
       if (p) {
@@ -104,7 +111,7 @@ var mouseEvents = {
     this.cleanupMouse();
   },
   cleanupMouse: function() {
-    pointermap['delete'](this.POINTER_ID);
+    pointermap.delete(this.POINTER_ID);
   }
 };
 

@@ -8,11 +8,13 @@ var findTarget = targeting.findTarget.bind(targeting);
 var allShadows = targeting.allShadows.bind(targeting);
 var pointermap = dispatcher.pointermap;
 var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
+
 // This should be long enough to ignore compat mouse events made by touch
 var DEDUP_TIMEOUT = 2500;
 var CLICK_COUNT_TIMEOUT = 200;
 var ATTRIB = 'touch-action';
 var INSTALLER;
+
 // The presence of touch event handlers blocks scrolling, and so we must be careful to
 // avoid adding handlers unnecessarily.  Chrome plans to add a touch-action-delay property
 // (crbug.com/329559) to address this, and once we have that we can opt-in to a simpler
@@ -39,6 +41,7 @@ var touchEvents = {
     if (HAS_TOUCH_ACTION_DELAY) {
       dispatcher.unlisten(target, this.events);
     } else {
+
       // TODO(dfreedman): is it worth it to disconnect the MO?
     }
   },
@@ -48,6 +51,7 @@ var touchEvents = {
     if (st) {
       el._scrollType = st;
       dispatcher.listen(el, this.events);
+
       // set touch-action on shadows as well
       allShadows(el).forEach(function(s) {
         s._scrollType = st;
@@ -58,6 +62,7 @@ var touchEvents = {
   elementRemoved: function(el) {
     el._scrollType = undefined;
     dispatcher.unlisten(el, this.events);
+
     // remove touch-action from shadow
     allShadows(el).forEach(function(s) {
       s._scrollType = undefined;
@@ -68,6 +73,7 @@ var touchEvents = {
     var a = el.getAttribute(ATTRIB);
     var st = this.touchActionToScrollType(a);
     var oldSt = this.touchActionToScrollType(oldValue);
+
     // simply update scrollType if listeners are already established
     if (st && oldSt) {
       el._scrollType = st;
@@ -105,10 +111,11 @@ var touchEvents = {
     return this.firstTouch === inTouch.identifier;
   },
   setPrimaryTouch: function(inTouch) {
+
     // set primary touch if there no pointers, or the only pointer is the mouse
     if (pointermap.pointers() === 0 || (pointermap.pointers() === 1 && pointermap.has(1))) {
       this.firstTouch = inTouch.identifier;
-      this.firstXY = {X: inTouch.clientX, Y: inTouch.clientY};
+      this.firstXY = { X: inTouch.clientX, Y: inTouch.clientY };
       this.scrolling = false;
       this.cancelResetClickCount();
     }
@@ -144,11 +151,12 @@ var touchEvents = {
   touchToPointer: function(inTouch) {
     var cte = this.currentTouchEvent;
     var e = dispatcher.cloneEvent(inTouch);
+
     // Spec specifies that pointerId 1 is reserved for Mouse.
     // Touch identifiers can start at 0.
     // Add 2 to the touch identifier for compatibility.
     var id = e.pointerId = inTouch.identifier + 2;
-    e.target = captureInfo[id] || findTarget(e);
+    e.target = captureInfo[ id ] || findTarget(e);
     e.bubbles = true;
     e.cancelable = true;
     e.detail = this.clickCount;
@@ -159,6 +167,7 @@ var touchEvents = {
     e.pressure = inTouch.webkitForce || inTouch.force || 0.5;
     e.isPrimary = this.isPrimaryTouch(inTouch);
     e.pointerType = this.POINTER_TYPE;
+
     // forward touch preventDefaults
     var self = this;
     e.preventDefault = function() {
@@ -172,10 +181,11 @@ var touchEvents = {
     var tl = inEvent.changedTouches;
     this.currentTouchEvent = inEvent;
     for (var i = 0, t; i < tl.length; i++) {
-      t = tl[i];
+      t = tl[ i ];
       inFunction.call(this, this.touchToPointer(t));
     }
   },
+
   // For single axis scrollers, determines whether the element should emit
   // pointer events or behave as a scroller
   shouldScroll: function(inEvent) {
@@ -183,18 +193,22 @@ var touchEvents = {
       var ret;
       var scrollAxis = inEvent.currentTarget._scrollType;
       if (scrollAxis === 'none') {
+
         // this element is a touch-action: none, should never scroll
         ret = false;
       } else if (scrollAxis === 'XY') {
+
         // this element should always scroll
         ret = true;
       } else {
-        var t = inEvent.changedTouches[0];
+        var t = inEvent.changedTouches[ 0 ];
+
         // check the intended scroll axis, and other axis
         var a = scrollAxis;
         var oa = scrollAxis === 'Y' ? 'X' : 'Y';
-        var da = Math.abs(t['client' + a] - this.firstXY[a]);
-        var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
+        var da = Math.abs(t[ 'client' + a ] - this.firstXY[ a ]);
+        var doa = Math.abs(t[ 'client' + oa ] - this.firstXY[ oa ]);
+
         // if delta in the scroll axis > delta other axis, scroll instead of
         // making events
         ret = da >= doa;
@@ -204,12 +218,13 @@ var touchEvents = {
     }
   },
   findTouch: function(inTL, inId) {
-    for (var i = 0, l = inTL.length, t; i < l && (t = inTL[i]); i++) {
+    for (var i = 0, l = inTL.length, t; i < l && (t = inTL[ i ]); i++) {
       if (t.identifier === inId) {
         return true;
       }
     }
   },
+
   // In some instances, a touchstart can happen without a touchend. This
   // leaves the pointermap in a broken state.
   // Therefore, on every touchstart, we remove the touches that did not fire a
@@ -218,11 +233,13 @@ var touchEvents = {
   // pointercancel for this "abandoned" touch
   vacuumTouches: function(inEvent) {
     var tl = inEvent.touches;
+
     // pointermap.pointers() should be < tl.length here, as the touchstart has not
     // been processed yet.
     if (pointermap.pointers() >= tl.length) {
       var d = [];
       pointermap.forEach(function(value, key) {
+
         // Never remove pointerId == 1, which is mouse.
         // Touch identifiers are 2 smaller than their pointerId, which is the
         // index in pointermap.
@@ -236,7 +253,7 @@ var touchEvents = {
   },
   touchstart: function(inEvent) {
     this.vacuumTouches(inEvent);
-    this.setPrimaryTouch(inEvent.changedTouches[0]);
+    this.setPrimaryTouch(inEvent.changedTouches[ 0 ]);
     this.dedupSynthMouse(inEvent);
     if (!this.scrolling) {
       this.clickCount++;
@@ -267,6 +284,7 @@ var touchEvents = {
   moveOverOut: function(inPointer) {
     var event = inPointer;
     var pointer = pointermap.get(event.pointerId);
+
     // a finger drifted off the screen, ignore it
     if (!pointer) {
       return;
@@ -277,12 +295,14 @@ var touchEvents = {
     if (outEvent && outTarget !== event.target) {
       outEvent.relatedTarget = event.target;
       event.relatedTarget = outTarget;
+
       // recover from retargeting by shadow
       outEvent.target = outTarget;
       if (event.target) {
         dispatcher.leaveOut(outEvent);
         dispatcher.enterOver(event);
       } else {
+
         // clean up case when finger leaves the screen
         event.target = outTarget;
         event.relatedTarget = null;
@@ -314,19 +334,22 @@ var touchEvents = {
     this.cleanUpPointer(inPointer);
   },
   cleanUpPointer: function(inPointer) {
-    pointermap['delete'](inPointer.pointerId);
+    pointermap.delete(inPointer.pointerId);
     this.removePrimaryPointer(inPointer);
   },
+
   // prevent synth mouse events from creating pointer events
   dedupSynthMouse: function(inEvent) {
     var lts = mouseEvents.lastTouches;
-    var t = inEvent.changedTouches[0];
+    var t = inEvent.changedTouches[ 0 ];
+
     // only the primary finger will synth mouse events
     if (this.isPrimaryTouch(t)) {
+
       // remember x/y of last touch
-      var lt = {x: t.clientX, y: t.clientY};
+      var lt = { x: t.clientX, y: t.clientY };
       lts.push(lt);
-      var fn = (function(lts, lt){
+      var fn = (function(lts, lt) {
         var i = lts.indexOf(lt);
         if (i > -1) {
           lts.splice(i, 1);
@@ -338,7 +361,8 @@ var touchEvents = {
 };
 
 if (!HAS_TOUCH_ACTION_DELAY) {
-  INSTALLER = new Installer(touchEvents.elementAdded, touchEvents.elementRemoved, touchEvents.elementChanged, touchEvents);
+  INSTALLER = new Installer(touchEvents.elementAdded, touchEvents.elementRemoved,
+    touchEvents.elementChanged, touchEvents);
 }
 
 export default touchEvents;

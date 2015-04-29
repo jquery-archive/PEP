@@ -1,6 +1,6 @@
-define([ 'intern!tdd' ], function (tdd) {
+define([ 'intern!tdd' ], function(tdd) {
   function catchGlobalErrors(testFn) {
-    return function () {
+    return function() {
       var promise = testFn.apply(this, arguments);
 
       if (promise && promise.then || this.isAsync) {
@@ -11,14 +11,14 @@ define([ 'intern!tdd' ], function (tdd) {
         }
 
         var originalHandler = window.onerror;
-        window.onerror = function (message, url, line, column, error) {
+        window.onerror = function(message, url, line, column, error) {
           dfd.reject(error || new Error(message));
         };
 
-        return dfd.promise.then(function (returnValue) {
+        return dfd.promise.then(function(returnValue) {
           window.onerror = originalHandler;
           return returnValue;
-        }, function (error) {
+        }, function(error) {
           window.onerror = originalHandler;
           throw error;
         });
@@ -27,7 +27,7 @@ define([ 'intern!tdd' ], function (tdd) {
   }
 
   var autoCapturingTdd = Object.create(tdd);
-  autoCapturingTdd.test = function (name, test) {
+  autoCapturingTdd.test = function(name, test) {
     tdd.test(name, catchGlobalErrors(test));
   };
 

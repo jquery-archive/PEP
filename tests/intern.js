@@ -5,6 +5,7 @@ define({
   environments: [
     { browserName: 'chrome' },
     { browserName: 'internet explorer', version: [ '11', '10', '9' ] },
+
     // TODO: Remove old Firefox version once BrowserStack has Selenium 2.45.0
     { browserName: 'firefox', version: '34' }
   ],

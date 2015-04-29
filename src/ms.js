@@ -1,7 +1,8 @@
 import dispatcher from 'dispatcher';
 
 var pointermap = dispatcher.pointermap;
-var HAS_BITMAP_TYPE = window.MSPointerEvent && typeof window.MSPointerEvent.MSPOINTER_TYPE_MOUSE === 'number';
+var HAS_BITMAP_TYPE = window.MSPointerEvent &&
+  typeof window.MSPointerEvent.MSPOINTER_TYPE_MOUSE === 'number';
 var msEvents = {
   events: [
     'MSPointerDown',
@@ -30,12 +31,12 @@ var msEvents = {
     var e = inEvent;
     if (HAS_BITMAP_TYPE) {
       e = dispatcher.cloneEvent(inEvent);
-      e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
+      e.pointerType = this.POINTER_TYPES[ inEvent.pointerType ];
     }
     return e;
   },
   cleanup: function(id) {
-    pointermap['delete'](id);
+    pointermap.delete(id);
   },
   MSPointerDown: function(inEvent) {
     pointermap.set(inEvent.pointerId, inEvent);

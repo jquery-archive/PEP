@@ -2,7 +2,7 @@ define([
   '../support/tdd',
   'intern/chai!expect',
   'pep'
-], function (tdd, expect, pep) {
+], function(tdd, expect, pep) {
   var suite = tdd.suite;
   var test = tdd.test;
 
@@ -11,6 +11,7 @@ define([
       expect(pep.PointerEvent).to.be.ok;
     });
     suite('PointerEventsPolyfill modules', function() {
+
 //      var pep = window.PointerEventsPolyfill;
       test('PointerEventsPolyfill', function() {
         expect(pep).to.be.ok;
