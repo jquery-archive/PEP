@@ -35,7 +35,7 @@ export default {
   searchRoot: function(inRoot, x, y) {
     if (inRoot) {
       var t = inRoot.elementFromPoint(x, y);
-      var st, sr, os;
+      var st, sr;
 
       // is element a shadow host?
       sr = this.targetingShadow(t);
@@ -68,7 +68,7 @@ export default {
     }
 
     // the owner element is expected to be a Document or ShadowRoot
-    if (s.nodeType != Node.DOCUMENT_NODE && s.nodeType != Node.DOCUMENT_FRAGMENT_NODE) {
+    if (s.nodeType !== Node.DOCUMENT_NODE && s.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
       s = document;
     }
     return s;

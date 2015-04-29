@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-git-authors');
   grunt.loadNpmTasks('grunt-jscs');
@@ -62,6 +63,12 @@ module.exports = function(grunt) {
           src: allFiles
         }
       }
+    },
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      main: allFiles
     }
   });
 
@@ -96,7 +103,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', [ 'lint', 'build', 'uglify' ]);
-  grunt.registerTask('lint', [ 'jscs:lint' ]);
+  grunt.registerTask('lint', [ 'jscs:lint', 'jshint' ]);
   grunt.registerTask('test', [ 'intern:pointerevents' ]);
   grunt.registerTask('ci', [ 'lint', 'build', 'intern:ci' ]);
 };

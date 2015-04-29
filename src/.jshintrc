@@ -11,7 +11,7 @@
 	"undef": true,
 	"unused": true,
 
-	"node": true,
+	"browser": true,
 	"esnext": true,
 
 	"globals": {

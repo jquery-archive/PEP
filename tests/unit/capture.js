@@ -125,7 +125,7 @@ define([
         var ids = 0;
         function wait(e) {
           ids += e.pointerId;
-          if (ids == 3) {
+          if (ids === 3) {
             pm.clear();
             dfd.resolve();
           }

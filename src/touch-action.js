@@ -23,7 +23,6 @@ var attrib2css = [
 var styles = '';
 
 // only install stylesheet if the browser has touch action support
-var head = document.head;
 var hasNativePE = window.PointerEvent || window.MSPointerEvent;
 
 // only add shadow selectors if shadowdom is supported

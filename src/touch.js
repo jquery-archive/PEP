@@ -7,7 +7,6 @@ var captureInfo = dispatcher.captureInfo;
 var findTarget = targeting.findTarget.bind(targeting);
 var allShadows = targeting.allShadows.bind(targeting);
 var pointermap = dispatcher.pointermap;
-var touchMap = Array.prototype.map.call.bind(Array.prototype.map);
 
 // This should be long enough to ignore compat mouse events made by touch
 var DEDUP_TIMEOUT = 2500;
@@ -261,7 +260,7 @@ var touchEvents = {
     }
   },
   overDown: function(inPointer) {
-    var p = pointermap.set(inPointer.pointerId, {
+    pointermap.set(inPointer.pointerId, {
       target: inPointer.target,
       out: inPointer,
       outTarget: inPointer.target
