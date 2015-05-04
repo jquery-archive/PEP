@@ -59,8 +59,8 @@ function PointerEvent(inType, inDict) {
   // define inherited MouseEvent properties
   // skip bubbles and cancelable since they're set above in initEvent()
   for (var i = 2, p; i < MOUSE_PROPS.length; i++) {
-    p = MOUSE_PROPS[ i ];
-    e[ p ] = inDict[ p ] || MOUSE_DEFAULTS[ i ];
+    p = MOUSE_PROPS[i];
+    e[p] = inDict[p] || MOUSE_DEFAULTS[i];
   }
   e.buttons = inDict.buttons || 0;
 

@@ -5,7 +5,7 @@ var pointermap = dispatcher.pointermap;
 // radius around touchend that swallows mouse events
 var DEDUP_DIST = 25;
 
-var WHICH_TO_BUTTONS = [ 0, 1, 4, 2 ];
+var WHICH_TO_BUTTONS = [0, 1, 4, 2];
 
 var HAS_BUTTONS = false;
 try {
@@ -36,7 +36,7 @@ var mouseEvents = {
     var lts = this.lastTouches;
     var x = inEvent.clientX;
     var y = inEvent.clientY;
-    for (var i = 0, l = lts.length, t; i < l && (t = lts[ i ]); i++) {
+    for (var i = 0, l = lts.length, t; i < l && (t = lts[i]); i++) {
 
       // simulated mouse events will be swallowed near a primary touchend
       var dx = Math.abs(x - t.x);
@@ -59,7 +59,7 @@ var mouseEvents = {
     e.isPrimary = true;
     e.pointerType = this.POINTER_TYPE;
     if (!HAS_BUTTONS) {
-      e.buttons = WHICH_TO_BUTTONS[ e.which ] || 0;
+      e.buttons = WHICH_TO_BUTTONS[e.which] || 0;
     }
     return e;
   },

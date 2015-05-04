@@ -120,17 +120,17 @@ var dispatcher = {
     var newEvents = s.events;
     if (newEvents) {
       newEvents.forEach(function(e) {
-        if (s[ e ]) {
-          this.eventMap[ e ] = s[ e ].bind(s);
+        if (s[e]) {
+          this.eventMap[e] = s[e].bind(s);
         }
       }, this);
-      this.eventSources[ name ] = s;
+      this.eventSources[name] = s;
       this.eventSourceList.push(s);
     }
   },
   register: function(element) {
     var l = this.eventSourceList.length;
-    for (var i = 0, es; (i < l) && (es = this.eventSourceList[ i ]); i++) {
+    for (var i = 0, es; (i < l) && (es = this.eventSourceList[i]); i++) {
 
       // call eventsource register
       es.register.call(es, element);
@@ -138,7 +138,7 @@ var dispatcher = {
   },
   unregister: function(element) {
     var l = this.eventSourceList.length;
-    for (var i = 0, es; (i < l) && (es = this.eventSourceList[ i ]); i++) {
+    for (var i = 0, es; (i < l) && (es = this.eventSourceList[i]); i++) {
 
       // call eventsource register
       es.unregister.call(es, element);
@@ -204,7 +204,7 @@ var dispatcher = {
       return;
     }
     var type = inEvent.type;
-    var fn = this.eventMap && this.eventMap[ type ];
+    var fn = this.eventMap && this.eventMap[type];
     if (fn) {
       fn(inEvent);
     }
@@ -243,7 +243,7 @@ var dispatcher = {
   makeEvent: function(inType, inEvent) {
 
     // relatedTarget must be null if pointer is captured
-    if (this.captureInfo[ inEvent.pointerId ]) {
+    if (this.captureInfo[inEvent.pointerId]) {
       inEvent.relatedTarget = null;
     }
     var e = new PointerEvent(inType, inEvent);
@@ -270,15 +270,15 @@ var dispatcher = {
     var eventCopy = Object.create(null);
     var p;
     for (var i = 0; i < CLONE_PROPS.length; i++) {
-      p = CLONE_PROPS[ i ];
-      eventCopy[ p ] = inEvent[ p ] || CLONE_DEFAULTS[ i ];
+      p = CLONE_PROPS[i];
+      eventCopy[p] = inEvent[p] || CLONE_DEFAULTS[i];
 
       // Work around SVGInstanceElement shadow tree
       // Return the <use> element that is represented by the instance for Safari, Chrome, IE.
       // This is the behavior implemented by Firefox.
       if (HAS_SVG_INSTANCE && (p === 'target' || p === 'relatedTarget')) {
-        if (eventCopy[ p ] instanceof SVGElementInstance) {
-          eventCopy[ p ] = eventCopy[ p ].correspondingUseElement;
+        if (eventCopy[p] instanceof SVGElementInstance) {
+          eventCopy[p] = eventCopy[p].correspondingUseElement;
         }
       }
     }
@@ -295,13 +295,13 @@ var dispatcher = {
 
     // if pointer capture is set, route all events for the specified pointerId
     // to the capture target
-    return this.captureInfo[ inEvent.pointerId ] || inEvent._target;
+    return this.captureInfo[inEvent.pointerId] || inEvent._target;
   },
   setCapture: function(inPointerId, inTarget) {
-    if (this.captureInfo[ inPointerId ]) {
+    if (this.captureInfo[inPointerId]) {
       this.releaseCapture(inPointerId);
     }
-    this.captureInfo[ inPointerId ] = inTarget;
+    this.captureInfo[inPointerId] = inTarget;
     var e = document.createEvent('Event');
     e.initEvent('gotpointercapture', true, false);
     e.pointerId = inPointerId;
@@ -312,12 +312,12 @@ var dispatcher = {
     this.asyncDispatchEvent(e);
   },
   releaseCapture: function(inPointerId) {
-    var t = this.captureInfo[ inPointerId ];
+    var t = this.captureInfo[inPointerId];
     if (t) {
       var e = document.createEvent('Event');
       e.initEvent('lostpointercapture', true, false);
       e.pointerId = inPointerId;
-      this.captureInfo[ inPointerId ] = undefined;
+      this.captureInfo[inPointerId] = undefined;
       document.removeEventListener('pointerup', this.implicitRelease);
       document.removeEventListener('pointercancel', this.implicitRelease);
       e._target = t;
