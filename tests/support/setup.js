@@ -43,7 +43,7 @@ define([
   exports.eventSetup = function eventSetup(shortType, target, callback) {
     if (Array.isArray(shortType)) {
       for (var i = 0; i < shortType.length; i++) {
-        eventSetup(shortType[ i ], target, callback);
+        eventSetup(shortType[i], target, callback);
       }
       return;
     }
@@ -54,7 +54,7 @@ define([
   exports.eventRemove = function eventRemove(shortType, target, callback) {
     if (Array.isArray(shortType)) {
       for (var i = 0; i < shortType.length; i++) {
-        eventRemove(shortType[ i ], target, callback);
+        eventRemove(shortType[i], target, callback);
       }
       return;
     }

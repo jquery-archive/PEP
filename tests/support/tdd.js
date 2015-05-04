@@ -1,4 +1,4 @@
-define([ 'intern!tdd' ], function(tdd) {
+define(['intern!tdd'], function(tdd) {
   function catchGlobalErrors(testFn) {
     return function() {
       var promise = testFn.apply(this, arguments);

@@ -12,9 +12,9 @@ module.exports = function(grunt) {
     ' * Copyright jQuery Foundation and other contributors | http://jquery.org/license\n' +
     ' */\n';
 
-  var srcFiles = [ 'pointerevents.js', 'src/**/*.js' ];
-  var buildFiles = [ 'Gruntfile.js', 'build/**/*.js' ];
-  var testFiles = [ 'tests/**/*.js' ];
+  var srcFiles = ['pointerevents.js', 'src/**/*.js'];
+  var buildFiles = ['Gruntfile.js', 'build/**/*.js'];
+  var testFiles = ['tests/**/*.js'];
   var allFiles = srcFiles.concat(buildFiles).concat(testFiles);
 
   grunt.initConfig({
@@ -102,8 +102,8 @@ module.exports = function(grunt) {
     );
   });
 
-  grunt.registerTask('default', [ 'lint', 'build', 'uglify' ]);
-  grunt.registerTask('lint', [ 'jscs:lint', 'jshint' ]);
-  grunt.registerTask('test', [ 'intern:pointerevents' ]);
-  grunt.registerTask('ci', [ 'lint', 'build', 'intern:ci' ]);
+  grunt.registerTask('default', ['lint', 'build', 'uglify']);
+  grunt.registerTask('lint', ['jscs:lint', 'jshint']);
+  grunt.registerTask('test', ['intern:pointerevents']);
+  grunt.registerTask('ci', ['lint', 'build', 'intern:ci']);
 };

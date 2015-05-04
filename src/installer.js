@@ -18,7 +18,7 @@ var OBSERVER_INIT = {
   childList: true,
   attributes: true,
   attributeOldValue: true,
-  attributeFilter: [ 'touch-action' ]
+  attributeFilter: ['touch-action']
 };
 
 function Installer(add, remove, changed, binder) {

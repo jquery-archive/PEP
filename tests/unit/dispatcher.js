@@ -82,7 +82,7 @@ define([
 
       // move always fires
       var cb = chai.spy();
-      var events = [ 'down', 'up', 'over', 'out', 'enter', 'leave' ];
+      var events = ['down', 'up', 'over', 'out', 'enter', 'leave'];
       eventSetup(events, container, cb);
       fire('down', container);
       fire('over', container);

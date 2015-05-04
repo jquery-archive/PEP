@@ -155,7 +155,7 @@ var touchEvents = {
     // Touch identifiers can start at 0.
     // Add 2 to the touch identifier for compatibility.
     var id = e.pointerId = inTouch.identifier + 2;
-    e.target = captureInfo[ id ] || findTarget(e);
+    e.target = captureInfo[id] || findTarget(e);
     e.bubbles = true;
     e.cancelable = true;
     e.detail = this.clickCount;
@@ -180,7 +180,7 @@ var touchEvents = {
     var tl = inEvent.changedTouches;
     this.currentTouchEvent = inEvent;
     for (var i = 0, t; i < tl.length; i++) {
-      t = tl[ i ];
+      t = tl[i];
       inFunction.call(this, this.touchToPointer(t));
     }
   },
@@ -200,13 +200,13 @@ var touchEvents = {
         // this element should always scroll
         ret = true;
       } else {
-        var t = inEvent.changedTouches[ 0 ];
+        var t = inEvent.changedTouches[0];
 
         // check the intended scroll axis, and other axis
         var a = scrollAxis;
         var oa = scrollAxis === 'Y' ? 'X' : 'Y';
-        var da = Math.abs(t[ 'client' + a ] - this.firstXY[ a ]);
-        var doa = Math.abs(t[ 'client' + oa ] - this.firstXY[ oa ]);
+        var da = Math.abs(t['client' + a] - this.firstXY[a]);
+        var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
 
         // if delta in the scroll axis > delta other axis, scroll instead of
         // making events
@@ -217,7 +217,7 @@ var touchEvents = {
     }
   },
   findTouch: function(inTL, inId) {
-    for (var i = 0, l = inTL.length, t; i < l && (t = inTL[ i ]); i++) {
+    for (var i = 0, l = inTL.length, t; i < l && (t = inTL[i]); i++) {
       if (t.identifier === inId) {
         return true;
       }
@@ -252,7 +252,7 @@ var touchEvents = {
   },
   touchstart: function(inEvent) {
     this.vacuumTouches(inEvent);
-    this.setPrimaryTouch(inEvent.changedTouches[ 0 ]);
+    this.setPrimaryTouch(inEvent.changedTouches[0]);
     this.dedupSynthMouse(inEvent);
     if (!this.scrolling) {
       this.clickCount++;
@@ -340,7 +340,7 @@ var touchEvents = {
   // prevent synth mouse events from creating pointer events
   dedupSynthMouse: function(inEvent) {
     var lts = mouseEvents.lastTouches;
-    var t = inEvent.changedTouches[ 0 ];
+    var t = inEvent.changedTouches[0];
 
     // only the primary finger will synth mouse events
     if (this.isPrimaryTouch(t)) {

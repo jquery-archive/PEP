@@ -31,7 +31,7 @@ var msEvents = {
     var e = inEvent;
     if (HAS_BITMAP_TYPE) {
       e = dispatcher.cloneEvent(inEvent);
-      e.pointerType = this.POINTER_TYPES[ inEvent.pointerType ];
+      e.pointerType = this.POINTER_TYPES[inEvent.pointerType];
     }
     return e;
   },

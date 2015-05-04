@@ -16,6 +16,7 @@
     "disallowSpacesInFunction": {
         "beforeOpeningRoundBrace": true
     },
+    "disallowSpacesInsideBrackets": true,
     "disallowSpacesInsideParentheses": true,
     "disallowTrailingComma": true,
     "disallowTrailingWhitespace": true,
@@ -68,7 +69,6 @@
     "requireSpacesInFunction": {
         "beforeOpeningCurlyBrace": true
     },
-    "requireSpacesInsideBrackets": true,
     "requireSpacesInsideObjectBrackets": "all",
     "validateLineBreaks": "LF"
 }
