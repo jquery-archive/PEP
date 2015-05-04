@@ -1,14 +1,12 @@
 define(function(require) {
 	var registerSuite = require('intern!object');
-	var w3cResults = require('../support/w3c-results');
-	var pollUntil = require('intern/dojo/node!leadfoot/helpers/pollUntil');
+	var w3cTest = require('../support/w3cTest');
 
 	registerSuite({
 		name: 'pointerevent_capture_mouse-manual',
 
 		main: function() {
-			return this.remote
-				.get(require.toUrl('pointerevents/pointerevent_capture_mouse-manual.html'))
+			return w3cTest(this.remote, 'pointerevent_capture_mouse-manual.html')
 				.findById('target0')
 					.moveMouseTo()
 				.end()
@@ -26,8 +24,7 @@ define(function(require) {
 					.moveMouseTo()
 					.releaseMouseButton()
 				.end()
-				.then(pollUntil(w3cResults.getResults, 1000))
-				.then(w3cResults.propagateResults);
+				.checkResults();
 		}
 	});
 });
