@@ -3,18 +3,18 @@ define([
   'intern/chai!assert',
   'chai-spies',
   'exports'
-], function (chai, assert, spies, exports) {
+], function(chai, assert, spies, exports) {
   chai.config.includeStack = true;
   chai.use(spies);
 
   exports.HAS_TOUCH = 'ontouchstart' in window;
   var HAS_MS = exports.HAS_MS = Boolean(navigator.msPointerEnabled);
 
-  exports.correctTarget = function (expected, actual) {
+  exports.correctTarget = function(expected, actual) {
     assert.strictEqual(actual, expected, 'target is incorrect');
   };
 
-  exports.fire = function (shortType, target, callback) {
+  exports.fire = function(shortType, target, callback) {
     if (target) {
       if (callback) {
         prep('pointer' + shortType, target, callback);
@@ -62,7 +62,7 @@ define([
     target.removeEventListener(type, callback);
   };
 
-  var prep = exports.prep = function (event, target, callback) {
+  var prep = exports.prep = function(event, target, callback) {
     var fn = function() {
       callback();
       target.removeEventListener(event, fn);

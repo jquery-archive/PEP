@@ -5,6 +5,7 @@ import touchEvents from 'touch';
 import msEvents from 'ms';
 
 export function applyPolyfill() {
+
   // only activate if this platform does not have pointer events
   if (!window.PointerEvent) {
     window.PointerEvent = PointerEvent;

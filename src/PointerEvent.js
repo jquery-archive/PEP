@@ -10,7 +10,7 @@
  * @constructor
  * @param {String} inType The type of the event to create.
  * @param {Object} [inDict] An optional dictionary of initial event properties.
- * @return {Event} A new PointerEvent of type `inType` and initialized with properties from `inDict`.
+ * @return {Event} A new PointerEvent of type `inType`, initialized with properties from `inDict`.
  */
 var MOUSE_PROPS = [
   'bubbles',
@@ -58,7 +58,7 @@ function PointerEvent(inType, inDict) {
 
   // define inherited MouseEvent properties
   // skip bubbles and cancelable since they're set above in initEvent()
-  for(var i = 2, p; i < MOUSE_PROPS.length; i++) {
+  for (var i = 2, p; i < MOUSE_PROPS.length; i++) {
     p = MOUSE_PROPS[i];
     e[p] = inDict[p] || MOUSE_DEFAULTS[i];
   }

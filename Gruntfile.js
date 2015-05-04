@@ -1,14 +1,21 @@
 module.exports = function(grunt) {
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-git-authors');
+  grunt.loadNpmTasks('grunt-jscs');
   grunt.loadNpmTasks('intern');
 
   var version = require('./package').version;
   var header =
     '/*!\n' +
     ' * PEP v' + version + ' | https://github.com/jquery/PEP\n' +
-    ' * Copyright jQuery Foundation and other contributors | http://jquery.org/license\n'+
+    ' * Copyright jQuery Foundation and other contributors | http://jquery.org/license\n' +
     ' */\n';
+
+  var srcFiles = ['pointerevents.js', 'src/**/*.js'];
+  var buildFiles = ['Gruntfile.js', 'build/**/*.js'];
+  var testFiles = ['tests/**/*.js'];
+  var allFiles = srcFiles.concat(buildFiles).concat(testFiles);
 
   grunt.initConfig({
     uglify: {
@@ -35,6 +42,33 @@ module.exports = function(grunt) {
           config: 'tests/intern'
         }
       }
+    },
+    jscs: {
+      lint: {
+        options: {
+          config: true,
+          esnext: true
+        },
+        files: {
+          src: allFiles
+        }
+      },
+      fix: {
+        options: {
+          config: true,
+          esnext: true,
+          fix: true
+        },
+        files: {
+          src: allFiles
+        }
+      }
+    },
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      main: allFiles
     }
   });
 
@@ -46,13 +80,15 @@ module.exports = function(grunt) {
     esperanto.bundle({
       base: 'src',
       entry: '../pointerevents.js'
-    }).then(function (bundle) {
+    }).then(function(bundle) {
       var umd = bundle.toUmd({
         name: 'PointerEventsPolyfill'
+
         // sourceMap: true,
         // sourceMapFile: 'dist/pep.js'
       });
       grunt.file.write('dist/pep.js', header + umd.code);
+
       // grunt.file.write('dist/pep.js.map', umd.map.toString());
     }).then(
       function() {
@@ -66,7 +102,8 @@ module.exports = function(grunt) {
     );
   });
 
-  grunt.registerTask('default', ['build', 'uglify']);
+  grunt.registerTask('default', ['lint', 'build', 'uglify']);
+  grunt.registerTask('lint', ['jscs:lint', 'jshint']);
   grunt.registerTask('test', ['intern:pointerevents']);
-  grunt.registerTask('ci', ['build', 'intern:ci']);
+  grunt.registerTask('ci', ['lint', 'build', 'intern:ci']);
 };

@@ -1,6 +1,6 @@
-module.exports = function( Release ) {
+module.exports = function(Release) {
 
-Release.define( {
+Release.define({
 	issueTracker: "github",
 	cdnPublish: "dist",
 	npmPublish: true,
@@ -9,13 +9,13 @@ Release.define( {
 		return "# " + Release.newVersion + " Changelog\n";
 	},
 
-	generateArtifacts: function( callback ) {
-		Release.exec( "grunt" );
-		callback( [
+	generateArtifacts: function(callback) {
+		Release.exec("grunt");
+		callback([
 			"dist/pep.js",
 			"dist/pep.min.js"
-		] );
+		]);
 	}
-} );
+});
 
 };

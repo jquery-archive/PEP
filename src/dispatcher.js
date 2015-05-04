@@ -1,6 +1,7 @@
 import PointerMap from 'pointermap';
 
 var CLONE_PROPS = [
+
   // MouseEvent
   'bubbles',
   'cancelable',
@@ -16,8 +17,10 @@ var CLONE_PROPS = [
   'metaKey',
   'button',
   'relatedTarget',
+
   // DOM Level 3
   'buttons',
+
   // PointerEvent
   'pointerId',
   'width',
@@ -28,6 +31,7 @@ var CLONE_PROPS = [
   'pointerType',
   'hwTimestamp',
   'isPrimary',
+
   // event instance
   'type',
   'target',
@@ -39,6 +43,7 @@ var CLONE_PROPS = [
 ];
 
 var CLONE_DEFAULTS = [
+
   // MouseEvent
   false,
   false,
@@ -54,8 +59,10 @@ var CLONE_DEFAULTS = [
   false,
   0,
   null,
+
   // DOM Level 3
   0,
+
   // PointerEvent
   0,
   0,
@@ -66,6 +73,7 @@ var CLONE_DEFAULTS = [
   '',
   0,
   false,
+
   // event instance
   '',
   null,
@@ -94,6 +102,7 @@ var dispatcher = {
   pointermap: new PointerMap(),
   eventMap: Object.create(null),
   captureInfo: Object.create(null),
+
   // Scope objects for native events.
   // This exists for ease of testing.
   eventSources: Object.create(null),
@@ -122,6 +131,7 @@ var dispatcher = {
   register: function(element) {
     var l = this.eventSourceList.length;
     for (var i = 0, es; (i < l) && (es = this.eventSourceList[i]); i++) {
+
       // call eventsource register
       es.register.call(es, element);
     }
@@ -129,6 +139,7 @@ var dispatcher = {
   unregister: function(element) {
     var l = this.eventSourceList.length;
     for (var i = 0, es; (i < l) && (es = this.eventSourceList[i]); i++) {
+
       // call eventsource register
       es.unregister.call(es, element);
     }
@@ -136,6 +147,7 @@ var dispatcher = {
   contains: /*scope.external.contains || */function(container, contained) {
     return container.contains(contained);
   },
+
   // EVENTS
   down: function(inEvent) {
     inEvent.bubbles = true;
@@ -181,8 +193,10 @@ var dispatcher = {
       this.enter(event);
     }
   },
+
   // LISTENER LOGIC
   eventHandler: function(inEvent) {
+
     // This is used to prevent multiple dispatch of pointerevents from
     // platform events. This can happen when two elements in different scopes
     // are set up to create pointer events, which is relevant to Shadow DOM.
@@ -196,12 +210,14 @@ var dispatcher = {
     }
     inEvent._handledByPE = true;
   },
+
   // set up event listeners
   listen: function(target, events) {
     events.forEach(function(e) {
       this.addEvent(target, e);
     }, this);
   },
+
   // remove event listeners
   unlisten: function(target, events) {
     events.forEach(function(e) {
@@ -214,6 +230,7 @@ var dispatcher = {
   removeEvent: /*scope.external.removeEvent || */function(target, eventName) {
     target.removeEventListener(eventName, this.boundHandler);
   },
+
   // EVENT CREATION AND TRACKING
   /**
    * Creates a new Event of type `inType`, based on the information in
@@ -224,6 +241,7 @@ var dispatcher = {
    * @return {Event} A PointerEvent of type `inType`
    */
   makeEvent: function(inType, inEvent) {
+
     // relatedTarget must be null if pointer is captured
     if (this.captureInfo[inEvent.pointerId]) {
       inEvent.relatedTarget = null;
@@ -235,6 +253,7 @@ var dispatcher = {
     e._target = e._target || inEvent.target;
     return e;
   },
+
   // make and dispatch an event in one call
   fireEvent: function(inType, inEvent) {
     var e = this.makeEvent(inType, inEvent);
@@ -248,10 +267,12 @@ var dispatcher = {
    *    properties.
    */
   cloneEvent: function(inEvent) {
-    var eventCopy = Object.create(null), p;
+    var eventCopy = Object.create(null);
+    var p;
     for (var i = 0; i < CLONE_PROPS.length; i++) {
       p = CLONE_PROPS[i];
       eventCopy[p] = inEvent[p] || CLONE_DEFAULTS[i];
+
       // Work around SVGInstanceElement shadow tree
       // Return the <use> element that is represented by the instance for Safari, Chrome, IE.
       // This is the behavior implemented by Firefox.
@@ -261,6 +282,7 @@ var dispatcher = {
         }
       }
     }
+
     // keep the semantics of preventDefault
     if (inEvent.preventDefault) {
       eventCopy.preventDefault = function() {
@@ -270,6 +292,7 @@ var dispatcher = {
     return eventCopy;
   },
   getTarget: function(inEvent) {
+
     // if pointer capture is set, route all events for the specified pointerId
     // to the capture target
     return this.captureInfo[inEvent.pointerId] || inEvent._target;

@@ -2,7 +2,7 @@
  * This module implements an map of pointer states
  */
 var USE_MAP = window.Map && window.Map.prototype.forEach;
-var POINTERS_FN = function(){ return this.size; };
+var POINTERS_FN = function() { return this.size; };
 function PointerMap() {
   if (USE_MAP) {
     var m = new Map();
@@ -27,7 +27,7 @@ PointerMap.prototype = {
   has: function(inId) {
     return this.keys.indexOf(inId) > -1;
   },
-  'delete': function(inId) {
+  delete: function(inId) {
     var i = this.keys.indexOf(inId);
     if (i > -1) {
       this.keys.splice(i, 1);
@@ -42,6 +42,7 @@ PointerMap.prototype = {
     this.keys.length = 0;
     this.values.length = 0;
   },
+
   // return value, key, map
   forEach: function(callback, thisArg) {
     this.values.forEach(function(v, i) {

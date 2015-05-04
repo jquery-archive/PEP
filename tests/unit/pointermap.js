@@ -2,7 +2,7 @@ define([
   '../support/tdd',
   'intern/chai!expect',
   'pep'
-], function (tdd, expect, pep) {
+], function(tdd, expect, pep) {
   var suite = tdd.suite;
   var test = tdd.test;
 
@@ -31,9 +31,6 @@ define([
         expect(p.values).to.have.length(1);
       }
       expect(p.pointers()).to.equal(1);
-    });
-    test('PointerMap .get', function() {
-      var p = new PointerMap();
     });
     test('PointerMap .pointers', function() {
       var p = new PointerMap();
