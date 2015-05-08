@@ -151,7 +151,7 @@ var touchEvents = {
     var cte = this.currentTouchEvent;
     var e = dispatcher.cloneEvent(inTouch);
 
-    // Spec specifies that pointerId 1 is reserved for Mouse.
+    // We reserve pointerId 1 for Mouse.
     // Touch identifiers can start at 0.
     // Add 2 to the touch identifier for compatibility.
     var id = e.pointerId = inTouch.identifier + 2;
