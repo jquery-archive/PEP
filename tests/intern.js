@@ -23,7 +23,7 @@ define({
     'tests/unit/constructor',
     'tests/unit/dispatcher',
     'tests/unit/loader',
-    'tests/unit/pointermap'
+    'tests/unit/map'
   ],
   functionalSuites: [
 

@@ -1,5 +1,5 @@
 import dispatcher from 'dispatcher';
-import PointerMap from 'pointermap';
+import Map from 'map';
 import Installer from 'installer';
 import targeting from 'targeting';
 import PointerEvent from 'PointerEvent';
@@ -15,6 +15,6 @@ export default {
   dispatcher: dispatcher,
   Installer: Installer,
   PointerEvent: PointerEvent,
-  PointerMap: PointerMap,
+  Map: Map,
   targetFinding: targeting
 };

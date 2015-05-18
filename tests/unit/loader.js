@@ -16,8 +16,8 @@ define([
       test('PointerEventsPolyfill', function() {
         expect(pep).to.be.ok;
       });
-      test('PointerMap', function() {
-        expect(pep.PointerMap).to.be.ok;
+      test('Map', function() {
+        expect(pep.Map).to.be.ok;
       });
       test('Dispatcher', function() {
         expect(pep.dispatcher).to.be.ok;
