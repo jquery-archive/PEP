@@ -2,55 +2,47 @@
  * This module implements an map of pointer states
  */
 var USE_MAP = window.Map && window.Map.prototype.forEach;
-var POINTERS_FN = function() { return this.size; };
 function PointerMap() {
-  if (USE_MAP) {
-    var m = new Map();
-    m.pointers = POINTERS_FN;
-    return m;
-  } else {
-    this.keys = [];
-    this.values = [];
-  }
+  return USE_MAP ? new Map() : new SparseArrayMap();
 }
 
-PointerMap.prototype = {
-  set: function(inId, inEvent) {
-    var i = this.keys.indexOf(inId);
-    if (i > -1) {
-      this.values[i] = inEvent;
-    } else {
-      this.keys.push(inId);
-      this.values.push(inEvent);
+function SparseArrayMap() {
+  this.array = [];
+  this.size = 0;
+}
+
+SparseArrayMap.prototype = {
+  set: function(k, v) {
+    if (v === undefined) {
+      return this.delete(k);
+    }
+    if (!this.has(k)) {
+      this.size++;
+    }
+    this.array[k] = v;
+  },
+  has: function(k) {
+    return this.array[k] !== undefined;
+  },
+  delete: function(k) {
+    if (this.has(k)) {
+      delete this.array[k];
+      this.size--;
     }
   },
-  has: function(inId) {
-    return this.keys.indexOf(inId) > -1;
-  },
-  delete: function(inId) {
-    var i = this.keys.indexOf(inId);
-    if (i > -1) {
-      this.keys.splice(i, 1);
-      this.values.splice(i, 1);
-    }
-  },
-  get: function(inId) {
-    var i = this.keys.indexOf(inId);
-    return this.values[i];
+  get: function(k) {
+    return this.array[k];
   },
   clear: function() {
-    this.keys.length = 0;
-    this.values.length = 0;
+    this.array.length = 0;
+    this.size = 0;
   },
 
   // return value, key, map
   forEach: function(callback, thisArg) {
-    this.values.forEach(function(v, i) {
-      callback.call(thisArg, v, this.keys[i], this);
+    return this.array.forEach(function(v, k) {
+      callback.call(thisArg, v, k, this);
     }, this);
-  },
-  pointers: function() {
-    return this.keys.length;
   }
 };
 

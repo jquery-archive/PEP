@@ -14,7 +14,7 @@ define([
         'get',
         'has',
         'delete',
-        'pointers',
+        'size',
         'clear',
         'forEach'
       ];
@@ -26,20 +26,16 @@ define([
     test('PointerMap .set', function() {
       var p = new PointerMap();
       p.set(1, true);
-      if (!window.Map || !(p instanceof Map)) {
-        expect(p.keys).to.have.length(1);
-        expect(p.values).to.have.length(1);
-      }
-      expect(p.pointers()).to.equal(1);
+      expect(p.size).to.equal(1);
     });
-    test('PointerMap .pointers', function() {
+    test('PointerMap .size', function() {
       var p = new PointerMap();
-      expect(p.pointers).to.be.a('function');
-      expect(p.pointers()).to.equal(0);
+      expect(p.size).to.be.a('number');
+      expect(p.size).to.equal(0);
       p.set(1, true);
-      expect(p.pointers()).to.equal(1);
+      expect(p.size).to.equal(1);
       p.set(1, false);
-      expect(p.pointers()).to.equal(1);
+      expect(p.size).to.equal(1);
     });
     test('PointerMap .has', function() {
       var p = new PointerMap();
@@ -51,16 +47,16 @@ define([
       var p = new PointerMap();
       p.set(1, true);
       p.set(2, false);
-      expect(p.pointers()).to.equal(2);
+      expect(p.size).to.equal(2);
       p.delete(1);
-      expect(p.pointers()).to.equal(1);
+      expect(p.size).to.equal(1);
       expect(p.get(2)).to.equal(false);
     });
     test('PointerMap .clear', function() {
       var p = new PointerMap();
       p.set(1, true);
       p.clear();
-      expect(p.pointers()).to.equal(0);
+      expect(p.size).to.equal(0);
     });
     test('PointerMap .forEach', function() {
       var p = new PointerMap();
