@@ -1,20 +1,17 @@
 /**
  * This module implements an map of pointer states
  */
-var USE_MAP = window.Map && window.Map.prototype.forEach;
-var POINTERS_FN = function() { return this.size; };
-function PointerMap() {
-  if (USE_MAP) {
-    var m = new Map();
-    m.pointers = POINTERS_FN;
-    return m;
+var USE_EXISTING_MAP = window.Map && window.Map.prototype.forEach;
+function Map() {
+  if (USE_EXISTING_MAP) {
+    return new window.Map();
   } else {
     this.keys = [];
     this.values = [];
   }
 }
 
-PointerMap.prototype = {
+Map.prototype = {
   set: function(inId, inEvent) {
     var i = this.keys.indexOf(inId);
     if (i > -1) {
@@ -49,9 +46,9 @@ PointerMap.prototype = {
       callback.call(thisArg, v, this.keys[i], this);
     }, this);
   },
-  pointers: function() {
+  get size() {
     return this.keys.length;
   }
 };
 
-export default PointerMap;
+export default Map;

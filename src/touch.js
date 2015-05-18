@@ -112,7 +112,7 @@ var touchEvents = {
   setPrimaryTouch: function(inTouch) {
 
     // set primary touch if there no pointers, or the only pointer is the mouse
-    if (pointermap.pointers() === 0 || (pointermap.pointers() === 1 && pointermap.has(1))) {
+    if (pointermap.size === 0 || (pointermap.size === 1 && pointermap.has(1))) {
       this.firstTouch = inTouch.identifier;
       this.firstXY = { X: inTouch.clientX, Y: inTouch.clientY };
       this.scrolling = false;
@@ -233,9 +233,9 @@ var touchEvents = {
   vacuumTouches: function(inEvent) {
     var tl = inEvent.touches;
 
-    // pointermap.pointers() should be < tl.length here, as the touchstart has not
+    // pointermap.size should be < tl.length here, as the touchstart has not
     // been processed yet.
-    if (pointermap.pointers() >= tl.length) {
+    if (pointermap.size >= tl.length) {
       var d = [];
       pointermap.forEach(function(value, key) {
 

@@ -1,4 +1,4 @@
-import PointerMap from 'pointermap';
+import Map from 'map';
 
 var CLONE_PROPS = [
 
@@ -99,7 +99,7 @@ var HAS_SVG_INSTANCE = (typeof SVGElementInstance !== 'undefined');
  *   - pointercancel: a pointer will no longer generate events
  */
 var dispatcher = {
-  pointermap: new PointerMap(),
+  pointermap: new Map(),
   eventMap: Object.create(null),
   captureInfo: Object.create(null),
 
