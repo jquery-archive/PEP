@@ -85,6 +85,13 @@ var CLONE_DEFAULTS = [
   0
 ];
 
+var BOUNDARY_EVENTS = {
+  'pointerover': 1,
+  'pointerout': 1,
+  'pointerenter': 1,
+  'pointerleave': 1
+};
+
 var HAS_SVG_INSTANCE = (typeof SVGElementInstance !== 'undefined');
 
 /**
@@ -299,10 +306,13 @@ var dispatcher = {
     return eventCopy;
   },
   getTarget: function(inEvent) {
-
-    // if pointer capture is set, route all events for the specified pointerId
-    // to the capture target
-    return this.captureInfo[inEvent.pointerId] || inEvent._target;
+    var capture = this.captureInfo[inEvent.pointerId];
+    if (!capture) {
+      return inEvent._target;
+    }
+    if (inEvent._target === capture || !(inEvent.type in BOUNDARY_EVENTS)) {
+      return capture;
+    }
   },
   setCapture: function(inPointerId, inTarget) {
     if (this.captureInfo[inPointerId]) {
