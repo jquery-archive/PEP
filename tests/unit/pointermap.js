@@ -18,9 +18,9 @@ define([
         'clear',
         'forEach'
       ];
-      var e = expect(PointerMap.prototype);
+      var p = new PointerMap();
       keys.forEach(function(k) {
-        e.to.have.ownProperty(k);
+        expect(p).to.have.property(k);
       });
     });
     test('PointerMap .set', function() {

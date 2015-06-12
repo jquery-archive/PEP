@@ -2,9 +2,7 @@
  * This module implements an map of pointer states
  */
 var USE_MAP = window.Map && window.Map.prototype.forEach;
-function PointerMap() {
-  return USE_MAP ? new Map() : new SparseArrayMap();
-}
+var PointerMap = USE_MAP ? Map : SparseArrayMap;
 
 function SparseArrayMap() {
   this.array = [];
