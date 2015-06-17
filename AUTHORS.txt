@@ -14,3 +14,4 @@ Günter Zöchbauer <guenter@gzoechbauer.com>
 Tom Buckley <tbuckley89@gmail.com>
 Addy Osmani <addyosmani@gmail.com>
 龙天 <wyvernnot@gmail.com>
+Colin Snover <github.com@zetafleet.com>

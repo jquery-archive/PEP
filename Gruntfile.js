@@ -1,68 +1,109 @@
 module.exports = function(grunt) {
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-git-authors');
+  grunt.loadNpmTasks('grunt-jscs');
+  grunt.loadNpmTasks('intern');
 
-grunt.loadNpmTasks('grunt-contrib-uglify');
-grunt.loadNpmTasks('grunt-karma');
-grunt.loadNpmTasks('grunt-git-authors');
+  var version = require('./package').version;
+  var header =
+    '/*!\n' +
+    ' * PEP v' + version + ' | https://github.com/jquery/PEP\n' +
+    ' * Copyright jQuery Foundation and other contributors | http://jquery.org/license\n' +
+    ' */\n';
 
-var version = require('./package').version;
-var header =
-  '/*!\n' +
-  ' * PEP v' + version + ' | https://github.com/jquery/PEP\n' +
-  ' * Copyright jQuery Foundation and other contributors | http://jquery.org/license\n'+
-  ' */\n';
+  var srcFiles = ['pointerevents.js', 'src/**/*.js'];
+  var buildFiles = ['Gruntfile.js', 'build/**/*.js'];
+  var testFiles = ['tests/**/*.js'];
+  var allFiles = srcFiles.concat(buildFiles).concat(testFiles);
 
-grunt.initConfig({
-  uglify: {
-    pointerevents: {
+  grunt.initConfig({
+    uglify: {
+      pointerevents: {
+        options: {
+          preserveComments: 'some'
+        },
+        nonull: true,
+        dest: 'dist/pep.min.js',
+        src: 'dist/pep.js'
+      }
+    },
+    intern: {
       options: {
-        preserveComments: 'some'
+        runType: 'runner'
       },
-      nonull: true,
-      dest: 'dist/PEP.min.js',
-      src: 'dist/PEP.js'
-    }
-  },
-  karma: {
-    options: {
-      configFile: 'karma.conf.js',
-      keepalive: true
+      pointerevents: {
+        options: {
+          config: 'tests/intern-local'
+        }
+      },
+      ci: {
+        options: {
+          config: 'tests/intern'
+        }
+      }
     },
-    pointerevents: {
+    jscs: {
+      lint: {
+        options: {
+          config: true,
+          esnext: true
+        },
+        files: {
+          src: allFiles
+        }
+      },
+      fix: {
+        options: {
+          config: true,
+          esnext: true,
+          fix: true
+        },
+        files: {
+          src: allFiles
+        }
+      }
     },
-    buildbot: {
-      reporters: 'crbot',
-      logLevel: 'OFF'
+    jshint: {
+      options: {
+        jshintrc: true
+      },
+      main: allFiles
     }
-  }
-});
+  });
 
-grunt.registerTask('build', function() {
-  var esperanto = require('esperanto');
-  var done = this.async();
+  grunt.registerTask('build', function() {
+    var esperanto = require('esperanto');
+    var done = this.async();
 
-  grunt.log.write('Building PEP...');
-  esperanto.bundle({
-    base: 'src',
-    entry: '../pointerevents.js'
-  }).then(function (bundle) {
-    var umd = bundle.toUmd({
-      name: 'PointerEventsPolyfill'
-    });
-    grunt.file.write('dist/PEP.js', header + umd.code);
-  }).then(
-    function() {
-      grunt.log.ok();
-      done();
-    },
-    function(error) {
-      grunt.log.error();
-      done(error);
-    }
-  );
-});
+    grunt.log.write('Building PEP...');
+    esperanto.bundle({
+      base: 'src',
+      entry: '../pointerevents.js'
+    }).then(function(bundle) {
+      var umd = bundle.toUmd({
+        name: 'PointerEventsPolyfill'
 
-grunt.registerTask('default', ['build', 'uglify']);
-grunt.registerTask('test', ['override-chrome-launcher', 'karma:pointerevents']);
-grunt.registerTask('test-buildbot', ['override-chrome-launcher', 'karma:buildbot']);
+        // sourceMap: true,
+        // sourceMapFile: 'dist/pep.js'
+      });
+      grunt.file.write('dist/pep.js', header + umd.code);
 
+      // grunt.file.write('dist/pep.js.map', umd.map.toString());
+    }).then(
+      function() {
+        grunt.log.ok();
+        done();
+      },
+      function(error) {
+        grunt.log.error();
+        done(error);
+      }
+    );
+  });
+
+  grunt.registerTask('default', ['lint', 'build', 'uglify']);
+  grunt.registerTask('lint', ['jscs:lint', 'jshint']);
+  grunt.registerTask('test', ['intern:pointerevents']);
+  grunt.registerTask('ci', ['lint', 'build', 'intern:ci']);
 };
