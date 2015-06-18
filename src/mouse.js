@@ -64,7 +64,7 @@ var mouseEvents = {
   prepareButtonsForMove: function(e, inEvent) {
     var p = pointermap.get(this.POINTER_ID);
     e.buttons = p ? p.buttons : 0;
-    inEvent.buttons = e.buttons
+    inEvent.buttons = e.buttons;
   },
   mousedown: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
@@ -75,27 +75,28 @@ var mouseEvents = {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) {
         e.buttons = BUTTON_TO_BUTTONS[e.button];
-        if (p) e.buttons |= p.buttons;
-        inEvent.buttons = e.buttons
+        if (p) { e.buttons |= p.buttons; }
+        inEvent.buttons = e.buttons;
       }
       pointermap.set(this.POINTER_ID, inEvent);
-      if(!p)
+      if (!p) {
         dispatcher.down(e);
-      else
+      } else {
         dispatcher.move(e);
+      }
     }
   },
   mousemove: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var e = this.prepareEvent(inEvent);
-      if (!HAS_BUTTONS) this.prepareButtonsForMove(e, inEvent);
+      if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
       dispatcher.move(e);
     }
   },
   mouseup: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var p = pointermap.get(this.POINTER_ID);
-      if (!p) return;
+      if (!p) { return; }
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) {
         var up = BUTTON_TO_BUTTONS[e.button];
@@ -103,7 +104,7 @@ var mouseEvents = {
         inEvent.buttons = e.buttons;
       }
       pointermap.set(this.POINTER_ID, inEvent);
-      if(e.buttons === 0){
+      if (e.buttons === 0) {
         this.cleanupMouse();
         dispatcher.up(e);
       } else {
@@ -114,14 +115,14 @@ var mouseEvents = {
   mouseover: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var e = this.prepareEvent(inEvent);
-      if (!HAS_BUTTONS) this.prepareButtonsForMove(e, inEvent);
+      if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
       dispatcher.enterOver(e);
     }
   },
   mouseout: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var e = this.prepareEvent(inEvent);
-      if (!HAS_BUTTONS) this.prepareButtonsForMove(e, inEvent);
+      if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
       dispatcher.leaveOut(e);
     }
   },
