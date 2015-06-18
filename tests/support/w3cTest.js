@@ -3,19 +3,15 @@ define(function(require) {
 	var pollUntil = require('intern/dojo/node!leadfoot/helpers/pollUntil');
 	var assert = require('intern/chai!assert');
 
+	var path = require('intern/dojo/node!path');
+	var testPkg = require('intern/dojo/node!../../package')['web-platform-tests'];
+	var testPath = path.normalize(testPkg.path);
+
 	function w3cTest(remote, url) {
 		return new CustomCommand(remote)
-			.get(require.toUrl('pointerevents/' + url))
+			.get(require.toUrl(path.join(testPath, url)))
 			.setExecuteAsyncTimeout(1000)
-			.executeAsync(loadPep)
 			.execute(addTestHook);
-	}
-
-	function loadPep(done) {
-		var script = document.createElement('script');
-		script.src = '/dist/pep.js';
-		script.onload = done;
-		document.body.appendChild(script);
 	}
 
 	function addTestHook() {
@@ -23,14 +19,14 @@ define(function(require) {
 		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 		add_completion_callback(function(tests /*, status */) {
 
-		// jscs:enable
+			// jscs:enable
 			window.w3cTests = tests;
 		});
 	}
 
 	function propagateResults(tests) {
 		var statusToCode = {};
-		["PASS", "FAIL", "TIMEOUT", "NOTRUN"].forEach(function(status) {
+		['PASS', 'FAIL', 'TIMEOUT', 'NOTRUN'].forEach(function(status) {
 			statusToCode[status] = tests[0][status];
 		});
 
