@@ -96,11 +96,13 @@ var mouseEvents = {
   mouseup: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var p = pointermap.get(this.POINTER_ID);
-      if (!p) { return; }
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) {
         var up = BUTTON_TO_BUTTONS[e.button];
-        e.buttons = p.buttons & ~up;
+        // Produces wrong state of buttons in Browsers without `buttons` support
+        // when a mouse button that was pressed outside the document is released
+        // inside and other buttons are still pressed down.
+        e.buttons = p ? p.buttons & ~up : 0;
         inEvent.buttons = e.buttons;
       }
       pointermap.set(this.POINTER_ID, inEvent);
