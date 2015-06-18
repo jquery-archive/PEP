@@ -99,6 +99,7 @@ var mouseEvents = {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) {
         var up = BUTTON_TO_BUTTONS[e.button];
+
         // Produces wrong state of buttons in Browsers without `buttons` support
         // when a mouse button that was pressed outside the document is released
         // inside and other buttons are still pressed down.
