@@ -1,5 +1,5 @@
 /**
- * This module implements an map of pointer states
+ * This module implements a map of pointer states
  */
 var USE_MAP = window.Map && window.Map.prototype.forEach;
 var PointerMap = USE_MAP ? Map : SparseArrayMap;
