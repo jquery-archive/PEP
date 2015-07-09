@@ -28,7 +28,31 @@ define({
   functionalSuites: [
 
     // 'tests/functional/pointerevent_button_attribute_mouse-manual',
-    'tests/functional/pointerevent_capture_mouse-manual'
+    'tests/functional/pointerevent_capture_mouse-manual',
+    'tests/functional/pointerevent_capture_suppressing_mouse-manual',
+
+    // 'tests/functional/pointerevent_change-touch-action-onpointerdown_touch-manual',
+    'tests/functional/pointerevent_constructor',
+
+    // 'tests/functional/pointerevent_gotpointercapture_before_first_pointerevent-manual',
+    // 'tests/functional/pointerevent_lostpointercapture_for_disconnected_node-manual',
+    'tests/functional/pointerevent_lostpointercapture_is_first-manual',
+
+    // 'tests/functional/pointerevent_pointercancel_touch-manual',
+    'tests/functional/pointerevent_pointerdown-manual',
+    'tests/functional/pointerevent_pointerenter_does_not_bubble-manual',
+    'tests/functional/pointerevent_pointerenter-manual',
+
+    // 'tests/functional/pointerevent_pointerleave_after_pointercancel_touch-manual',
+    // 'tests/functional/pointerevent_pointerleave_after_pointerup_nohover-manual',
+
+    'tests/functional/pointerevent_pointerleave_descendant_over-manual',
+    'tests/functional/pointerevent_pointerleave_descendants-manual',
+
+    // 'tests/functional/pointerevent_pointerleave_does_not_bubble-manual',
+    // 'tests/functional/pointerevent_pointerleave_mouse-manual',
+
+    'tests/functional/pointerevent_pointermove_isprimary_same_as_pointerdown-manual'
   ],
   excludeInstrumentation: /^(?:node_modules|tests)\//
 });
