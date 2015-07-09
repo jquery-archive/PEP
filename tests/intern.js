@@ -27,8 +27,9 @@ define({
   ],
   functionalSuites: [
 
-    // 'tests/functional/pointerevent_button_attribute_mouse-manual',
-    'tests/functional/pointerevent_capture_mouse-manual'
+    //'tests/functional/pointerevent_button_attribute_mouse-manual',
+    'tests/functional/pointerevent_capture_mouse-manual',
+    'tests/functional/pointerevent_capture_suppressing_mouse-manual'
   ],
   excludeInstrumentation: /^(?:node_modules|tests)\//
 });
