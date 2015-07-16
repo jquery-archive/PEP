@@ -40,7 +40,7 @@ Installer.prototype = {
     // a removal without an insertion when a node is redistributed among
     // shadows. Since it all ends up correct in the document, watching only
     // the document will yield the correct mutations to watch.
-    if (targeting.canTarget(target)) {
+    if (this.observer && targeting.canTarget(target)) {
       this.observer.observe(target, OBSERVER_INIT);
     }
   },
