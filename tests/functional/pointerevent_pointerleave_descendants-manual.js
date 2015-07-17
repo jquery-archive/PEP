@@ -1,7 +1,7 @@
 define(function(require) {
 	var registerSuite = require('intern!object');
 	var w3cTest = require('../support/w3cTest');
-	var name = 'pointerevent_capture_suppressing_mouse-manual';
+	var name = 'pointerevent_pointerleave_descendants-manual';
 
 	registerSuite({
 		name: name,
@@ -9,18 +9,10 @@ define(function(require) {
 		main: function() {
 			return w3cTest(this.remote, name + '.html')
 				.findById('target0')
-					.moveMouseTo(50, 50)
-					.end()
-				.findById('target1')
-					.moveMouseTo(50, 30)
-					.end()
-				.findById('btnCapture')
-					.moveMouseTo(50, 4)
-					.pressMouseButton(0)
+					.moveMouseTo(50, 8)
 					.end()
 				.findByTagName('body')
-					.moveMouseTo(50, 0)
-					.releaseMouseButton(0)
+					.moveMouseTo(50, 30)
 					.end()
 				.checkResults();
 		}

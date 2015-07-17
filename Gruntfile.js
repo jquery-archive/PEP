@@ -20,7 +20,12 @@ module.exports = function(grunt) {
   var srcFiles = ['pointerevents.js', 'src/**/*.js'];
   var buildFiles = ['Gruntfile.js', 'build/**/*.js'];
 
-  var testFiles = ['tests/**/*.js', '!' + path.join(w3cPath, '**', '*.js')];
+  var testFiles = [
+    'tests/**/*.js',
+    '!tests/support/pep_support.js',
+    '!' + path.join(w3cPath, '**', '*.js')
+  ];
+
   var allFiles = srcFiles.concat(buildFiles).concat(testFiles);
 
   grunt.initConfig({
