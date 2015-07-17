@@ -122,6 +122,9 @@ function modFile(source) {
 	// Ensure pep.js is the first script loaded on the page
 	source = source.replace(/^[\t ]*(?=<script\b)/im, '\n$&<script src="' + encodeURI(pepPath) + '"></script>\n$&');
 
+	// Expose test results on `window.w3cTests`
+	source = source.replace(/^([\t ]*)<script[^>]*?>\n/im, '$&$1    add_completion_callback(function(tests) { window.w3cTests = tests; });\n\n');
+
 	// Make paths to scripts and style sheets relative instead of absolute
 	return source.replace(/((?:src|href)\s*=\s*['"])([^.])/g, function(match, prelude, chr) {
 		return prelude + '.' + (chr === '/' ? '' : '/') + chr;
