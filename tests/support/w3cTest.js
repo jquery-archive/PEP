@@ -10,18 +10,7 @@ define(function(require) {
 	function w3cTest(remote, url) {
 		return new CustomCommand(remote)
 			.get(require.toUrl(path.join(testPath, url)))
-			.setExecuteAsyncTimeout(1000)
-			.execute(addTestHook);
-	}
-
-	function addTestHook() {
-
-		// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
-		add_completion_callback(function(tests /*, status */) {
-
-			// jscs:enable
-			window.w3cTests = tests;
-		});
+			.setExecuteAsyncTimeout(1000);
 	}
 
 	function propagateResults(tests) {
