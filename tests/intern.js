@@ -28,7 +28,19 @@ define({
   functionalSuites: [
 
     // 'tests/functional/pointerevent_button_attribute_mouse-manual',
-    'tests/functional/pointerevent_capture_mouse-manual'
+    'tests/functional/pointerevent_capture_mouse-manual',
+    'tests/functional/pointerevent_capture_suppressing_mouse-manual',
+
+    // 'tests/functional/pointerevent_change-touch-action-onpointerdown_touch-manual',
+    'tests/functional/pointerevent_constructor',
+
+    // 'tests/functional/pointerevent_gotpointercapture_before_first_pointerevent-manual',
+    // 'tests/functional/pointerevent_lostpointercapture_for_disconnected_node-manual',
+    'tests/functional/pointerevent_lostpointercapture_is_first-manual',
+
+    // 'tests/functional/pointerevent_pointercancel_touch-manual',
+    'tests/functional/pointerevent_pointerdown-manual',
+    'tests/functional/pointerevent_pointerenter_does_not_bubble-manual'
   ],
   excludeInstrumentation: /^(?:node_modules|tests)\//
 });
