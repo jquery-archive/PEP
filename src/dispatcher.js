@@ -145,7 +145,12 @@ var dispatcher = {
     }
   },
   contains: /*scope.external.contains || */function(container, contained) {
-    return container.contains(contained);
+    try {
+      return container.contains(contained);
+    } catch(ex) {
+      // most likely: https://bugzilla.mozilla.org/show_bug.cgi?id=208427
+      return false;
+    }
   },
 
   // EVENTS
