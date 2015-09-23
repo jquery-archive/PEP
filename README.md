@@ -51,6 +51,23 @@ By default, no Pointer Events are sent from an element. This maximizes possibili
 
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of Pointer Events.
 
+#### Using PEP with jQuery
+
+You can use pointer events with jQuery and PEP:
+```html
+<div id="canvas" touch-action="none"></div>
+<script src="pep.dist.js"></script>
+<script src="jquery.js"></script>
+<script>
+$("#canvas").on("pointermove", function(event) {
+  draw(event);
+});
+</script>
+```
+Check out [this jsbin demo](http://jsbin.com/bojumofowa/1/edit?html,css,js,output) for a full demo.
+
+jQuery doesn't copy all properties from the original event object to the event object provided in the event handler. You can find [a list of copied and normalized properties on the jQuery API docs](http://api.jquery.com/category/events/event-object/). To access any other original properties, use `event.originalEvent`.
+
 ## Polyfill Details
 
 ### Getting Started
