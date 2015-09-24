@@ -147,7 +147,8 @@ var dispatcher = {
   contains: /*scope.external.contains || */function(container, contained) {
     try {
       return container.contains(contained);
-    } catch(ex) {
+    } catch (ex) {
+
       // most likely: https://bugzilla.mozilla.org/show_bug.cgi?id=208427
       return false;
     }
