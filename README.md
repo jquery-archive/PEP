@@ -69,7 +69,7 @@ Check out some of the samples at http://jquery.github.io/PEP/.
 ### touch-action
 
 According to the spec, the
-[touch-action](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property) css property controls whether an element will perform a "default action" such as scrolling, or receive a continuous stream of Pointer Events.
+[touch-action](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property) CSS property controls whether an element will perform a "default action" such as scrolling, or receive a continuous stream of Pointer Events.
 
 Due to the difficult nature of polyfilling new CSS properties, this library will use a touch-action *attribute* instead. In addition, run time changes involving the `touch-action` attribute will be monitored for maximum flexibility.
 
