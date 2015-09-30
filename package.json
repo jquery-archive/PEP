@@ -11,6 +11,7 @@
     "type": "git",
     "url": "git://github.com/jquery/PEP.git"
   },
+  "files": ["dist/", "src/", "pointerevents.js", "samples/"],
   "bugs": "https://github.com/jquery/PEP/issues",
   "license": "MIT",
   "devDependencies": {
