@@ -69,9 +69,6 @@ var mouseEvents = {
   mousedown: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var p = pointermap.get(this.POINTER_ID);
-
-      // TODO(dfreedman) workaround for some elements not sending mouseup
-      // http://crbug/149091
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) {
         e.buttons = BUTTON_TO_BUTTONS[e.button];
