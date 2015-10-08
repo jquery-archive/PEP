@@ -57,7 +57,8 @@ define({
     // 'tests/functional/pointerevent_pointerleave_pen-manual',
     // 'tests/functional/pointerevent_pointerleave_touch-manual',
 
-    // 'tests/functional/pointerevent_pointermove-manual',
+    'tests/functional/pointerevent_pointermove-manual',
+
     // 'tests/functional/pointerevent_pointermove-on-chorded-mouse-button',
     'tests/functional/pointerevent_pointermove_isprimary_same_as_pointerdown-manual',
     'tests/functional/pointerevent_pointermove_pointertype-manual',
@@ -83,7 +84,7 @@ define({
 
     // 'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual.js',
     // 'tests/functional/pointerevent_releasepointercapture_onpointercancel_touch-manual.js',
-    // 'tests/functional/pointerevent_releasepointercapture_onpointerup_mouse-manual'
+    'tests/functional/pointerevent_releasepointercapture_onpointerup_mouse-manual',
 
     // 'tests/functional/pointerevent_setpointercapture_disconnected-manual.js',
     // 'tests/functional/pointerevent_setpointercapture_inactive_button_mouse-manual.js',
