@@ -161,9 +161,9 @@ var touchEvents = {
     e.detail = this.clickCount;
     e.button = 0;
     e.buttons = this.typeToButtons(cte.type);
-    e.width = inTouch.webkitRadiusX || inTouch.radiusX || 0;
-    e.height = inTouch.webkitRadiusY || inTouch.radiusY || 0;
-    e.pressure = inTouch.webkitForce || inTouch.force || 0.5;
+    e.width = inTouch.radiusX || inTouch.webkitRadiusX || 0;
+    e.height = inTouch.radiusY || inTouch.webkitRadiusY || 0;
+    e.pressure = inTouch.force || inTouch.webkitForce || 0.5;
     e.isPrimary = this.isPrimaryTouch(inTouch);
     e.pointerType = this.POINTER_TYPE;
 
