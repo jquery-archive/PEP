@@ -87,6 +87,35 @@ function PointerEvent(inType, inDict) {
   e.pointerType = inDict.pointerType || '';
   e.hwTimestamp = inDict.hwTimestamp || 0;
   e.isPrimary = inDict.isPrimary || false;
+
+  var rect;
+  function boundingClientRect() {
+    if (rect) {
+      return rect;
+    }
+    return (rect = inDict.target.getBoundingClientRect());
+  }
+
+  // CSSOM View Module's extension to mouse events
+  if (inDict.offsetX === undefined) {
+    Object.defineProperty(e, 'offsetX', {
+      get: function() {
+        return e.clientX - boundingClientRect().left - inDict.target.clientLeft;
+      }
+    });
+  } else {
+    e.offsetX = inDict.offsetX;
+  }
+  if (inDict.offsetY === undefined) {
+    Object.defineProperty(e, 'offsetY', {
+      get: function() {
+        return e.clientY - boundingClientRect().top - inDict.target.clientTop;
+      }
+    });
+  } else {
+    e.offsetY = inDict.offsetY;
+  }
+
   return e;
 }
 

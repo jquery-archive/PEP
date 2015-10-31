@@ -21,6 +21,10 @@
         height: 300px;
         width: 300px;
         text-align: center;
+        position: relative;
+        top: 10px;
+        left: 10px;
+        margin-bottom: 10px;
       }
       #enterleave {
         background-color: blue;
@@ -32,12 +36,13 @@
         left: 25%;
         top: 25%;
         position: relative;
+        border: 10px solid gray;
       }
       #output {
-        width: 300px;
         height: 150px;
         overflow: scroll;
         white-space: pre;
+        margin-bottom: 1000em;
       }
     </style>
     <script src="../../dist/pep.js"></script>
@@ -72,7 +77,9 @@
       find('capture', 'output', 'enterleave');
       events.forEach(function(en) {
         capture.addEventListener(en, function(inEvent) {
-          appendOutput(inEvent.type + ' [' + inEvent.pointerId + ']');
+          appendOutput(inEvent.type + ' [' + inEvent.pointerId + ']' +
+            ' pageX/offsetX ' + inEvent.pageX + '/' + inEvent.offsetX +
+            ' pageY/offsetY ' + inEvent.pageY + '/' + inEvent.offsetY);
         });
       });
       enterleave.addEventListener('pointerenter', function(e) {
