@@ -122,6 +122,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['lint', 'build', 'uglify']);
   grunt.registerTask('lint', ['jscs:lint', 'jshint']);
-  grunt.registerTask('test', ['pretest', 'intern:pointerevents']);
+  grunt.registerTask('test', ['build', 'pretest', 'intern:pointerevents']);
   grunt.registerTask('ci', ['lint', 'build', 'pretest', 'intern:ci']);
 };
