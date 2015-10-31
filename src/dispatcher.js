@@ -1,3 +1,4 @@
+import PointerEvent from 'PointerEvent';
 import PointerMap from 'pointermap';
 
 var CLONE_PROPS = [
