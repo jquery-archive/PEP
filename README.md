@@ -28,16 +28,7 @@ Instead, there should exist a set of events that are normalized such that they b
 
 By default, no Pointer Events are sent from an element. This maximizes possibility that a browser can deliver smooth scrolling and jank-free gestures. If you want to receive events, you must set the `touch-action` property of that element.
 
-1. Set up some elements to create events with the `touch-action` attribute
-  - `<div id="not-a-scroller" touch-action="none"></div>`
-      - Generates events all the time, will not scroll
-  - `<div id="horizontal-scroller" touch-action="pan-x">`
-      - Generates events in the y axis, scrolls in the x axis
-  - `<div id="vertical-scroller" touch-action="pan-y">`
-      - Generates events in the x axis, scrolls in the y axis
-  - `<div id="all-axis-scroller" touch-action="pan-x pan-y">`
-      - Generates events only when tapping, scrolls otherwise
-      - Can also have the value `pan-y pan-x` or `scroll`
+1. Set up some elements to create events with the [`touch-action` attribute](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property).
 
 1. Listen for the desired events
   - `pointermove`: a pointer moves, similar to touchmove or mousemove.
@@ -50,6 +41,8 @@ By default, no Pointer Events are sent from an element. This maximizes possibili
   - `pointercancel`: a pointer will no longer generate events.
 
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of Pointer Events.
+
+See also the [examples in the W3C Pointer Events specification](http://www.w3.org/TR/pointerevents/#examples).
 
 #### Using PEP with jQuery
 
