@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-git-authors');
   grunt.loadNpmTasks('grunt-jscs');
   grunt.loadNpmTasks('intern');
@@ -80,6 +81,15 @@ module.exports = function(grunt) {
         jshintrc: true
       },
       main: allFiles
+    },
+    watch: {
+      src: {
+        files: ['src/*', 'pointerevents.js'],
+        tasks: ['build', 'lint'],
+        options: {
+          spawn: false
+        }
+      }
     }
   });
 
