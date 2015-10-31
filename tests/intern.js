@@ -25,7 +25,9 @@ define({
     'tests/unit/loader',
     'tests/unit/pointermap'
   ],
-  functionalSuites: [
+
+  // Disable until ScriptTimeout issues are resolved
+  functionalSuites: [] || [
 
     // 'tests/functional/pointerevent_button_attribute_mouse-manual',
     'tests/functional/pointerevent_capture_mouse-manual',
