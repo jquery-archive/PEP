@@ -11,7 +11,12 @@
     "type": "git",
     "url": "git://github.com/jquery/PEP.git"
   },
-  "files": ["dist/", "src/", "pointerevents.js", "samples/"],
+  "files": [
+    "dist/",
+    "src/",
+    "pointerevents.js",
+    "samples/"
+  ],
   "bugs": "https://github.com/jquery/PEP/issues",
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +29,7 @@
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "0.11.2",
     "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "^0.6.1",
     "grunt-git-authors": "^3.0.0",
     "grunt-jscs": "1.8.0",
     "intern": "2.2.2",
