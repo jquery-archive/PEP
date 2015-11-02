@@ -18,7 +18,7 @@ module.exports = function(grunt) {
   var testPkg = pkg['web-platform-tests'];
   var w3cPath = path.normalize(testPkg.path);
 
-  var srcFiles = ['pointerevents.js', 'src/**/*.js'];
+  var srcFiles = ['src/**/*.js'];
   var buildFiles = ['Gruntfile.js', 'build/**/*.js'];
 
   var testFiles = [
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
     },
     watch: {
       src: {
-        files: ['src/*', 'pointerevents.js'],
+        files: srcFiles,
         tasks: ['build', 'lint'],
         options: {
           spawn: false
@@ -100,7 +100,7 @@ module.exports = function(grunt) {
     grunt.log.write('Building PEP...');
     esperanto.bundle({
       base: 'src',
-      entry: '../pointerevents.js'
+      entry: 'pointerevents.js'
     }).then(function(bundle) {
       var umd = bundle.toUmd({
         name: 'PointerEventsPolyfill'
