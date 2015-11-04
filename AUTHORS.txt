@@ -15,3 +15,9 @@ Tom Buckley <tbuckley89@gmail.com>
 Addy Osmani <addyosmani@gmail.com>
 龙天 <wyvernnot@gmail.com>
 Colin Snover <github.com@zetafleet.com>
+Will Binns-Smith <wbinnssmith@gmail.com>
+Stuart P. Bentley <stuart@testtrack4.com>
+John-David Dalton <john.david.dalton@gmail.com>
+Mike Mariano <mikemariano@gmail.com>
+Stefan Neubert <dev@steditor.net>
+Jörn Zaefferer <joern.zaefferer@gmail.com>
