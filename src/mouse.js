@@ -104,7 +104,12 @@ var mouseEvents = {
         inEvent.buttons = e.buttons;
       }
       pointermap.set(this.POINTER_ID, inEvent);
-      if (e.buttons === 0) {
+
+      // Support: Firefox <=44 only
+      // FF Ubuntu includes the lifted button in the `buttons` property on
+      // mouseup.
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1223366
+      if (e.buttons === 0 || e.buttons === BUTTON_TO_BUTTONS[e.button]) {
         this.cleanupMouse();
         dispatcher.up(e);
       } else {
