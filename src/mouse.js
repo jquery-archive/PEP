@@ -104,7 +104,10 @@ var mouseEvents = {
         inEvent.buttons = e.buttons;
       }
       pointermap.set(this.POINTER_ID, inEvent);
-      if (e.buttons === 0) {
+
+      // FF Ubuntu includes the lifted button in the `buttons` property on
+      // mouseup.
+      if (e.buttons === 0 || e.buttons === BUTTON_TO_BUTTONS[e.button]) {
         this.cleanupMouse();
         dispatcher.up(e);
       } else {
