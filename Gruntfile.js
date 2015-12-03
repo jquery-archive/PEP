@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-git-authors');
   grunt.loadNpmTasks('grunt-jscs');
+  grunt.loadNpmTasks('grunt-selenium-standalone');
   grunt.loadNpmTasks('intern');
 
   var pkg = require('./package');
@@ -54,6 +55,27 @@ module.exports = function(grunt) {
           config: 'tests/intern'
         }
       }
+    },
+    "selenium_standalone": {
+        options: {
+          stopOnExit: true
+        },
+        pointerevents: {
+            seleniumVersion: '2.53.0',
+            seleniumDownloadURL: 'http://selenium-release.storage.googleapis.com',
+            drivers: {
+                chrome: {
+                  version: '2.21',
+                  arch: process.arch,
+                  baseURL: 'http://chromedriver.storage.googleapis.com'
+                },
+                ie: {
+                  version: '2.53',
+                  arch: process.arch,
+                  baseURL: 'http://selenium-release.storage.googleapis.com'
+                }
+            }
+        }
     },
     jscs: {
       lint: {
@@ -130,8 +152,18 @@ module.exports = function(grunt) {
     pretest().then(done);
   });
 
+  grunt.registerTask('server', [
+    'selenium_standalone:pointerevents:install',
+    'selenium_standalone:pointerevents:start'
+  ]);
   grunt.registerTask('default', ['lint', 'build', 'uglify']);
   grunt.registerTask('lint', ['jscs:lint', 'jshint']);
-  grunt.registerTask('test', ['build', 'pretest', 'intern:pointerevents']);
+  grunt.registerTask('test', [
+    'build',
+    'server',
+    'pretest',
+    'intern:pointerevents',
+    'selenium_standalone:pointerevents:stop'
+  ]);
   grunt.registerTask('ci', ['lint', 'build', 'pretest', 'intern:ci']);
 };
