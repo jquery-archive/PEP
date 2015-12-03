@@ -36,7 +36,7 @@
     "request": "^2.58.0"
   },
   "web-platform-tests": {
-    "repo": "w3c/web-platform-tests#ba54984aa8838342ae97aed1fc7bd3cb5499f637",
+    "repo": "w3c/web-platform-tests#c98d1ff0ea91ba1aa9a15e8ea2d70d8ede1fdc0e",
     "path": "./tests/w3c"
   },
   "scripts": {
