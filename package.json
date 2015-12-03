@@ -31,6 +31,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-git-authors": "^3.0.0",
     "grunt-jscs": "1.8.0",
+    "grunt-selenium-standalone": "^0.1.2",
     "intern": "2.2.2",
     "lodash": "^3.9.3",
     "request": "^2.58.0"
