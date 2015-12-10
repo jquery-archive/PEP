@@ -23,6 +23,27 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
 
 1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of Pointer Events.
 
+```html
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PEP (Pointer Events Polyfill)</title>
+  <meta name="viewport" content="width=device-width">
+  <!-- include PEP -->
+  <script src="https://code.jquery.com/pep/0.4.0/pep.js"></script>
+</head>
+<body>
+<button id="b" touch-action="none">Test button!</button>
+<p><output id="o"></output></p>
+<script>
+document.getElementById( "b" ).addEventListener( "pointerdown", function( e ) {
+  document.getElementById( "o" ).innerHTML = "that was a " +
+    e.pointerType + " " + e.type + " on a "+ e.target.nodeName;
+} );
+</script>
+</body>
+</html>
+```
 
 See also the [examples in the W3C Pointer Events specification](http://www.w3.org/TR/pointerevents/#examples) and our own [samples for using PEP](http://jquery.github.io/PEP/).
 
