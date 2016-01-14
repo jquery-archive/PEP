@@ -21,3 +21,5 @@ John-David Dalton <john.david.dalton@gmail.com>
 Mike Mariano <mikemariano@gmail.com>
 Stefan Neubert <dev@steditor.net>
 Jörn Zaefferer <joern.zaefferer@gmail.com>
+Marius Stefan Bethge <marius.bethge@gmail.com>
+Rob Larsen <rob@htmlcssjavascript.com>
