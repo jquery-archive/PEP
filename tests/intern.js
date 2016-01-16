@@ -52,7 +52,18 @@ define({
     // 'tests/functional/pointerevent_pointerleave_does_not_bubble-manual',
     // 'tests/functional/pointerevent_pointerleave_mouse-manual',
 
-    'tests/functional/pointerevent_pointermove_isprimary_same_as_pointerdown-manual'
+    'tests/functional/pointerevent_pointermove_isprimary_same_as_pointerdown-manual',
+
+    // 'tests/functional/pointerevent_pointermove_pointertype-manual',
+
+    'tests/functional/pointerevent_pointermove-manual',
+
+    // 'tests/functional/pointerevent_pointerout_after_pointerup_nohover-manual',
+    // 'tests/functional/pointerevent_releasepointercapture_events_to_original_target-manual',
+    // 'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual',
+    // 'tests/functional/pointerevent_releasepointercapture_onpointercancel_touch-manual'
+
+    'tests/functional/pointerevent_releasepointercapture_onpointerup_mouse-manual'
   ],
   excludeInstrumentation: /^(?:node_modules|tests)\//
 });
