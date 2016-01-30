@@ -87,6 +87,7 @@ var mouseEvents = {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
+      e.button = -1;
       dispatcher.move(e);
     }
   },
@@ -109,7 +110,8 @@ var mouseEvents = {
       // FF Ubuntu includes the lifted button in the `buttons` property on
       // mouseup.
       // https://bugzilla.mozilla.org/show_bug.cgi?id=1223366
-      if (e.buttons === 0 || e.buttons === BUTTON_TO_BUTTONS[e.button]) {
+      e.buttons &= ~BUTTON_TO_BUTTONS[e.button];
+      if (e.buttons === 0) {
         this.cleanupMouse();
         dispatcher.up(e);
       } else {
@@ -121,6 +123,7 @@ var mouseEvents = {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
+      e.button = -1;
       dispatcher.enterOver(e);
     }
   },
@@ -128,6 +131,7 @@ var mouseEvents = {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
+      e.button = -1;
       dispatcher.leaveOut(e);
     }
   },
