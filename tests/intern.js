@@ -27,8 +27,7 @@ define({
   ],
   functionalSuites: [
 
-    // See: https://github.com/jquery/PEP/issues/173
-    // 'tests/functional/pointerevent_button_attribute_mouse-manual',
+    'tests/functional/pointerevent_button_attribute_mouse-manual',
     'tests/functional/pointerevent_capture_mouse-manual',
     'tests/functional/pointerevent_capture_suppressing_mouse-manual',
 
