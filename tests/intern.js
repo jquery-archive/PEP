@@ -88,8 +88,6 @@ define({
     // 'tests/functional/pointerevent_setpointercapture_inactive_button_mouse-manual.js',
     // 'tests/functional/pointerevent_setpointercapture_invalid_pointerid-manual.js',
     // 'tests/functional/pointerevent_setpointercapture_relatedtarget-manual.js',
-    // 'tests/functional/pointerevent_styles.js',
-    // 'tests/functional/pointerevent_support.js',
     // 'tests/functional/pointerevent_touch-action-auto-css_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-button-test_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-illegal.js',
