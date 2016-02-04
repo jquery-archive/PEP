@@ -56,7 +56,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    selenium_standalone: {
+    "selenium_standalone": {
         pointerevents: {
             seleniumVersion: '2.47.1',
             seleniumDownloadURL: 'http://selenium-release.storage.googleapis.com',
@@ -149,9 +149,18 @@ module.exports = function(grunt) {
     pretest().then(done);
   });
 
-  grunt.registerTask( 'server', ['selenium_standalone:pointerevents:install', 'selenium_standalone:pointerevents:start']);
+  grunt.registerTask('server', [
+    'selenium_standalone:pointerevents:install',
+    'selenium_standalone:pointerevents:start'
+  ]);
   grunt.registerTask('default', ['lint', 'build', 'uglify']);
   grunt.registerTask('lint', ['jscs:lint', 'jshint']);
-  grunt.registerTask('test', ['build', 'server', 'pretest', 'intern:pointerevents', 'selenium_standalone:pointerevents:stop']);
+  grunt.registerTask('test', [
+    'build',
+    'server',
+    'pretest',
+    'intern:pointerevents',
+    'selenium_standalone:pointerevents:stop'
+  ]);
   grunt.registerTask('ci', ['lint', 'build', 'pretest', 'intern:ci']);
 };
