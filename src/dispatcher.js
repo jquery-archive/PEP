@@ -319,8 +319,7 @@ var dispatcher = {
       this.releaseCapture(inPointerId);
     }
     this.captureInfo[inPointerId] = inTarget;
-    var e = document.createEvent('Event');
-    e.initEvent('gotpointercapture', true, false);
+    var e = new PointerEvent('gotpointercapture');
     e.pointerId = inPointerId;
     this.implicitRelease = this.releaseCapture.bind(this, inPointerId);
     document.addEventListener('pointerup', this.implicitRelease);
@@ -331,8 +330,7 @@ var dispatcher = {
   releaseCapture: function(inPointerId) {
     var t = this.captureInfo[inPointerId];
     if (t) {
-      var e = document.createEvent('Event');
-      e.initEvent('lostpointercapture', true, false);
+      var e = new PointerEvent('lostpointercapture');
       e.pointerId = inPointerId;
       this.captureInfo[inPointerId] = undefined;
       document.removeEventListener('pointerup', this.implicitRelease);
