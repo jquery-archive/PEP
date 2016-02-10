@@ -34,7 +34,8 @@ define({
     // 'tests/functional/pointerevent_change-touch-action-onpointerdown_touch-manual',
     'tests/functional/pointerevent_constructor',
 
-    // 'tests/functional/pointerevent_gotpointercapture_before_first_pointerevent-manual',
+    'tests/functional/pointerevent_gotpointercapture_before_first_pointerevent-manual',
+
     // 'tests/functional/pointerevent_lostpointercapture_for_disconnected_node-manual',
     'tests/functional/pointerevent_lostpointercapture_is_first-manual',
 
@@ -76,9 +77,10 @@ define({
 
     'tests/functional/pointerevent_pointerup-manual.js',
     'tests/functional/pointerevent_pointerup_isprimary_same_as_pointerdown-manual.js',
-    'tests/functional/pointerevent_pointerup_pointertype-manual.js'
+    'tests/functional/pointerevent_pointerup_pointertype-manual.js',
 
-    // 'tests/functional/pointerevent_releasepointercapture_events_to_original_target-manual.js',
+    'tests/functional/pointerevent_releasepointercapture_events_to_original_target-manual.js',
+
     // 'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual.js',
     // 'tests/functional/pointerevent_releasepointercapture_onpointercancel_touch-manual.js',
     // 'tests/functional/pointerevent_releasepointercapture_onpointerup_mouse-manual'
@@ -86,7 +88,8 @@ define({
     // 'tests/functional/pointerevent_setpointercapture_disconnected-manual.js',
     // 'tests/functional/pointerevent_setpointercapture_inactive_button_mouse-manual.js',
     // 'tests/functional/pointerevent_setpointercapture_invalid_pointerid-manual.js',
-    // 'tests/functional/pointerevent_setpointercapture_relatedtarget-manual.js',
+    'tests/functional/pointerevent_setpointercapture_relatedtarget-manual.js'
+
     // 'tests/functional/pointerevent_touch-action-auto-css_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-button-test_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-illegal.js',
