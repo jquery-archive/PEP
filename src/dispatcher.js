@@ -197,15 +197,11 @@ var dispatcher = {
   },
   leaveOut: function(event) {
     this.out(event);
-    if (!this.contains(event.target, event.relatedTarget)) {
-      this.leave(event);
-    }
+    this.propagate(event, this.leave, false);
   },
   enterOver: function(event) {
     this.over(event);
-    if (!this.contains(event.target, event.relatedTarget)) {
-      this.enter(event);
-    }
+    this.propagate(event, this.enter, true);
   },
 
   // LISTENER LOGIC
@@ -313,6 +309,21 @@ var dispatcher = {
     if (inEvent._target === capture || !(inEvent.type in BOUNDARY_EVENTS)) {
       return capture;
     }
+  },
+  propagate: function(event, fn, propagateDown) {
+    var target = event.target;
+    var targets = [];
+    while (!target.contains(event.relatedTarget) && target !== document) {
+      targets.push(target);
+      target = target.parentNode;
+    }
+    if (propagateDown) {
+      targets.reverse();
+    }
+    targets.forEach(function(target) {
+      event.target = target;
+      fn.call(this, event);
+    }, this);
   },
   setCapture: function(inPointerId, inTarget) {
     if (this.captureInfo[inPointerId]) {

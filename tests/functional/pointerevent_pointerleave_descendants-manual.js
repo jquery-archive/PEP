@@ -9,10 +9,11 @@ define(function(require) {
 		main: function() {
 			return w3cTest(this.remote, name + '.html')
 				.findById('target0')
-					.moveMouseTo(50, 8)
+					.moveMouseTo(200, 10)
 					.end()
-				.findByTagName('body')
-					.moveMouseTo(50, 30)
+				.findByCssSelector('#target0 div')
+					.moveMouseTo(200, 10)
+					.moveMouseTo(200, 150)
 					.end()
 				.checkResults();
 		}
