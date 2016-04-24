@@ -9,6 +9,13 @@ function assertActive(id) {
     throw error;
   }
 }
+function assertConnected(elem) {
+  if (!elem.ownerDocument.contains(elem)) {
+    var error = new Error('InvalidStateError');
+    error.name = 'InvalidStateError';
+    throw error;
+  }
+}
 function inActiveButtonState(id) {
   var p = dispatcher.pointermap.get(id);
   return p.buttons !== 0;
@@ -16,6 +23,7 @@ function inActiveButtonState(id) {
 if (n.msPointerEnabled) {
   s = function(pointerId) {
     assertActive(pointerId);
+    assertConnected(this);
     if (inActiveButtonState(pointerId)) {
       this.msSetPointerCapture(pointerId);
     }
@@ -27,6 +35,7 @@ if (n.msPointerEnabled) {
 } else {
   s = function setPointerCapture(pointerId) {
     assertActive(pointerId);
+    assertConnected(this);
     if (inActiveButtonState(pointerId)) {
       dispatcher.setCapture(pointerId, this);
     }
