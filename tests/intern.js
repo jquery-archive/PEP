@@ -81,14 +81,14 @@ define({
     'tests/functional/pointerevent_pointerup_pointertype-manual.js',
 
     'tests/functional/pointerevent_releasepointercapture_events_to_original_target-manual.js',
+    'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual.js',
 
-    // 'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual.js',
     // 'tests/functional/pointerevent_releasepointercapture_onpointercancel_touch-manual.js',
     'tests/functional/pointerevent_releasepointercapture_onpointerup_mouse-manual',
 
     // 'tests/functional/pointerevent_setpointercapture_disconnected-manual.js',
-    // 'tests/functional/pointerevent_setpointercapture_inactive_button_mouse-manual.js',
-    // 'tests/functional/pointerevent_setpointercapture_invalid_pointerid-manual.js',
+    'tests/functional/pointerevent_setpointercapture_inactive_button_mouse-manual.js',
+    'tests/functional/pointerevent_setpointercapture_invalid_pointerid-manual.js',
     'tests/functional/pointerevent_setpointercapture_relatedtarget-manual.js'
 
     // 'tests/functional/pointerevent_touch-action-auto-css_touch-manual.js',

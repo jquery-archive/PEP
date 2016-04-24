@@ -2,27 +2,37 @@ import dispatcher from './dispatcher';
 
 var n = window.navigator;
 var s, r;
-function assertDown(id) {
+function assertActive(id) {
   if (!dispatcher.pointermap.has(id)) {
-    throw new Error('InvalidPointerId');
+    var error = new Error('InvalidPointerId');
+    error.name = 'InvalidPointerId';
+    throw error;
   }
+}
+function inActiveButtonState(id) {
+  var p = dispatcher.pointermap.get(id);
+  return p.buttons !== 0;
 }
 if (n.msPointerEnabled) {
   s = function(pointerId) {
-    assertDown(pointerId);
-    this.msSetPointerCapture(pointerId);
+    assertActive(pointerId);
+    if (inActiveButtonState(pointerId)) {
+      this.msSetPointerCapture(pointerId);
+    }
   };
   r = function(pointerId) {
-    assertDown(pointerId);
+    assertActive(pointerId);
     this.msReleasePointerCapture(pointerId);
   };
 } else {
   s = function setPointerCapture(pointerId) {
-    assertDown(pointerId);
-    dispatcher.setCapture(pointerId, this);
+    assertActive(pointerId);
+    if (inActiveButtonState(pointerId)) {
+      dispatcher.setCapture(pointerId, this);
+    }
   };
   r = function releasePointerCapture(pointerId) {
-    assertDown(pointerId);
+    assertActive(pointerId);
     dispatcher.releaseCapture(pointerId, this);
   };
 }
