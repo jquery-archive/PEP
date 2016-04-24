@@ -76,7 +76,7 @@ var mouseEvents = {
         inEvent.buttons = e.buttons;
       }
       pointermap.set(this.POINTER_ID, inEvent);
-      if (!p) {
+      if (!p || p.buttons === 0) {
         dispatcher.down(e);
       } else {
         dispatcher.move(e);
@@ -88,6 +88,7 @@ var mouseEvents = {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
       e.button = -1;
+      pointermap.set(this.POINTER_ID, inEvent);
       dispatcher.move(e);
     }
   },
@@ -112,7 +113,6 @@ var mouseEvents = {
       // https://bugzilla.mozilla.org/show_bug.cgi?id=1223366
       e.buttons &= ~BUTTON_TO_BUTTONS[e.button];
       if (e.buttons === 0) {
-        this.cleanupMouse();
         dispatcher.up(e);
       } else {
         dispatcher.move(e);
@@ -124,6 +124,7 @@ var mouseEvents = {
       var e = this.prepareEvent(inEvent);
       if (!HAS_BUTTONS) { this.prepareButtonsForMove(e, inEvent); }
       e.button = -1;
+      pointermap.set(this.POINTER_ID, inEvent);
       dispatcher.enterOver(e);
     }
   },
@@ -138,9 +139,9 @@ var mouseEvents = {
   cancel: function(inEvent) {
     var e = this.prepareEvent(inEvent);
     dispatcher.cancel(e);
-    this.cleanupMouse();
+    this.deactivateMouse();
   },
-  cleanupMouse: function() {
+  deactivateMouse: function() {
     pointermap.delete(this.POINTER_ID);
   }
 };
