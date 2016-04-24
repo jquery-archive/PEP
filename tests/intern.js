@@ -51,9 +51,9 @@ define({
 
     'tests/functional/pointerevent_pointerleave_descendant_over-manual',
     'tests/functional/pointerevent_pointerleave_descendants-manual',
+    'tests/functional/pointerevent_pointerleave_does_not_bubble-manual',
+    'tests/functional/pointerevent_pointerleave_mouse-manual',
 
-    // 'tests/functional/pointerevent_pointerleave_does_not_bubble-manual',
-    // 'tests/functional/pointerevent_pointerleave_mouse-manual',
     // 'tests/functional/pointerevent_pointerleave_pen-manual',
     // 'tests/functional/pointerevent_pointerleave_touch-manual',
 
