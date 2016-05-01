@@ -1,7 +1,7 @@
-import targeting from 'targeting';
-import dispatcher from 'dispatcher';
-import Installer from 'installer';
-import mouseEvents from 'mouse';
+import targeting from './targeting';
+import dispatcher from './dispatcher';
+import Installer from './installer';
+import mouseEvents from './mouse';
 
 var captureInfo = dispatcher.captureInfo;
 var findTarget = targeting.findTarget.bind(targeting);

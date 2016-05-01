@@ -1,4 +1,4 @@
-import dispatcher from 'dispatcher';
+import dispatcher from './dispatcher';
 
 var pointermap = dispatcher.pointermap;
 var HAS_BITMAP_TYPE = window.MSPointerEvent &&

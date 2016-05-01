@@ -1,8 +1,8 @@
-import PointerEvent from 'PointerEvent';
-import dispatcher from 'dispatcher';
-import mouseEvents from 'mouse';
-import touchEvents from 'touch';
-import msEvents from 'ms';
+import PointerEvent from './PointerEvent';
+import dispatcher from './dispatcher';
+import mouseEvents from './mouse';
+import touchEvents from './touch';
+import msEvents from './ms';
 
 export function applyPolyfill() {
 
