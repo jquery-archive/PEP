@@ -1,4 +1,4 @@
-import dispatcher from 'dispatcher';
+import dispatcher from './dispatcher';
 
 var n = window.navigator;
 var s, r;

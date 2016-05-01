@@ -1,5 +1,5 @@
-import PointerEvent from 'PointerEvent';
-import PointerMap from 'pointermap';
+import PointerEvent from './PointerEvent';
+import PointerMap from './pointermap';
 
 var CLONE_PROPS = [
 

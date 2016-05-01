@@ -116,30 +116,26 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('build', function() {
-    var esperanto = require('esperanto');
+    var rollup = require('rollup');
     var done = this.async();
 
     grunt.log.write('Building PEP...');
-    esperanto.bundle({
-      base: 'src',
-      entry: 'pointerevents.js'
+    rollup.rollup({
+      entry: 'src/pointerevents.js'
     }).then(function(bundle) {
-      var umd = bundle.toUmd({
-        name: 'PointerEventsPolyfill'
-
-        // sourceMap: true,
-        // sourceMapFile: 'dist/pep.js'
+      var result = bundle.generate({
+        moduleName: 'PointerEventsPolyfill',
+        format: 'umd',
+        banner: header
       });
-      grunt.file.write('dist/pep.js', header + umd.code);
-
-      // grunt.file.write('dist/pep.js.map', umd.map.toString());
+      grunt.file.write('dist/pep.js', result.code);
     }).then(
       function() {
         grunt.log.ok();
         done();
       },
       function(error) {
-        grunt.log.error();
+        grunt.log.error(error);
         done(error);
       }
     );

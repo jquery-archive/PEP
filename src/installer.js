@@ -5,7 +5,7 @@
  * All nodes that wish to generate Pointer Events must have the attribute
  * `touch-action` set to `none`.
  */
-import targeting from 'targeting';
+import targeting from './targeting';
 
 var forEach = Array.prototype.forEach.call.bind(Array.prototype.forEach);
 var map = Array.prototype.map.call.bind(Array.prototype.map);
