@@ -103,3 +103,19 @@ Touches will not generate events unless inside of an area that has a valid `touc
 ### Browser Compatibility
 
 PEP should work on IE 10+ and the latest versions of Chrome, Safari, Firefox, and Opera. In any [browser implementing pointer events natively](http://caniuse.com/#feat=pointer) (detected by checking for `window.PointerEvent`), PEP won't do anything.
+
+## Building PEP
+
+If you want to build PEP yourself from source, you'll need to install [Node.js](https://nodejs.org/en/download/) and run the following commands:
+
+```sh
+# Install all dependencies
+npm install
+
+# Build PEP
+npm run build
+```
+
+When the build completes, the generated files will be available in the `dist/` directory.
+
+*NOTE: Running the demos requires building PEP.*
