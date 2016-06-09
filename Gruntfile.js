@@ -80,8 +80,7 @@ module.exports = function(grunt) {
     jscs: {
       lint: {
         options: {
-          config: true,
-          esnext: true
+          config: true
         },
         files: {
           src: allFiles
