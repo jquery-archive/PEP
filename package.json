@@ -25,6 +25,7 @@
     "fs-extra": "^0.30.0",
     "glob": "^7.0.3",
     "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
@@ -41,6 +42,8 @@
     "path": "./tests/w3c"
   },
   "scripts": {
+    "build": "grunt build",
+    "ci": "grunt ci",
     "test": "grunt test"
   }
 }
