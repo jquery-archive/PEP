@@ -117,3 +117,5 @@ npm run build
 ```
 
 When the build completes, the generated files will be available in the `dist/` directory.
+
+*NOTE: Running the demos requires building PEP.*
