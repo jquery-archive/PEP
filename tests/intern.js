@@ -11,7 +11,7 @@ define({
   ],
   maxConcurrency: 2,
   tunnel: 'BrowserStackTunnel',
-  loader: {
+  loaderOptions: {
     packages: [
       { name: 'chai-spies', location: 'node_modules/chai-spies', main: 'chai-spies' },
       { name: 'pep', location: 'dist', main: 'pep' },
