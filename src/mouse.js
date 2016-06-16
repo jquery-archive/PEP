@@ -63,7 +63,13 @@ var mouseEvents = {
   },
   prepareButtonsForMove: function(e, inEvent) {
     var p = pointermap.get(this.POINTER_ID);
-    e.buttons = p ? p.buttons : 0;
+
+    // Update buttons state after possible out-of-document mouseup.
+    if (inEvent.which === 0 || !p) {
+      e.buttons = 0;
+    } else {
+      e.buttons = p.buttons;
+    }
     inEvent.buttons = e.buttons;
   },
   mousedown: function(inEvent) {
