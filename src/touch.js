@@ -167,6 +167,12 @@ var touchEvents = {
     e.isPrimary = this.isPrimaryTouch(inTouch);
     e.pointerType = this.POINTER_TYPE;
 
+    // forward modifier keys
+    e.altKey = cte.altKey;
+    e.ctrlKey = cte.ctrlKey;
+    e.metaKey = cte.metaKey;
+    e.shiftKey = cte.shiftKey;
+
     // forward touch preventDefaults
     var self = this;
     e.preventDefault = function() {
