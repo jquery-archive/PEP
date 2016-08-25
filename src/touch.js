@@ -2,6 +2,8 @@ import targeting from './targeting';
 import dispatcher from './dispatcher';
 import Installer from './installer';
 import mouseEvents from './mouse';
+import {touchActionSupported} from './feature-detect';
+import {passiveEventListenerSupported} from './feature-detect';
 
 var captureInfo = dispatcher.captureInfo;
 var findTarget = targeting.findTarget.bind(targeting);
@@ -14,12 +16,7 @@ var CLICK_COUNT_TIMEOUT = 200;
 var ATTRIB = 'touch-action';
 var INSTALLER;
 
-// The presence of touch event handlers blocks scrolling, and so we must be careful to
-// avoid adding handlers unnecessarily.  Chrome plans to add a touch-action-delay property
-// (crbug.com/329559) to address this, and once we have that we can opt-in to a simpler
-// handler registration mechanism.  Rather than try to predict how exactly to opt-in to
-// that we'll just leave this disabled until there is a build of Chrome to test.
-var HAS_TOUCH_ACTION_DELAY = false;
+var usePassiveListeners = passiveEventListenerSupported && touchActionSupported;
 
 // handler block for native touch events
 var touchEvents = {
@@ -30,14 +27,14 @@ var touchEvents = {
     'touchcancel'
   ],
   register: function(target) {
-    if (HAS_TOUCH_ACTION_DELAY) {
+    if (usePassiveListeners) {
       dispatcher.listen(target, this.events);
     } else {
       INSTALLER.enableOnSubtree(target);
     }
   },
   unregister: function(target) {
-    if (HAS_TOUCH_ACTION_DELAY) {
+    if (usePassiveListeners) {
       dispatcher.unlisten(target, this.events);
     } else {
 
@@ -194,6 +191,11 @@ var touchEvents = {
   // For single axis scrollers, determines whether the element should emit
   // pointer events or behave as a scroller
   shouldScroll: function(inEvent) {
+    if (usePassiveListeners) {
+
+      // A event is uncancelable, if it triggers default user agent behaviour.
+      return !inEvent.cancelable;
+    }
     if (this.firstXY) {
       var ret;
       var scrollAxis = inEvent.currentTarget._scrollType;
@@ -280,7 +282,9 @@ var touchEvents = {
         this.scrolling = true;
         this.touchcancel(inEvent);
       } else {
-        inEvent.preventDefault();
+        if (!usePassiveListeners) {
+          inEvent.preventDefault();
+        }
         this.processTouches(inEvent, this.moveOverOut);
       }
     }
@@ -362,7 +366,7 @@ var touchEvents = {
   }
 };
 
-if (!HAS_TOUCH_ACTION_DELAY) {
+if (!usePassiveListeners) {
   INSTALLER = new Installer(touchEvents.elementAdded, touchEvents.elementRemoved,
     touchEvents.elementChanged, touchEvents);
 }

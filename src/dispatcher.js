@@ -1,5 +1,7 @@
 import PointerEvent from './PointerEvent';
 import PointerMap from './pointermap';
+import {touchActionSupported} from './feature-detect';
+import {passiveEventListenerSupported} from './feature-detect';
 
 var CLONE_PROPS = [
 
@@ -235,7 +237,9 @@ var dispatcher = {
     }, this);
   },
   addEvent: /*scope.external.addEvent || */function(target, eventName) {
-    target.addEventListener(eventName, this.boundHandler);
+    var passiveListener = passiveEventListenerSupported && touchActionSupported;
+    var passiveOrCapture = passiveListener ? { passive: true } : false;
+    target.addEventListener(eventName, this.boundHandler, passiveOrCapture);
   },
   removeEvent: /*scope.external.removeEvent || */function(target, eventName) {
     target.removeEventListener(eventName, this.boundHandler);

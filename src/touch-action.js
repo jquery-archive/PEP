@@ -1,3 +1,5 @@
+import {touchActionSupported} from './feature-detect';
+
 function shadowSelector(v) {
   return 'body /shadow-deep/ ' + selector(v);
 }
@@ -22,14 +24,11 @@ var attrib2css = [
 ];
 var styles = '';
 
-// only install stylesheet if the browser has touch action support
-var hasNativePE = window.PointerEvent || window.MSPointerEvent;
-
 // only add shadow selectors if shadowdom is supported
 var hasShadowRoot = !window.ShadowDOMPolyfill && document.head.createShadowRoot;
 
 export function applyAttributeStyles() {
-  if (hasNativePE) {
+  if (touchActionSupported) {
     attrib2css.forEach(function(r) {
       if (String(r) === r) {
         styles += selector(r) + rule(r) + '\n';
