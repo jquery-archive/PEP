@@ -5,7 +5,7 @@ function selector(v) {
   return '[touch-action="' + v + '"]';
 }
 function rule(v) {
-  return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; touch-action-delay: none; }';
+  return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; }';
 }
 var attrib2css = [
   'none',
