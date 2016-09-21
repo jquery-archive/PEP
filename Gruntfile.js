@@ -31,6 +31,11 @@ module.exports = function(grunt) {
   var allFiles = srcFiles.concat(buildFiles).concat(testFiles);
 
   grunt.initConfig({
+    authors: {
+      prior: [
+        'Google, Inc.'
+      ]
+    },
     uglify: {
       pointerevents: {
         options: {
