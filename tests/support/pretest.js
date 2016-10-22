@@ -88,6 +88,9 @@ function getFiles(tree) {
 
 function getTests(tree) {
 	return Promise.all(_.map(tree, function(object) {
+		if (object.type === 'tree') {
+			return Promise.resolve();
+		}
 		var $raw = getRaw(object.url);
 		return $raw.then(function(raw) {
 			return fs.outputFileAsync(path.join(testPath, object.path), raw, 'utf-8');
