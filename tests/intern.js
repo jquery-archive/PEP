@@ -80,6 +80,8 @@ define({
     'tests/functional/pointerevent_pointerup_isprimary_same_as_pointerdown-manual.js',
     'tests/functional/pointerevent_pointerup_pointertype-manual.js',
 
+    // 'tests/functional/pointerevent_properties_mouse-manual.js',
+
     'tests/functional/pointerevent_releasepointercapture_events_to_original_target-manual.js',
     'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual.js',
 
