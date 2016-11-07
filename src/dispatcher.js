@@ -313,7 +313,9 @@ var dispatcher = {
   propagate: function(event, fn, propagateDown) {
     var target = event.target;
     var targets = [];
-    while (!target.contains(event.relatedTarget) && target !== document) {
+
+    // Order of conditions due to document.contains() missing in IE.
+    while (target !== document && !target.contains(event.relatedTarget)) {
       targets.push(target);
       target = target.parentNode;
     }
