@@ -100,6 +100,10 @@ Due to the difficult nature of polyfilling new CSS properties, this library will
 
 Touches will not generate events unless inside of an area that has a valid `touch-action` attribute defined. This is to maintain composition scrolling optimizations where possible.
 
+## navigator.maxTouchPoints
+
+As the information necessary to populate [`navigator.maxTouchPoints`](https://www.w3.org/TR/pointerevents/#extensions-to-the-navigator-interface) is not available in browsers that do not natively implement pointer events, PEP does not currently polyfill this extension to the `navigator` interface.
+
 ### Browser Compatibility
 
 PEP should work on IE 10+ and the latest versions of Chrome, Safari, Firefox, and Opera. In any [browser implementing pointer events natively](http://caniuse.com/#feat=pointer) (detected by checking for `window.PointerEvent`), PEP won't do anything.
