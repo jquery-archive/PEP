@@ -18,6 +18,10 @@ export function applyPolyfill() {
       });
       dispatcher.registerSource('ms', msEvents);
     } else {
+      Object.defineProperty(window.navigator, 'maxTouchPoints', {
+        value: 0,
+        enumerable: true
+      });
       dispatcher.registerSource('mouse', mouseEvents);
       if (window.ontouchstart !== undefined) {
         dispatcher.registerSource('touch', touchEvents);
