@@ -102,7 +102,7 @@ Touches will not generate events unless inside of an area that has a valid `touc
 
 ## navigator.maxTouchPoints
 
-As the information necessary to populate [`navigator.maxTouchPoints`](https://www.w3.org/TR/pointerevents/#extensions-to-the-navigator-interface) is not available in browsers that do not natively implement pointer events, PEP does not currently polyfill this extension to the `navigator` interface.
+As the information necessary to populate [`navigator.maxTouchPoints`](https://www.w3.org/TR/pointerevents/#extensions-to-the-navigator-interface) is not available in browsers that do not natively implement pointer events, PEP sets the value to `0`, which is "the minimum number guaranteed to be recognized" as required by the specification.
 
 ### Browser Compatibility
 
