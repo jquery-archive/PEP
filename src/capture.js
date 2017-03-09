@@ -1,7 +1,7 @@
 import dispatcher from './dispatcher';
 
 var n = window.navigator;
-var s, r;
+var s, r, h;
 function assertActive(id) {
   if (!dispatcher.pointermap.has(id)) {
     var error = new Error('InvalidPointerId');
@@ -25,11 +25,13 @@ if (n.msPointerEnabled) {
     assertActive(pointerId);
     assertConnected(this);
     if (inActiveButtonState(pointerId)) {
+      dispatcher.setCapture(pointerId, this, true);
       this.msSetPointerCapture(pointerId);
     }
   };
   r = function(pointerId) {
     assertActive(pointerId);
+    dispatcher.releaseCapture(pointerId, true);
     this.msReleasePointerCapture(pointerId);
   };
 } else {
@@ -42,9 +44,12 @@ if (n.msPointerEnabled) {
   };
   r = function releasePointerCapture(pointerId) {
     assertActive(pointerId);
-    dispatcher.releaseCapture(pointerId, this);
+    dispatcher.releaseCapture(pointerId);
   };
 }
+h = function hasPointerCapture(pointerId) {
+  return !!dispatcher.captureInfo[pointerId];
+};
 
 export function applyPolyfill() {
   if (window.Element && !Element.prototype.setPointerCapture) {
@@ -54,6 +59,9 @@ export function applyPolyfill() {
       },
       'releasePointerCapture': {
         value: r
+      },
+      'hasPointerCapture': {
+        value: h
       }
     });
   }
