@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width user-scalable=no">
+    <title>PEP (Pointer Events Polyfill) Testing Ground</title>
+    <style>
+      #target0 {
+        height: 200px;
+        width: 200px;
+        background: lightblue;
+        padding: 10px;
+      }
+    </style>
+    <script src="../../dist/pep.js"></script>
+  </head>
+  <body>
+    <div id="target0">
+      This is #target0. Click and hold here to capture a pointer and to set the pointer ID for the buttons below.<br>
+      Use the buttons to release a capture that does not exist or to schedule a capture relase in 2 seconds.<br>
+      Check the console log for details.
+    </div>
+    <button id="releaser">Release Capture on #target0 with Pointer ID: N/A</button>
+    <button id="releaser2">Release Capture on #target0 with Pointer ID: N/A in 2 seconds.</button>
+    <script>
+      var target = document.querySelector('#target0');
+      var releaser = document.querySelector('#releaser');
+      var releaser2 = document.querySelector('#releaser2');
+      var pointerid = -1;
+
+      target.addEventListener('pointerdown', function(event) {
+        target.setPointerCapture(event.pointerId);
+        pointerid = event.pointerId;
+        releaser.innerText = 'Release Capture on #target0 with Pointer ID: ' + event.pointerId;
+        releaser2.innerText = 'Release Capture on #target0 with Pointer ID: ' + event.pointerId + ' in 2 seconds.'
+        console.log('Target has pointer capture: ' + target.hasPointerCapture(event.pointerId));
+        setTimeout(function() {
+          console.log('Target has pointer capture: ' + target.hasPointerCapture(event.pointerId))}, 2000);
+        });
+
+      target.addEventListener('gotpointercapture', function(event) {
+        console.log('#target0: Capture active. PointerID: ' + event.pointerId);
+      });
+
+      target.addEventListener('lostpointercapture', function(event) {
+        console.log('#target0: Capture released. PointerID: ' + event.pointerId);
+      });
+
+      releaser.addEventListener('pointerdown', function(event) {
+        console.log('Attempting to release capture on #target0 with PointerID: ' + pointerid);
+        target.releasePointerCapture(pointerid);
+      });
+
+      releaser2.addEventListener('pointerdown', function(event) {
+        setTimeout(function() {
+          console.log('Attempting to release capture on #target0 with PointerID: ' + pointerid);
+          target.releasePointerCapture(pointerid);
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>
