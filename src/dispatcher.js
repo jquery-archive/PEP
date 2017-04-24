@@ -318,6 +318,7 @@ var dispatcher = {
     while (target !== document && !target.contains(event.relatedTarget)) {
       targets.push(target);
       target = target.parentNode;
+
       // Touch: Do not propagate if node is detached.
       if (!target) {
         return;
