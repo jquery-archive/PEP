@@ -10,7 +10,11 @@ function assertActive(id) {
   }
 }
 function assertConnected(elem) {
-  if (!elem.ownerDocument.contains(elem)) {
+  var parent = elem.parentNode;
+  while (parent && parent !== elem.ownerDocument) {
+    parent = parent.parentNode;
+  }
+  if (!parent) {
     var error = new Error('InvalidStateError');
     error.name = 'InvalidStateError';
     throw error;
