@@ -64,6 +64,10 @@ Check out [this jsbin demo](http://jsbin.com/bojumofowa/1/edit?html,css,js,outpu
 
 jQuery doesn't copy all properties from the original event object to the event object provided in the event handler. You can find [a list of copied and normalized properties on the jQuery API docs](http://api.jquery.com/category/events/event-object/). To access any other original properties, use `event.originalEvent`.
 
+### Using PEP with React
+
+React doesn't support Pointer Events or `touch-action` natively, but check out the [&lt;Pointable/&gt; component](https://www.npmjs.com/package/react-pointable) on npm for a declarative way of integrating PEP / Pointer Events into a React project.
+
 
 ## Why Pointer Events?
 
