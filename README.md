@@ -7,7 +7,7 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
 ## Getting Started
 
 1. Place the PEP script in the document head
-  - `<script src="https://code.jquery.com/pep/0.4.2/pep.js"></script>`
+  - `<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>`
 
 1. By default, no pointer events are sent from an element. This maximizes the possibility that a browser can deliver smooth scrolling and jank-free gestures. If you want to receive events, you must set the `touch-action` property of that element. Set up some elements to create events with the [`touch-action` attribute](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property).
 
@@ -30,7 +30,7 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
   <title>PEP (Pointer Events Polyfill)</title>
   <meta name="viewport" content="width=device-width">
   <!-- include PEP -->
-  <script src="https://code.jquery.com/pep/0.4.1/pep.js"></script>
+  <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
 </head>
 <body>
 <button id="b" touch-action="none">Test button!</button>
