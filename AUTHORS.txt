@@ -27,3 +27,5 @@ Rob Larsen <rob@htmlcssjavascript.com>
 Alexander Schmitz <arschmitz@gmail.com>
 Robert Tuttle <robert.tuttle@frogdesign.com>
 Brenton Simpson <appsforartists@google.com>
+Patrick H. Lauke <redux@splintered.co.uk>
+Caleb Miller <calebdotmiller@gmail.com>
