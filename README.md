@@ -100,7 +100,16 @@ Instead, there should exist a set of events that are normalized such that they b
 According to the spec, the
 [touch-action](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property) CSS property controls whether an element will perform a "default action" such as scrolling, or receive a continuous stream of pointer events.
 
-Due to the difficult nature of polyfilling new CSS properties, this library will use a touch-action *attribute* instead. In addition, run time changes involving the `touch-action` attribute will be monitored for maximum flexibility.
+Due to the difficult nature of polyfilling new CSS properties, this library uses a touch-action *attribute* instead. For PEP to work correctly, you will therefore need to include `touch-action="..."` attributes in your HTML that mirror any `touch-action:...` properties you have in your CSS.
+
+```
+<style>
+  div#foo { touch-action: none; }
+</style>
+...
+<div id="foo" touch-action="none"> ... </div>
+```
+Run time changes involving the `touch-action` attribute are monitored using Mutation Observers for maximum flexibility.
 
 Touches will not generate events unless inside of an area that has a valid `touch-action` attribute defined. This is to maintain composition scrolling optimizations where possible.
 
