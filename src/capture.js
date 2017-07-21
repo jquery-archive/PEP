@@ -57,16 +57,8 @@ h = function hasPointerCapture(pointerId) {
 
 export function applyPolyfill() {
   if (window.Element && !Element.prototype.setPointerCapture) {
-    Object.defineProperties(Element.prototype, {
-      'setPointerCapture': {
-        value: s
-      },
-      'releasePointerCapture': {
-        value: r
-      },
-      'hasPointerCapture': {
-        value: h
-      }
-    });
+    Object.defineProperty(Element.prototype, 'setPointerCapture', { value: s });
+    Object.defineProperty(Element.prototype, 'releasePointerCapture', { value: r });
+    Object.defineProperty(Element.prototype, 'hasPointerCapture', { value: h });
   }
 }
