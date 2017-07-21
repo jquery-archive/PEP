@@ -321,7 +321,7 @@ var touchEvents = {
     this.cleanUpPointer(inPointer);
   },
   cleanUpPointer: function(inPointer) {
-    pointermap.delete(inPointer.pointerId);
+    pointermap["remove" in pointermap ? "remove" : "delete"](inPointer.pointerId);
     this.removePrimaryPointer(inPointer);
   },
 

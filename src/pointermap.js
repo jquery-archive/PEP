@@ -12,7 +12,7 @@ function SparseArrayMap() {
 SparseArrayMap.prototype = {
   set: function(k, v) {
     if (v === undefined) {
-      return this.delete(k);
+      return this.remove(k);
     }
     if (!this.has(k)) {
       this.size++;
@@ -22,7 +22,7 @@ SparseArrayMap.prototype = {
   has: function(k) {
     return this.array[k] !== undefined;
   },
-  delete: function(k) {
+  remove: function(k) {
     if (this.has(k)) {
       delete this.array[k];
       this.size--;

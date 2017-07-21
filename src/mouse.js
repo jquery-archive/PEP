@@ -148,7 +148,7 @@ var mouseEvents = {
     this.deactivateMouse();
   },
   deactivateMouse: function() {
-    pointermap.delete(this.POINTER_ID);
+    pointermap["remove" in pointermap ? "remove" : "delete"](this.POINTER_ID);
   }
 };
 
