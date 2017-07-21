@@ -53,11 +53,17 @@ var MOUSE_DEFAULTS = [
 function PointerEvent(inType, inDict) {
   inDict = inDict || Object.create(null);
 
-  var e = new CustomEvent(inType, {
-    bubbles: inDict.bubbles || false,
-    cancelable: inDict.cancelable || false,
-    detail: inDict.detail || {}
-  });
+  var e;
+  if (document.createEvent) {
+    e = document.createEvent("CustomEvent");
+    e.initCustomEvent(inType, inDict.bubbles || false, inDict.cancelable || false, inDict.detail || {});
+  } else {
+    e = new CustomEvent(inType, {
+      bubbles: inDict.bubbles || false,
+      cancelable: inDict.cancelable || false,
+      detail: inDict.detail || {}
+    });
+  }
 
   // define inherited MouseEvent properties
   // skip bubbles and cancelable since they're set above in initEvent()
