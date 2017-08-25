@@ -315,7 +315,7 @@ var dispatcher = {
     var targets = [];
 
     // Order of conditions due to document.contains() missing in IE.
-    while (target !== document && !target.contains(event.relatedTarget)) {
+    while (target != null && target !== document && !target.contains(event.relatedTarget)) {
       targets.push(target);
       target = target.parentNode;
 
