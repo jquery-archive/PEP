@@ -38,7 +38,7 @@
     "rollup": "^0.29.0"
   },
   "web-platform-tests": {
-    "repo": "w3c/web-platform-tests#c5d333c859075744b3828a2a29057ee456234cb2",
+    "repo": "w3c/web-platform-tests#e3c513e9ef1d1bf07488b13f55749b6ec1ebd8b9",
     "path": "./tests/w3c"
   },
   "scripts": {

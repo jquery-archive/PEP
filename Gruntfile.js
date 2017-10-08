@@ -39,7 +39,7 @@ module.exports = function(grunt) {
     uglify: {
       pointerevents: {
         options: {
-          preserveComments: 'some'
+          preserveComments: /^!/
         },
         nonull: true,
         dest: 'dist/pep.min.js',
