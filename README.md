@@ -113,6 +113,10 @@ Run time changes involving the `touch-action` attribute are monitored using Muta
 
 Touches will not generate events unless inside of an area that has a valid `touch-action` attribute defined. This is to maintain composition scrolling optimizations where possible.
 
+### Capturing Phase
+
+PEP does not currently polyfill the capturing phase for pointer events.
+
 ## navigator.maxTouchPoints
 
 As the information necessary to populate [`navigator.maxTouchPoints`](https://www.w3.org/TR/pointerevents/#extensions-to-the-navigator-interface) is not available in browsers that do not natively implement pointer events, PEP sets the value to `0`, which is "the minimum number guaranteed to be recognized" as required by the specification.
