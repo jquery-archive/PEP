@@ -70,7 +70,7 @@ As of version [16.4](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), Rea
 
 ```js
 export function Pointable() {
-  return <div touch-action="none" onPointerDown={(e) => console.log(e);} /> 
+  return <div touch-action="none" onPointerDown={(e) => console.log(e)} /> 
 }
 ```
 
