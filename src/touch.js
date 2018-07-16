@@ -44,8 +44,19 @@ var touchEvents = {
     }
   },
   elementRemoved: function(el) {
-    el._scrollType = undefined;
-    dispatcher.unlisten(el, this.events);
+
+    // In some cases, an element is removed before a touchend.
+    // When this is the case, we should wait for the touchend before unlistening,
+    // because we still want pointer events to bubble up after removing from DOM.
+    if (pointermap.size > 0) {
+      el.addEventListener('touchend', () => {
+        el._scrollType = undefined;
+        dispatcher.unlisten(el, this.events);
+      });
+    } else {
+      el._scrollType = undefined;
+      dispatcher.unlisten(el, this.events);
+    }
 
     // remove touch-action from shadow
     allShadows(el).forEach(function(s) {
