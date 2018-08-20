@@ -66,9 +66,9 @@ jQuery doesn't copy all properties from the original event object to the event o
 
 ### Using PEP with React
 
-React supports pointer events natively [since version 16.4.0](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), but does not includes polyfill to avoid an increase in bundle size.
+React supports pointer events natively [since version 16.4.0](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), but does not include polyfills to avoid an increase in bundle size.
 
-PEP works fine with React 16.4 and higher, but if you want to use pointer events with React < 16.4 check out [this npm module](https://www.npmjs.com/package/react-pointable) which introduces declarative &lt;Pointable /&gt; component.
+PEP works fine with React 16.4 and higher, but if you want to use pointer events with React < 16.4 check out [the `react-pointable` npm module](https://www.npmjs.com/package/react-pointable) which introduces a declarative `&lt;Pointable /&gt;` component.
 
 ## Why Pointer Events?
 
