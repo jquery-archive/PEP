@@ -39,11 +39,11 @@ define([
     });
 
     test('setPointerCapture throw exceptions when the pointerId is not on screen', function() {
-      expect(function() { set(host); }).to.throw(/InvalidPointerId/);
+      expect(function() { set(host); }).to.throw(/NotFoundError/);
     });
 
     test('releasePointerCapture throws exception when the pointerId is not on screen', function() {
-      expect(function() { release(host); }).to.throw(/InvalidPointerId/);
+      expect(function() { release(host); }).to.throw(/NotFoundError/);
     });
 
     suite('pointercapture events', function() {
