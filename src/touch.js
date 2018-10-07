@@ -8,11 +8,18 @@ var findTarget = targeting.findTarget.bind(targeting);
 var allShadows = targeting.allShadows.bind(targeting);
 var pointermap = dispatcher.pointermap;
 
-// This should be long enough to ignore compat mouse events made by touch
+// this should be long enough to ignore compat mouse events made by touch
 var DEDUP_TIMEOUT = 2500;
 var CLICK_COUNT_TIMEOUT = 200;
 var ATTRIB = 'touch-action';
 var INSTALLER;
+
+// bitmask fot scroll 
+var UP = 1; // 0001
+var DOWN = 2; // 0010
+var LEFT = 4; // 0100
+var RIGHT = 8; // 1000
+var AUTO = UP | DOWN | LEFT | RIGHT;
 
 // handler block for native touch events
 var touchEvents = {
@@ -32,7 +39,7 @@ var touchEvents = {
   elementAdded: function(el) {
     var a = el.getAttribute(ATTRIB);
     var st = this.touchActionToScrollType(a);
-    if (st) {
+    if (typeof st === "number") {
       el._scrollType = st;
       dispatcher.listen(el, this.events);
 
@@ -59,35 +66,49 @@ var touchEvents = {
     var oldSt = this.touchActionToScrollType(oldValue);
 
     // simply update scrollType if listeners are already established
-    if (st && oldSt) {
+    if (typeof st === "number" && typeof oldSt === "number") {
       el._scrollType = st;
       allShadows(el).forEach(function(s) {
         s._scrollType = st;
       }, this);
-    } else if (oldSt) {
+    } else if (typeof oldSt === "number") {
       this.elementRemoved(el);
-    } else if (st) {
+    } else if (typeof st === "number") {
       this.elementAdded(el);
     }
   },
   scrollTypes: {
-    EMITTER: 'none',
-    XSCROLLER: 'pan-x',
-    YSCROLLER: 'pan-y',
-    SCROLLER: /^(?:pan-x pan-y)|(?:pan-y pan-x)|auto$/
+    UP: function(s) {
+      return s.includes('pan-y') || s.includes('pan-up') ? UP : 0;
+    },
+    DOWN: function(s) {
+      return s.includes('pan-y') || s.includes('pan-down') ? DOWN : 0;
+    },
+    LEFT: function(s) {
+      return s.includes('pan-x') || s.includes('pan-left') ? LEFT : 0;
+    },
+    RIGHT: function(s) {
+      return s.includes('pan-x') || s.includes('pan-right') ? RIGHT : 0;
+    }
   },
   touchActionToScrollType: function(touchAction) {
-    var t = touchAction;
-    var st = this.scrollTypes;
-    if (t === 'none') {
-      return 'none';
-    } else if (t === st.XSCROLLER) {
-      return 'X';
-    } else if (t === st.YSCROLLER) {
-      return 'Y';
-    } else if (st.SCROLLER.exec(t)) {
-      return 'XY';
+    if (!touchAction) {
+      return;
     }
+
+    if (touchAction === "auto") {
+      return AUTO;
+    }
+
+    if (touchAction === "none") {
+      return 0;
+    }
+
+    var s = touchAction.split(' ');
+    var st = this.scrollTypes;
+
+    // construct a bitmask of allowed scroll directions
+    return st.UP(s) | st.DOWN(s) | st.LEFT(s) | st.RIGHT(s)
   },
   POINTER_TYPE: 'touch',
   firstTouch: null,
@@ -181,27 +202,58 @@ var touchEvents = {
   shouldScroll: function(inEvent) {
     if (this.firstXY) {
       var ret;
-      var scrollAxis = inEvent.currentTarget._scrollType;
-      if (scrollAxis === 'none') {
+      var st = inEvent.currentTarget._scrollType;
+      if (st === 0) {
 
-        // this element is a touch-action: none, should never scroll
+        // this element is a `touch-action: none`, should never scroll
         ret = false;
-      } else if (scrollAxis === 'XY') {
+      } else if (st === AUTO) {
 
-        // this element should always scroll
+        // this element is a `touch-action: auto`, should always scroll
         ret = true;
       } else {
         var t = inEvent.changedTouches[0];
 
-        // check the intended scroll axis, and other axis
-        var a = scrollAxis;
-        var oa = scrollAxis === 'Y' ? 'X' : 'Y';
-        var da = Math.abs(t['client' + a] - this.firstXY[a]);
-        var doa = Math.abs(t['client' + oa] - this.firstXY[oa]);
+        var dy = t['clientY'] - this.firstXY.Y;
+        var dya = Math.abs(dy);
+        var dx = t['clientX'] - this.firstXY.X;
+        var dxa = Math.abs(dx);
 
-        // if delta in the scroll axis > delta other axis, scroll instead of
-        // making events
-        ret = da >= doa;
+        var up = st & UP;
+        var down = st & DOWN;
+        var left = st & LEFT;
+        var right = st & RIGHT;
+
+        if (left && right) {
+
+          // should scroll on the x axis
+          ret = dxa > dya;
+        } else if (left) {
+
+          // should scroll left
+          ret = dxa > dya && dx > 0;
+        } else if (right) {
+
+          // should scroll right
+          ret = dxa > dya && dx < 0;
+        }
+
+        if (!ret) {
+          if (up && down) {
+
+            // should scroll on the y axis
+            ret = dxa < dya;
+          } else if (up) {
+
+            // should scroll up
+            ret = dxa < dya && dy > 0;
+          } else if (down) {
+
+            // should scroll down
+            ret = dxa < dya && dy < 0;
+          }
+        }
+
       }
       this.firstXY = null;
       return ret;
