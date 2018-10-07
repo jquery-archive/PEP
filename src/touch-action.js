@@ -1,5 +1,5 @@
 function shadowSelector(s) {
-  return 'body /shadow-deep/ ' + s
+  return 'body /shadow-deep/ ' + s;
 }
 function rule(v) {
   return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; }';

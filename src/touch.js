@@ -14,11 +14,11 @@ var CLICK_COUNT_TIMEOUT = 200;
 var ATTRIB = 'touch-action';
 var INSTALLER;
 
-// bitmask fot scroll 
-var UP = 1; // 0001
-var DOWN = 2; // 0010
-var LEFT = 4; // 0100
-var RIGHT = 8; // 1000
+// bitmask for _scrollType
+var UP = 1;
+var DOWN = 2;
+var LEFT = 4;
+var RIGHT = 8;
 var AUTO = UP | DOWN | LEFT | RIGHT;
 
 // handler block for native touch events
@@ -108,7 +108,7 @@ var touchEvents = {
     var st = this.scrollTypes;
 
     // construct a bitmask of allowed scroll directions
-    return st.UP(s) | st.DOWN(s) | st.LEFT(s) | st.RIGHT(s)
+    return st.UP(s) | st.DOWN(s) | st.LEFT(s) | st.RIGHT(s);
   },
   POINTER_TYPE: 'touch',
   firstTouch: null,
@@ -214,9 +214,9 @@ var touchEvents = {
       } else {
         var t = inEvent.changedTouches[0];
 
-        var dy = t['clientY'] - this.firstXY.Y;
+        var dy = t.clientY - this.firstXY.Y;
         var dya = Math.abs(dy);
-        var dx = t['clientX'] - this.firstXY.X;
+        var dx = t.clientX - this.firstXY.X;
         var dxa = Math.abs(dx);
 
         var up = st & UP;
