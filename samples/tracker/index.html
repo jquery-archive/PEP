@@ -81,17 +81,34 @@ function init(){
 function draw() {
   c.clearRect(0,0,canvas.width, canvas.height); 
 
-  for(var pointerId in pointers)
-  {
-    var pointer = pointers[pointerId]; 
-    c.beginPath(); 
+  for(const pointerId of Object.keys(pointers)) {
+    c.beginPath();
     c.fillStyle = "white";
-    c.fillText(pointer.pointerType+ " pointerId : "+pointer.pointerId+" x:"+pointer.x+" y:"+pointer.y, pointer.x+30, pointer.y-30); 
+    const { pointerType, x, y, pressure, tiltX, tiltY} = pointers[pointerId];
+    c.fillText(`${pointerType} [${pointerId}] ${x},${y} ${pressure || '(no pressure)'} ${tiltX || '(no tilt)'} ${tiltY || ''}`, x+30, y-30);
 
     c.beginPath(); 
+    c.strokeStyle = "orange";
+    c.lineWidth = "4";
+    c.moveTo(x, y);
+    c.lineTo(
+      x + 40 * Math.sin(tiltX * Math.PI / 180),
+      y + 40 * Math.sin(tiltY * Math.PI / 180)
+    );
+    c.stroke();
+
+    if (pressure > 0) {
+      c.beginPath();
+      c.strokeStyle = "#008bff";
+      c.lineWidth = "6";
+      c.arc(x, y, 40 * pressure, 0, Math.PI * 2, true);
+      c.stroke();
+    }
+
+    c.beginPath();
     c.strokeStyle = "cyan";
     c.lineWidth = "6";
-    c.arc(pointer.x, pointer.y, 40, 0, Math.PI*2, true); 
+    c.arc(x, y, 40, 0, Math.PI*2, true);
     c.stroke();
   }
   //c.fillText("hello", 0,0); 
@@ -99,21 +116,22 @@ function draw() {
   requestAnimFrame(draw);
 }
 
-function onPointerDown(e) {
-  pointers[e.pointerId] = {
-    x: e.clientX,
-    y: e.clientY,
-    pointerType: e.pointerType,
-    pointerId: e.pointerId
+function onPointerDown({ clientX, clientY, pointerType, pointerId, pressure, tiltX, tiltY }) {
+  pointers[pointerId] = {
+    x: clientX,
+    y: clientY,
+    pointerType,
+    pointerId,
+    pressure,
+    tiltX,
+    tiltY,
   };
 }
 
 function onPointerMove(e) {
   // Prevent the browser from doing its default thing (scroll, zoom)
-  var pointer = pointers[e.pointerId];
-  if (pointer) {
-    pointer.x = e.clientX;
-    pointer.y = e.clientY;
+  if (e.pointerId in pointers) {
+    onPointerDown(e);
   }
 } 
 

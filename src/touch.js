@@ -19,6 +19,7 @@ var touchEvents = {
   events: [
     'touchstart',
     'touchmove',
+    'touchforcechange',
     'touchend',
     'touchcancel'
   ],
@@ -127,7 +128,7 @@ var touchEvents = {
   },
   typeToButtons: function(type) {
     var ret = 0;
-    if (type === 'touchstart' || type === 'touchmove') {
+    if (type === 'touchstart' || type === 'touchmove' || type === 'touchforcechange') {
       ret = 1;
     }
     return ret;
@@ -150,7 +151,20 @@ var touchEvents = {
     e.height = (inTouch.radiusY || inTouch.webkitRadiusY || 0) * 2;
     e.pressure = inTouch.force || inTouch.webkitForce || 0.5;
     e.isPrimary = this.isPrimaryTouch(inTouch);
-    e.pointerType = this.POINTER_TYPE;
+    if (inTouch.altitudeAngle) {
+      const tan = Math.tan(inTouch.altitudeAngle);
+      const radToDeg = 180 / Math.PI;
+      e.tiltX = Math.atan(Math.cos(inTouch.azimuthAngle) / tan) * radToDeg;
+      e.tiltY = Math.atan(Math.sin(inTouch.azimuthAngle) / tan) * radToDeg;
+    } else {
+      e.tiltX = 0;
+      e.tiltY = 0;
+    }
+    if (inTouch.touchType === 'stylus') {
+      e.pointerType = 'pen';
+    } else {
+      e.pointerType = this.POINTER_TYPE;
+    }
 
     // forward modifier keys
     e.altKey = cte.altKey;
@@ -258,6 +272,10 @@ var touchEvents = {
     });
     dispatcher.enterOver(inPointer);
     dispatcher.down(inPointer);
+  },
+  touchforcechange: function(inEvent) {
+    // Handle pressure and tilt updates without touch point moving
+    this.touchmove(inEvent);
   },
   touchmove: function(inEvent) {
     if (!this.scrolling) {
