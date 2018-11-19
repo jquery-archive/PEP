@@ -273,8 +273,9 @@ var touchEvents = {
     dispatcher.enterOver(inPointer);
     dispatcher.down(inPointer);
   },
+
+  // Called when pressure or tilt changes without the x/y changing
   touchforcechange: function(inEvent) {
-    // Handle pressure and tilt updates without touch point moving
     this.touchmove(inEvent);
   },
   touchmove: function(inEvent) {

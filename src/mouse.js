@@ -76,10 +76,6 @@ var mouseEvents = {
     }
     inEvent.buttons = e.buttons;
   },
-  webkitmouseforcechanged: function(inEvent) {
-    // This is called when the user force presses the mouse without moving the position
-    this.mousedown(inEvent);
-  },
   mousedown: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
       var p = pointermap.get(this.POINTER_ID);
@@ -96,6 +92,11 @@ var mouseEvents = {
         dispatcher.move(e);
       }
     }
+  },
+
+  // This is called when the user force presses without moving x/y
+  webkitmouseforcechanged: function(inEvent) {
+    this.mousemove(inEvent);
   },
   mousemove: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {

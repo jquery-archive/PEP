@@ -82,10 +82,23 @@ function draw() {
   c.clearRect(0,0,canvas.width, canvas.height); 
 
   for(const pointerId of Object.keys(pointers)) {
+    const p = pointers[pointerId];
     c.beginPath();
     c.fillStyle = "white";
-    const { pointerType, x, y, pressure, tiltX, tiltY} = pointers[pointerId];
-    c.fillText(`${pointerType} [${pointerId}] ${x},${y} ${pressure || '(no pressure)'} ${tiltX || '(no tilt)'} ${tiltY || ''}`, x+30, y-30);
+
+    const x = p.x;
+    const y = p.y;
+    const pressure = p.pressure;
+    const tiltX = p.tiltX;
+    const tiltY = p.tiltY;
+    c.fillText(
+      p.pointerType + ' [' + pointerId + '] ' +
+      x + ',' + y + ' ' +
+      (pressure || '(no pressure)') + ' ' +
+      (tiltX || '(no tilt)') + ' ' + (tiltY || ''),
+      x + 30,
+      y - 30
+    );
 
     c.beginPath(); 
     c.strokeStyle = "orange";
@@ -116,22 +129,26 @@ function draw() {
   requestAnimFrame(draw);
 }
 
-function onPointerDown({ clientX, clientY, pointerType, pointerId, pressure, tiltX, tiltY }) {
+function updatePointer(e) {
   pointers[pointerId] = {
-    x: clientX,
-    y: clientY,
-    pointerType,
-    pointerId,
-    pressure,
-    tiltX,
-    tiltY,
+    x: e.clientX,
+    y: e.clientY,
+    pointerType: e.pointerType,
+    pointerId: e.pointerId,
+    pressure: e.pressure,
+    tiltX: e.tiltX,
+    tiltY: e.tiltY,
   };
+}
+
+function onPointerDown(e) {
+  updatePointer(e);
 }
 
 function onPointerMove(e) {
   // Prevent the browser from doing its default thing (scroll, zoom)
   if (e.pointerId in pointers) {
-    onPointerDown(e);
+    updatePointer(e);
   }
 } 
 
