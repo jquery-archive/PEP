@@ -130,7 +130,7 @@ function draw() {
 }
 
 function updatePointer(e) {
-  pointers[pointerId] = {
+  pointers[e.pointerId] = {
     x: e.clientX,
     y: e.clientY,
     pointerType: e.pointerType,
