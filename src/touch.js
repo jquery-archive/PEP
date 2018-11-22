@@ -149,7 +149,7 @@ var touchEvents = {
     e.buttons = this.typeToButtons(cte.type);
     e.width = (inTouch.radiusX || inTouch.webkitRadiusX || 0) * 2;
     e.height = (inTouch.radiusY || inTouch.webkitRadiusY || 0) * 2;
-    e.pressure = inTouch.force || inTouch.webkitForce || 0.5;
+    e.pressure = inTouch.force !== undefined ? inTouch.force : inTouch.webkitForce !== undefined ? inTouch.webkitForce : undefined;
     e.isPrimary = this.isPrimaryTouch(inTouch);
     if (inTouch.altitudeAngle) {
       const tan = Math.tan(inTouch.altitudeAngle);
