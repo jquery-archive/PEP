@@ -43,7 +43,8 @@
   },
   "scripts": {
     "build": "grunt build",
-    "ci": "grunt ci",
-    "test": "grunt test"
+    "lint": "grunt lint",
+    "test": "grunt test",
+    "ci": "grunt ci"
   }
 }
