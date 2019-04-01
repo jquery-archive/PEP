@@ -13,9 +13,7 @@ var _ = require('lodash'),
 
 var basePath = path.join(__dirname, '..', '..'),
 	testPath = path.join(basePath, testPkg.path),
-	pepPath = path.relative(testPath, path.join(basePath, 'dist', 'pep.js')),
 	shaPath = path.join(testPath, '.sha'),
-	supPath = path.relative(testPath, path.join(basePath, 'tests', 'support', 'pep_support.js')),
 	token = 'Mjk5ZGQxNTk0ZDA3YTllY2I5YzlmMzRhZWYyOTEyZTQ1MDE2ZDdmNw==',
 	treeUrl = 'https://api.github.com/repos/${owner}/${repo}/git/trees/${sha}';
 
@@ -89,7 +87,12 @@ function getFiles(tree) {
 function getTests(tree) {
 	return Promise.all(_.map(tree, function(object) {
 		if (object.type === 'tree') {
-			return Promise.resolve();
+			return getTree(object.url).then(function(tree) {
+				tree.forEach(function(node) {
+					node.path = object.path + '/' + node.path
+				});
+				return getTests(tree);
+			});
 		}
 		var $raw = getRaw(object.url);
 		return $raw.then(function(raw) {
@@ -110,10 +113,12 @@ function getHarness(tree) {
 }
 
 function modFiles() {
-	return glob(path.join(testPath, '*.html')).then(function(paths) {
+	return glob(path.join(testPath, '**/*.html')).then(function(paths) {
 		return Promise.all(_.map(paths, function(path) {
 			return fs.readFileAsync(path, 'utf8')
-				.then(modFile)
+				.then(function(source) {
+					return modFile(source, path);
+				})
 				.then(function(source) {
 					return fs.writeFileAsync(path, source, 'utf-8');
 				});
@@ -121,14 +126,16 @@ function modFiles() {
 	});
 }
 
-function modFile(source) {
+function modFile(source, filePath) {
+	var fileDir = path.dirname(filePath);
+	var pepPath = path.relative(fileDir, path.join(basePath, 'dist', 'pep.js'));
+	var supPath = path.relative(fileDir, path.join(basePath, 'tests', 'support', 'pep_support.js')),
 
 	// Ensure pep.js is the first script loaded on the page
-	source = source.replace(/^\s*(?=<script\b)/im, '\n$&<script src="' + encodeURI(pepPath) + '"></script>\n$&');
+	source = source.replace(/^\s*(?=<script\b|<\/head>)/im, '\n$&<script src="' + encodeURI(pepPath) + '"></script>\n$&');
 
 	// Add "tests/support/pep_support.js" after "pointerevent_support.js"
 	source = source.replace(/^(\s*)<script.*?pointerevent_support[\s\S]+?<\/script>\n/im, '$&$1<script src="' + encodeURI(supPath) + '"></script>\n');
-
 	// Make paths to scripts and style sheets relative instead of absolute
 	return source.replace(/((?:src|href)\s*=\s*['"])([^.])/g, function(match, prelude, chr) {
 		return prelude + '.' + (chr === '/' ? '' : '/') + chr;
