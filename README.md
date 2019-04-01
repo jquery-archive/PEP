@@ -47,6 +47,16 @@ document.getElementById( "b" ).addEventListener( "pointerdown", function( e ) {
 
 See also the [examples in the W3C Pointer Events Specification](http://www.w3.org/TR/pointerevents/#examples) and our own [samples for using PEP](http://jquery.github.io/PEP/).
 
+### Using PEP as a module
+
+```shell
+npm install pepjs
+```
+
+```javascript
+import 'pepjs'
+```
+
 ### Using PEP with jQuery
 
 You can use pointer events with jQuery and PEP:
