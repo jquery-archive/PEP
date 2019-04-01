@@ -16,7 +16,6 @@ var MOUSE_PROPS = [
   'bubbles',
   'cancelable',
   'view',
-  'detail',
   'screenX',
   'screenY',
   'clientX',
@@ -34,7 +33,6 @@ var MOUSE_PROPS = [
 var MOUSE_DEFAULTS = [
   false,
   false,
-  null,
   null,
   0,
   0,
@@ -68,7 +66,7 @@ function PointerEvent(inType, inDict) {
   // state and 0 for up state.
   var pressure = 0;
 
-  if (inDict.pressure && e.buttons) {
+  if (inDict.pressure !== undefined && e.buttons) {
     pressure = inDict.pressure;
   } else {
     pressure = e.buttons ? 0.5 : 0;
@@ -80,8 +78,8 @@ function PointerEvent(inType, inDict) {
 
   // define the properties of the PointerEvent interface
   e.pointerId = inDict.pointerId || 0;
-  e.width = inDict.width || 0;
-  e.height = inDict.height || 0;
+  e.width = inDict.width || 1;
+  e.height = inDict.height || 1;
   e.pressure = pressure;
   e.tiltX = inDict.tiltX || 0;
   e.tiltY = inDict.tiltY || 0;
@@ -90,6 +88,7 @@ function PointerEvent(inType, inDict) {
   e.pointerType = inDict.pointerType || '';
   e.hwTimestamp = inDict.hwTimestamp || 0;
   e.isPrimary = inDict.isPrimary || false;
+  e.detail = 0;
   return e;
 }
 

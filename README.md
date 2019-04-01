@@ -9,9 +9,9 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
 1. Place the PEP script in the document head
   - `<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>`
 
-1. By default, no pointer events are sent from an element. This maximizes the possibility that a browser can deliver smooth scrolling and jank-free gestures. If you want to receive events, you must set the `touch-action` property of that element. Set up some elements to create events with the [`touch-action` attribute](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property).
+2. By default, no pointer events are sent from an element. This maximizes the possibility that a browser can deliver smooth scrolling and jank-free gestures. If you want to receive events, you must set the `touch-action` property of that element. Set up some elements to create events with the [`touch-action` attribute](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property).
 
-1. Listen for the desired events
+3. Listen for the desired events
   - `pointermove`: a pointer moves, similar to touchmove or mousemove.
   - `pointerdown`: a pointer is activated, or a device button held.
   - `pointerup`: a pointer is deactivated, or a device button released.
@@ -21,7 +21,7 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
   - `pointerleave`: a pointer leaves the bounding box of an element.
   - `pointercancel`: a pointer will no longer generate events.
 
-1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of pointer events.
+4. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of pointer events.
 
 ```html
 <html lang="en">
