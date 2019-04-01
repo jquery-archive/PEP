@@ -27,7 +27,9 @@ define({
   ],
   functionalSuites: [
 
-    'tests/functional/pointerevent_button_attribute_mouse-manual',
+    // 'tests/functional/pointerevent_attributes_hoverable_pointers-manual',
+    // 'tests/functional/pointerevent_attributes_nohover_pointers-manual.html',
+
     'tests/functional/pointerevent_capture_mouse-manual',
     'tests/functional/pointerevent_capture_suppressing_mouse-manual',
 
@@ -40,58 +42,48 @@ define({
     'tests/functional/pointerevent_lostpointercapture_is_first-manual',
 
     // 'tests/functional/pointerevent_pointercancel_touch-manual',
-    'tests/functional/pointerevent_pointerdown-manual',
 
-    'tests/functional/pointerevent_pointerenter-manual',
     'tests/functional/pointerevent_pointerenter_does_not_bubble-manual',
 
-    // 'tests/functional/pointerevent_pointerenter_nohover-manual.html',
     // 'tests/functional/pointerevent_pointerleave_after_pointercancel_touch-manual',
-    // 'tests/functional/pointerevent_pointerleave_after_pointerup_nohover-manual',
 
     'tests/functional/pointerevent_pointerleave_descendant_over-manual',
     'tests/functional/pointerevent_pointerleave_descendants-manual',
     'tests/functional/pointerevent_pointerleave_does_not_bubble-manual',
-    'tests/functional/pointerevent_pointerleave_mouse-manual',
 
     // 'tests/functional/pointerevent_pointerleave_pen-manual',
-    // 'tests/functional/pointerevent_pointerleave_touch-manual',
 
     'tests/functional/pointerevent_pointermove-manual',
 
-    // 'tests/functional/pointerevent_pointermove-on-chorded-mouse-button',
+    // 'tests/functional/pointerevent_pointermove_on_chorded_mouse_button-manual',
     'tests/functional/pointerevent_pointermove_isprimary_same_as_pointerdown-manual',
-    'tests/functional/pointerevent_pointermove_pointertype-manual',
-
-    'tests/functional/pointerevent_pointerout-manual',
 
     // 'tests/functional/pointerevent_pointerout_after_pointercancel_touch-manual.js',
-    // 'tests/functional/pointerevent_pointerout_after_pointerup_nohover-manual.js',
     // 'tests/functional/pointerevent_pointerout_pen-manual.js',
 
     'tests/functional/pointerevent_pointerout_received_once-manual.js',
-    'tests/functional/pointerevent_pointerover-manual.js',
-    'tests/functional/pointerevent_pointertype_mouse-manual.js',
-
-    // 'tests/functional/pointerevent_pointertype_pen-manual.js',
-    // 'tests/functional/pointerevent_pointertype_touch-manual.js',
-
-    'tests/functional/pointerevent_pointerup-manual.js',
-    'tests/functional/pointerevent_pointerup_isprimary_same_as_pointerdown-manual.js',
-    'tests/functional/pointerevent_pointerup_pointertype-manual.js',
-
-    // 'tests/functional/pointerevent_properties_mouse-manual.js',
 
     'tests/functional/pointerevent_releasepointercapture_events_to_original_target-manual.js',
     'tests/functional/pointerevent_releasepointercapture_invalid_pointerid-manual.js',
 
     // 'tests/functional/pointerevent_releasepointercapture_onpointercancel_touch-manual.js',
+    // 'tests/functional/pointerevent_releasepointercapture_release_right_after_capture-manual',
     'tests/functional/pointerevent_releasepointercapture_onpointerup_mouse-manual',
 
+    // 'tests/functional/pointerevent_setpointercapture_override_pending_capture_element-manual',
+    // 'tests/functional/pointerevent_setpointercapture_to_same_element_twice-manual',
     'tests/functional/pointerevent_setpointercapture_disconnected-manual.js',
     'tests/functional/pointerevent_setpointercapture_inactive_button_mouse-manual.js',
     'tests/functional/pointerevent_setpointercapture_invalid_pointerid-manual.js',
     'tests/functional/pointerevent_setpointercapture_relatedtarget-manual.js'
+
+    // 'tests/functional/pointerevent_suppress_compat_events_on_click-manual',
+    // 'tests/functional/pointerevent_suppress_compat_events_on_drag_mouse-manual',
+
+    // 'tests/functional/pointerevent_element_haspointercapture-manual',
+    // 'tests/functional/pointerevent_element_haspointercapture_release_pending_capture-manual',
+
+    // 'tests/functional/pointerevent_multiple_primary_pointers_boundary_events-manual',
 
     // 'tests/functional/pointerevent_touch-action-auto-css_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-button-test_touch-manual.js',
@@ -103,12 +95,16 @@ define({
     // 'tests/functional/pointerevent_touch-action-inherit_highest-parent-none_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-inherit_parent-none_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-keyboard-manual.js',
-    // 'tests/functional/pointerevent_touch-action-mouse-manual.js'
+    // 'tests/functional/pointerevent_touch-action-mouse-manual.js',
     // 'tests/functional/pointerevent_touch-action-none-css_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-pan-x-css_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-pan-x-pan-y-pan-y_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-pan-x-pan-y_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-pan-y-css_touch-manual.js',
+    // 'tests/functional/pointerevent_touch-action-pan-down-css_touch-manual',
+    // 'tests/functional/pointerevent_touch-action-pan-left-css_touch-manual',
+    // 'tests/functional/pointerevent_touch-action-pan-right-css_touch-manual',
+    // 'tests/functional/pointerevent_touch-action-pan-up-css_touch-manual',
     // 'tests/functional/pointerevent_touch-action-span-test_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-svg-test_touch-manual.js',
     // 'tests/functional/pointerevent_touch-action-table-test_touch-manual.js',
