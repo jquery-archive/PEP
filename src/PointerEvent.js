@@ -66,7 +66,7 @@ function PointerEvent(inType, inDict) {
   // state and 0 for up state.
   var pressure = 0;
 
-  if (inDict.pressure && e.buttons) {
+  if (inDict.pressure !== undefined && e.buttons) {
     pressure = inDict.pressure;
   } else {
     pressure = e.buttons ? 0.5 : 0;
