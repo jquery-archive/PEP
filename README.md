@@ -66,9 +66,13 @@ jQuery doesn't copy all properties from the original event object to the event o
 
 ### Using PEP with React
 
-React supports pointer events natively [since version 16.4.0](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), but does not include polyfills to avoid an increase in bundle size.
+As of version [16.4](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), React comes with first class support for pointer events. To use pointer events on unsupported browsers, you can inlcude PEP before mounting your React application. You can also use the `touch-action` property on any JSX node:
 
-PEP works fine with React 16.4 and higher, but if you want to use pointer events with React < 16.4 check out [the `react-pointable` npm module](https://www.npmjs.com/package/react-pointable) which introduces a declarative `<Pointable />` component.
+```js
+export function Pointable() {
+  return <div touch-action="none" onPointerDown={(e) => console.log(e)} /> 
+}
+```
 
 ## Why Pointer Events?
 
