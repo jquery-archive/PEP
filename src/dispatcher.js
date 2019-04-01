@@ -342,7 +342,7 @@ var dispatcher = {
     document.addEventListener('pointerup', this.implicitRelease);
     document.addEventListener('pointercancel', this.implicitRelease);
 
-    var e = new PointerEvent('gotpointercapture');
+    var e = new PointerEvent('gotpointercapture', { bubbles: true });
     e.pointerId = inPointerId;
     e._target = inTarget;
 
@@ -360,7 +360,7 @@ var dispatcher = {
     document.removeEventListener('pointerup', this.implicitRelease);
     document.removeEventListener('pointercancel', this.implicitRelease);
 
-    var e = new PointerEvent('lostpointercapture');
+    var e = new PointerEvent('lostpointercapture', { bubbles: true });
     e.pointerId = inPointerId;
     e._target = t;
 
