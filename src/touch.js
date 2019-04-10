@@ -56,9 +56,10 @@ var touchEvents = {
     // When this is the case, we should wait for the touchend before unlistening,
     // because we still want pointer events to bubble up after removing from DOM.
     if (pointermap.size > 0) {
-      el.addEventListener('touchend', () => {
+      var evts = this.events;
+      el.addEventListener('touchend', function() {
         el._scrollType = undefined;
-        dispatcher.unlisten(el, this.events);
+        dispatcher.unlisten(el, evts);
       });
     } else {
       el._scrollType = undefined;
