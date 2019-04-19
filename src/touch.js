@@ -170,8 +170,8 @@ var touchEvents = {
         inTouch.webkitForce : undefined;
     e.isPrimary = this.isPrimaryTouch(inTouch);
     if (inTouch.altitudeAngle) {
-      const tan = Math.tan(inTouch.altitudeAngle);
-      const radToDeg = 180 / Math.PI;
+      var tan = Math.tan(inTouch.altitudeAngle);
+      var radToDeg = 180 / Math.PI;
       e.tiltX = Math.atan(Math.cos(inTouch.azimuthAngle) / tan) * radToDeg;
       e.tiltY = Math.atan(Math.sin(inTouch.azimuthAngle) / tan) * radToDeg;
     } else {
