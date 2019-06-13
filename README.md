@@ -76,7 +76,7 @@ jQuery doesn't copy all properties from the original event object to the event o
 
 ### Using PEP with React
 
-As of version [16.4](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), React comes with first class support for pointer events. To use pointer events on unsupported browsers, you can inlcude PEP before mounting your React application. You can also use the `touch-action` property on any JSX node:
+As of version [16.4](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), React comes with first class support for pointer events. To use pointer events on unsupported browsers, you can include PEP before mounting your React application. You can also use the `touch-action` property on any JSX node:
 
 ```js
 export function Pointable() {
