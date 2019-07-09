@@ -129,7 +129,7 @@ function modFiles() {
 function modFile(source, filePath) {
 	var fileDir = path.dirname(filePath);
 	var pepPath = path.relative(fileDir, path.join(basePath, 'dist', 'pep.js'));
-	var supPath = path.relative(fileDir, path.join(basePath, 'tests', 'support', 'pep_support.js')),
+	var supPath = path.relative(fileDir, path.join(basePath, 'tests', 'support', 'pep_support.js'));
 
 	// Ensure pep.js is the first script loaded on the page
 	var htmlTag = source.replace(/^\s*(?=<script\b|<\/head>)/im, '\n$&<script src="' + encodeURI(pepPath) + '"></script>\n$&');
