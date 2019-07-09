@@ -89,7 +89,7 @@ function getTests(tree) {
 		if (object.type === 'tree') {
 			return getTree(object.url).then(function(tree) {
 				tree.forEach(function(node) {
-					node.path = object.path + '/' + node.path
+					node.path = object.path + '/' + node.path;
 				});
 				return getTests(tree);
 			});
@@ -136,6 +136,7 @@ function modFile(source, filePath) {
 
 	// Add "tests/support/pep_support.js" after "pointerevent_support.js"
 	source = source.replace(/^(\s*)<script.*?pointerevent_support[\s\S]+?<\/script>\n/im, '$&$1<script src="' + encodeURI(supPath) + '"></script>\n');
+
 	// Make paths to scripts and style sheets relative instead of absolute
 	return source.replace(/((?:src|href)\s*=\s*['"])([^.])/g, function(match, prelude, chr) {
 		return prelude + '.' + (chr === '/' ? '' : '/') + chr;
