@@ -332,7 +332,9 @@ var touchEvents = {
         this.scrolling = true;
         this.touchcancel(inEvent);
       } else {
-        inEvent.preventDefault();
+        if (inEvent.type !== 'touchforcechange') {
+          inEvent.preventDefault();
+        }
         this.processTouches(inEvent, this.moveOverOut);
       }
     }
