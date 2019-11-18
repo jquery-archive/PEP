@@ -11,6 +11,11 @@ define({
   ],
   maxConcurrency: 2,
   tunnel: 'BrowserStackTunnel',
+	tunnelOptions: {
+		verbose: true,
+		username: 'andreashocevar1',
+		accessKey: 'EdH5aANnHMtqqcbxrq2P'
+	},
   loaderOptions: {
     packages: [
       { name: 'chai-spies', location: 'node_modules/chai-spies', main: 'chai-spies' },
