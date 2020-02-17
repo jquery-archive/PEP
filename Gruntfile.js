@@ -125,7 +125,8 @@ module.exports = function(grunt) {
 
     grunt.log.write('Building PEP...');
     rollup.rollup({
-      entry: 'src/pointerevents.js'
+      entry: 'src/pointerevents.js',
+      plugins: [require('rollup-plugin-buble')()]
     }).then(function(bundle) {
       var result = bundle.generate({
         moduleName: 'PointerEventsPolyfill',

@@ -35,7 +35,8 @@
     "intern": "^3.2.3",
     "lodash": "^4.13.1",
     "request": "^2.72.0",
-    "rollup": "^0.29.0"
+    "rollup": "^0.29.0",
+    "rollup-plugin-buble": "^0.19.8"
   },
   "web-platform-tests": {
     "repo": "w3c/web-platform-tests#eaf80d8c9ebbe4c938e5bc12f6e96fef17dbdddf",
