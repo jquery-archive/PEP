@@ -9,9 +9,9 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
 1. Place the PEP script in the document head
   - `<script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>`
 
-1. By default, no pointer events are sent from an element. This maximizes the possibility that a browser can deliver smooth scrolling and jank-free gestures. If you want to receive events, you must set the `touch-action` property of that element. Set up some elements to create events with the [`touch-action` attribute](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property).
+2. By default, no pointer events are sent from an element. This maximizes the possibility that a browser can deliver smooth scrolling and jank-free gestures. If you want to receive events, you must set the `touch-action` property of that element. Set up some elements to create events with the [`touch-action` attribute](http://www.w3.org/TR/pointerevents/#the-touch-action-css-property).
 
-1. Listen for the desired events
+3. Listen for the desired events
   - `pointermove`: a pointer moves, similar to touchmove or mousemove.
   - `pointerdown`: a pointer is activated, or a device button held.
   - `pointerup`: a pointer is deactivated, or a device button released.
@@ -21,7 +21,7 @@ PEP polyfills pointer events in all browsers that haven't yet implemented them, 
   - `pointerleave`: a pointer leaves the bounding box of an element.
   - `pointercancel`: a pointer will no longer generate events.
 
-1. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of pointer events.
+4. As elements come and go, or have their `touch-action` attribute changed, they will send the proper set of pointer events.
 
 ```html
 <html lang="en">
@@ -47,6 +47,16 @@ document.getElementById( "b" ).addEventListener( "pointerdown", function( e ) {
 
 See also the [examples in the W3C Pointer Events Specification](http://www.w3.org/TR/pointerevents/#examples) and our own [samples for using PEP](http://jquery.github.io/PEP/).
 
+### Using PEP as a module
+
+```shell
+npm install pepjs
+```
+
+```javascript
+import 'pepjs'
+```
+
 ### Using PEP with jQuery
 
 You can use pointer events with jQuery and PEP:
@@ -66,8 +76,13 @@ jQuery doesn't copy all properties from the original event object to the event o
 
 ### Using PEP with React
 
-React doesn't support Pointer Events or `touch-action` natively, but check out the [&lt;Pointable/&gt; component](https://www.npmjs.com/package/react-pointable) on npm for a declarative way of integrating PEP / Pointer Events into a React project.
+As of version [16.4](https://reactjs.org/blog/2018/05/23/react-v-16-4.html), React comes with first class support for pointer events. To use pointer events on unsupported browsers, you can include PEP before mounting your React application. You can also use the `touch-action` property on any JSX node:
 
+```js
+export function Pointable() {
+  return <div touch-action="none" onPointerDown={(e) => console.log(e)} /> 
+}
+```
 
 ## Why Pointer Events?
 
@@ -112,6 +127,10 @@ Due to the difficult nature of polyfilling new CSS properties, this library uses
 Run time changes involving the `touch-action` attribute are monitored using Mutation Observers for maximum flexibility.
 
 Touches will not generate events unless inside of an area that has a valid `touch-action` attribute defined. This is to maintain composition scrolling optimizations where possible.
+
+### Capturing Phase
+
+PEP does not currently polyfill the capturing phase for pointer events.
 
 ## navigator.maxTouchPoints
 

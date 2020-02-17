@@ -54,6 +54,7 @@ Paint.prototype.onPointerMove = function(event) {
   // Check if there's a pointer that's down.
   if (pointer) {
     pointer.setTarget({x: event.clientX, y: event.clientY});
+    pointer.pressure = event.pressure;
     //console.log('pointers', pointer);
   }
 };
@@ -69,7 +70,7 @@ Paint.prototype.renderLoop = function(lastRender) {
     if (pointer.isDelta()) {
       //console.log('rendering', pointer.targetX);
       var ctx = this.ctx;
-      ctx.lineWidth = pointer.width;
+      ctx.lineWidth = pointer.width * (pointer.pressure || 1);
       ctx.strokeStyle = pointer.color;
       ctx.beginPath();
       ctx.moveTo(pointer.x, pointer.y);

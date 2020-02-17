@@ -4,8 +4,8 @@ var n = window.navigator;
 var s, r, h;
 function assertActive(id) {
   if (!dispatcher.pointermap.has(id)) {
-    var error = new Error('InvalidPointerId');
-    error.name = 'InvalidPointerId';
+    var error = new Error('NotFoundError');
+    error.name = 'NotFoundError';
     throw error;
   }
 }

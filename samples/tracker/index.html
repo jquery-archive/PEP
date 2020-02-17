@@ -2,7 +2,7 @@
 <html lang=en>
   <head>
     <meta charset=utf-8>
-    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0;" /> 
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
     <title>PEP (Pointer Events Polyfill) Tracker</title>
     <style type="text/css"> 
 
@@ -81,17 +81,47 @@ function init(){
 function draw() {
   c.clearRect(0,0,canvas.width, canvas.height); 
 
-  for(var pointerId in pointers)
-  {
-    var pointer = pointers[pointerId]; 
-    c.beginPath(); 
+  for(const pointerId of Object.keys(pointers)) {
+    const p = pointers[pointerId];
+    c.beginPath();
     c.fillStyle = "white";
-    c.fillText(pointer.pointerType+ " pointerId : "+pointer.pointerId+" x:"+pointer.x+" y:"+pointer.y, pointer.x+30, pointer.y-30); 
+
+    const x = p.x;
+    const y = p.y;
+    const pressure = p.pressure;
+    const tiltX = p.tiltX;
+    const tiltY = p.tiltY;
+    c.fillText(
+      p.pointerType + ' [' + pointerId + '] ' +
+      x + ',' + y + ' ' +
+      (pressure || '(no pressure)') + ' ' +
+      (tiltX || '(no tilt)') + ' ' + (tiltY || ''),
+      x + 30,
+      y - 30
+    );
 
     c.beginPath(); 
+    c.strokeStyle = "orange";
+    c.lineWidth = "4";
+    c.moveTo(x, y);
+    c.lineTo(
+      x + 40 * Math.sin(tiltX * Math.PI / 180),
+      y + 40 * Math.sin(tiltY * Math.PI / 180)
+    );
+    c.stroke();
+
+    if (pressure > 0) {
+      c.beginPath();
+      c.strokeStyle = "#008bff";
+      c.lineWidth = "6";
+      c.arc(x, y, 40 * pressure, 0, Math.PI * 2, true);
+      c.stroke();
+    }
+
+    c.beginPath();
     c.strokeStyle = "cyan";
     c.lineWidth = "6";
-    c.arc(pointer.x, pointer.y, 40, 0, Math.PI*2, true); 
+    c.arc(x, y, 40, 0, Math.PI*2, true);
     c.stroke();
   }
   //c.fillText("hello", 0,0); 
@@ -99,21 +129,26 @@ function draw() {
   requestAnimFrame(draw);
 }
 
-function onPointerDown(e) {
+function updatePointer(e) {
   pointers[e.pointerId] = {
     x: e.clientX,
     y: e.clientY,
     pointerType: e.pointerType,
-    pointerId: e.pointerId
+    pointerId: e.pointerId,
+    pressure: e.pressure,
+    tiltX: e.tiltX,
+    tiltY: e.tiltY,
   };
+}
+
+function onPointerDown(e) {
+  updatePointer(e);
 }
 
 function onPointerMove(e) {
   // Prevent the browser from doing its default thing (scroll, zoom)
-  var pointer = pointers[e.pointerId];
-  if (pointer) {
-    pointer.x = e.clientX;
-    pointer.y = e.clientY;
+  if (e.pointerId in pointers) {
+    updatePointer(e);
   }
 } 
 

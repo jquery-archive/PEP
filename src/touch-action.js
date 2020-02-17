@@ -1,24 +1,18 @@
-function shadowSelector(v) {
-  return 'body /shadow-deep/ ' + selector(v);
-}
-function selector(v) {
-  return '[touch-action="' + v + '"]';
+function shadowSelector(s) {
+  return 'body /shadow-deep/ ' + s;
 }
 function rule(v) {
   return '{ -ms-touch-action: ' + v + '; touch-action: ' + v + '; }';
 }
 var attrib2css = [
-  'none',
-  'auto',
-  'pan-x',
-  'pan-y',
-  {
-    rule: 'pan-x pan-y',
-    selectors: [
-      'pan-x pan-y',
-      'pan-y pan-x'
-    ]
-  }
+  { selector: '[touch-action="none"]', value: 'none' },
+  { selector: '[touch-action="auto"]', value: 'auto' },
+  { selector: '[touch-action~="pan-x"]', value: 'pan-x' },
+  { selector: '[touch-action~="pan-y"]', value: 'pan-y' },
+  { selector: '[touch-action~="pan-up"]', value: 'pan-up' },
+  { selector: '[touch-action~="pan-down"]', value: 'pan-down' },
+  { selector: '[touch-action~="pan-left"]', value: 'pan-left' },
+  { selector: '[touch-action~="pan-right"]', value: 'pan-right' }
 ];
 var styles = '';
 
@@ -31,16 +25,9 @@ var hasShadowRoot = !window.ShadowDOMPolyfill && document.head.createShadowRoot;
 export function applyAttributeStyles() {
   if (hasNativePE) {
     attrib2css.forEach(function(r) {
-      if (String(r) === r) {
-        styles += selector(r) + rule(r) + '\n';
-        if (hasShadowRoot) {
-          styles += shadowSelector(r) + rule(r) + '\n';
-        }
-      } else {
-        styles += r.selectors.map(selector) + rule(r.rule) + '\n';
-        if (hasShadowRoot) {
-          styles += r.selectors.map(shadowSelector) + rule(r.rule) + '\n';
-        }
+      styles += r.selector + rule(r.value) + '\n';
+      if (hasShadowRoot) {
+        styles += shadowSelector(r.selector) + rule(r.value) + '\n';
       }
     });
 

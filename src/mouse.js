@@ -19,6 +19,7 @@ var mouseEvents = {
   POINTER_TYPE: 'mouse',
   events: [
     'mousedown',
+    'webkitmouseforcechanged',
     'mousemove',
     'mouseup',
     'mouseover',
@@ -59,6 +60,9 @@ var mouseEvents = {
     e.pointerId = this.POINTER_ID;
     e.isPrimary = true;
     e.pointerType = this.POINTER_TYPE;
+    if ('webkitForce' in inEvent) {
+      e.pressure = inEvent.webkitForce - MouseEvent.WEBKIT_FORCE_AT_MOUSE_DOWN;
+    }
     return e;
   },
   prepareButtonsForMove: function(e, inEvent) {
@@ -88,6 +92,11 @@ var mouseEvents = {
         dispatcher.move(e);
       }
     }
+  },
+
+  // This is called when the user force presses without moving x/y
+  webkitmouseforcechanged: function(inEvent) {
+    this.mousemove(inEvent);
   },
   mousemove: function(inEvent) {
     if (!this.isEventSimulatedFromTouch(inEvent)) {
