@@ -81,16 +81,16 @@ function init(){
 function draw() {
   c.clearRect(0,0,canvas.width, canvas.height); 
 
-  for(const pointerId of Object.keys(pointers)) {
-    const p = pointers[pointerId];
+  for(pointerId of Object.keys(pointers)) {
+    var p = pointers[pointerId];
     c.beginPath();
     c.fillStyle = "white";
 
-    const x = p.x;
-    const y = p.y;
-    const pressure = p.pressure;
-    const tiltX = p.tiltX;
-    const tiltY = p.tiltY;
+    var x = p.x;
+    var y = p.y;
+    var pressure = p.pressure;
+    var tiltX = p.tiltX;
+    var tiltY = p.tiltY;
     c.fillText(
       p.pointerType + ' [' + pointerId + '] ' +
       x + ',' + y + ' ' +
