@@ -1,8 +1,8 @@
 {
   "name": "pepjs",
-  "version": "0.5.1",
-  "main": "dist/pep.js",
+  "version": "0.5.3",
   "description": "Polyfill of the PointerEvents W3C spec",
+  "main": "dist/pep.js",
   "author": {
     "name": "jQuery Foundation and other contributors",
     "url": "https://github.com/jquery/PEP/blob/master/AUTHORS.txt"
