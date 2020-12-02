@@ -4,6 +4,10 @@
 
 PEP polyfills pointer events in all browsers that haven't yet implemented them, providing a unified, responsive input model for all devices and input types. You can [read more about pointer events below](#why-pointer-events).
 
+## Project status
+
+PEP development ceased in 2018. A few minor maintenance patches have been pushed since then, and the latest version (0.5.3) has been oublished to [npm](https://www.npmjs.com/package/pepjs). However, native support for Pointer Events is relatively good in most browsers at this point - see [caniuse: Pointer Events](https://caniuse.com/pointer). This project is now archived.
+
 ## Getting Started
 
 1. Place the PEP script in the document head
