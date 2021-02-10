@@ -1,3 +1,5 @@
+**PEP has now [entered emeritus status at the OpenJS Foundation](https://openjsf.org/blog/2021/02/10/pointer-events-polyfill-pep-enters-emeritus-status-at-the-openjs-foundation/). This repository is now archived.**
+
 # Pointer Events Polyfill - making pointer events usable today
 
 ![PEP logo](pep-logo-shield.png)
